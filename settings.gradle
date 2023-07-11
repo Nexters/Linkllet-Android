@@ -14,3 +14,9 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Linkllet"
 include ':app'
+include ':core:data'
+include ':core:designsystem'
+include ':feature:settings'
+include ':core:ui'
+include ':core:navigation'
+include ':core:common'
