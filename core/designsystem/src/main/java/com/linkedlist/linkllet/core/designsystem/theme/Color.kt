@@ -1,4 +1,4 @@
-package com.linkedlist.linkllet.ui.theme
+package com.linkedlist.linkllet.core.designsystem.theme
 
 import androidx.compose.ui.graphics.Color
 
