@@ -3,10 +3,10 @@ package com.linkedlist.linkllet.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
+import com.linkedlist.linkllet.feature.home.navigation.Home
+import com.linkedlist.linkllet.feature.home.navigation.homeRoute
 import com.linkedlist.linkllet.ui.LnkAppState
-import com.linkedlist.linkllet.ui.Home
 import com.linkedlist.linkllet.ui.Settings
-import com.linkedlist.linkllet.ui.homeRoute
 
 @Composable
 fun LnkNavHost(
@@ -20,7 +20,7 @@ fun LnkNavHost(
         navController = navController,
         startDestination = startDestination,
     ) {
-        Home()
+        Home(navigateAddLink = {})
         Settings()
     }
 }
