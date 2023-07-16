@@ -65,6 +65,9 @@ dependencies {
     debugImplementation 'androidx.compose.ui:ui-tooling'
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
 
+    // compose navigation
+    implementation "androidx.navigation:navigation-compose:2.6.0"
+
     implementation(project(":core:common"))
     implementation(project(":core:ui"))
     implementation(project(":core:designsystem"))
