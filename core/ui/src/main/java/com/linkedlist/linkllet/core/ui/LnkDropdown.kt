@@ -36,6 +36,7 @@ import androidx.compose.ui.window.PopupPositionProvider
 import com.linkedlist.linkllet.core.designsystem.icon.LnkIcon
 import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.BtnRadio
 import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.IcDropdownArrow
+import com.linkedlist.linkllet.core.designsystem.theme.Typography
 
 @Composable
 fun LnkDropdownTextMenu(
@@ -102,7 +103,7 @@ fun LnkDropdownTextItem(
                 .wrapContentHeight()
                 .weight(1f),
             text = itemText,
-            fontSize = 12.sp
+            style = Typography.bodyMedium
         )
         Spacer(modifier = Modifier.width(32.dp))
         if (!isHeader && !selected) {
