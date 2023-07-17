@@ -70,7 +70,7 @@ fun LnkTextFieldWithTitle(
             ){
                 Text(
                     modifier = Modifier.padding(start = 8.dp),
-                    text = "최대 ${maxLength}자까지 입력할 수 있어요.",
+                    text = "※ 최대 ${maxLength}자까지 입력할 수 있어요.",
                     style = Typography.labelSmall
                 )
                 Spacer(modifier = modifier
@@ -147,11 +147,13 @@ fun LnkBasicTextFiled(
 
 @Composable
 fun Modifier.onTabClearFocusing(
-    focusManager : FocusManager = LocalFocusManager.current
+    focusManager : FocusManager? = LocalFocusManager.current,
+    onClear : () -> Unit = {}
 ) : Modifier {
     return this.pointerInput(Unit){
         detectTapGestures {
-            focusManager.clearFocus()
+            focusManager?.clearFocus()
+            onClear()
         }
     }
 }
