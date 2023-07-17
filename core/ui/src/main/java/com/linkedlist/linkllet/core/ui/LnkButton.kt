@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.linkedlist.linkllet.core.designsystem.theme.ColorC0C0C0
 import com.linkedlist.linkllet.core.designsystem.theme.ColorE9E9E9
+import com.linkedlist.linkllet.core.designsystem.theme.Typography
 
 
 @Composable
@@ -103,8 +104,7 @@ fun LnkButton(
         shape = RoundedCornerShape(12.dp),
         contentPadding = PaddingValues(vertical = verticalPadding),
         colors = ButtonDefaults.buttonColors(
-            containerColor = buttonColor,
-            contentColor = textColor
+            containerColor = buttonColor
         ),
         enabled = enabled,
         onClick = {
@@ -116,7 +116,9 @@ fun LnkButton(
         ) {
             Text(
                 modifier = Modifier.align(Alignment.Center),
-                text = text
+                style = Typography.bodyMedium,
+                text = text,
+                color = textColor
             )
         }
     }

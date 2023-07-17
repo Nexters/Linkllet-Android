@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import com.linkedlist.linkllet.core.designsystem.theme.ColorBCBCBC
 import com.linkedlist.linkllet.core.designsystem.theme.ColorE0E0E0
 import com.linkedlist.linkllet.core.designsystem.theme.ColorF4F4F4
+import com.linkedlist.linkllet.core.designsystem.theme.Typography
 
 @Composable
 fun LnkTextFieldWithTitle(
@@ -47,7 +48,11 @@ fun LnkTextFieldWithTitle(
     Column(
         modifier = modifier
     ) {
-        Text(text = title)
+        Text(
+            modifier = Modifier.padding(start = 8.dp),
+            text = title,
+            style = Typography.titleMedium
+        )
         Spacer(modifier.height(16.dp))
         LnkBasicTextFiled(
             modifier = modifier,
@@ -64,13 +69,17 @@ fun LnkTextFieldWithTitle(
                 modifier = Modifier.fillMaxWidth()
             ){
                 Text(
-                    text = "최대 ${maxLength}자까지 입력할 수 있어요."
+                    modifier = Modifier.padding(start = 8.dp),
+                    text = "최대 ${maxLength}자까지 입력할 수 있어요.",
+                    style = Typography.labelSmall
                 )
                 Spacer(modifier = modifier
                     .wrapContentHeight()
                     .weight(1f))
                 Text(
-                    text = "${value.length} / ${maxLength}"
+                    modifier = Modifier.padding(start = 8.dp),
+                    text = "${value.length} / ${maxLength}",
+                    style = Typography.labelSmall
                 )
             }
         }
@@ -105,6 +114,7 @@ fun LnkBasicTextFiled(
             if(it.length > maxLength) onValueChange(value)
             else onValueChange(it)
         },
+        textStyle = Typography.bodyMedium,
         decorationBox = { innerTextField ->
             OutlinedCard(
                 border = BorderStroke(
@@ -124,6 +134,7 @@ fun LnkBasicTextFiled(
                     if(value.isEmpty())
                         Text(
                             text = hint,
+                            style = Typography.labelMedium,
                             color = ColorBCBCBC
                         )
                     innerTextField()

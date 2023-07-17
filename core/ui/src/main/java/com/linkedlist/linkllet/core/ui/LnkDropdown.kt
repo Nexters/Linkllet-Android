@@ -36,6 +36,7 @@ import androidx.compose.ui.window.PopupPositionProvider
 import com.linkedlist.linkllet.core.designsystem.icon.LnkIcon
 import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.BtnRadio
 import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.IcDropdownArrow
+import com.linkedlist.linkllet.core.designsystem.theme.Typography
 
 @Composable
 fun LnkDropdownTextMenu(
@@ -44,51 +45,36 @@ fun LnkDropdownTextMenu(
     items: List<String> = emptyList(),
     isFocused: Boolean = false,
     onMenuClick: () -> Unit = {},
-    onItemClick: (String) -> Unit = {},
-    onDismissRequest : () -> Unit = {}
+    onItemClick: (String) -> Unit = {}
 ) {
-    Popup(
-        onDismissRequest = onDismissRequest,
-        popupPositionProvider = object : PopupPositionProvider {
-            override fun calculatePosition(
-                anchorBounds: IntRect,
-                windowSize: IntSize,
-                layoutDirection: LayoutDirection,
-                popupContentSize: IntSize
-            ): IntOffset {
-                return IntOffset(0, 0)
+    OutlinedCard(
+        modifier = modifier.wrapContentHeight(),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        LnkDropdownTextItem(
+            itemText = selectedText,
+            isHeader = true,
+            isFocused = isFocused,
+            onSelect = {
+                onMenuClick()
             }
+        )
 
-        }) {
-        OutlinedCard(
-            modifier = modifier.wrapContentHeight(),
-            shape = RoundedCornerShape(12.dp)
-        ) {
-            LnkDropdownTextItem(
-                itemText = selectedText,
-                isHeader = true,
-                isFocused = isFocused,
-                onSelect = {
-                    onMenuClick()
-                }
-            )
-
-            AnimatedVisibility(visible = isFocused && items.isNotEmpty()) {
-                Divider()
-                LazyColumn(
-                    modifier = Modifier.height(
-                        (49 * (if (items.size > 4) 4 else items.size)).dp
+        AnimatedVisibility(visible = isFocused && items.isNotEmpty()) {
+            Divider()
+            LazyColumn(
+                modifier = Modifier.height(
+                    (49 * (if (items.size > 4) 4 else items.size)).dp
+                )
+            ) {
+                items(items) {
+                    LnkDropdownTextItem(
+                        itemText = it,
+                        selected = selectedText == it,
+                        onSelect = {
+                            onItemClick(it)
+                        }
                     )
-                ) {
-                    items(items) {
-                        LnkDropdownTextItem(
-                            itemText = it,
-                            selected = selectedText == it,
-                            onSelect = {
-                                onItemClick(it)
-                            }
-                        )
-                    }
                 }
             }
         }
@@ -117,12 +103,12 @@ fun LnkDropdownTextItem(
                 .wrapContentHeight()
                 .weight(1f),
             text = itemText,
-            fontSize = 12.sp
+            style = Typography.bodyMedium
         )
         Spacer(modifier = Modifier.width(32.dp))
-        if(!isHeader && !selected){
+        if (!isHeader && !selected) {
             Spacer(modifier = Modifier.size(16.dp))
-        }else {
+        } else {
             Icon(
                 modifier = Modifier
                     .rotate(
@@ -141,7 +127,7 @@ fun LnkDropdownTextItem(
 @Preview
 @Composable
 fun LnkDropdownTextMenuPreview() {
-    var selectedText by remember{ mutableStateOf("기본") }
+    var selectedText by remember { mutableStateOf("기본") }
     var isFocused by remember { mutableStateOf(false) }
     MaterialTheme() {
         LnkDropdownTextMenu(
@@ -154,10 +140,7 @@ fun LnkDropdownTextMenuPreview() {
             onMenuClick = {
                 isFocused = !isFocused
             },
-            items = listOf("기본","UIUX","개발","서버","디자인","안드","iOS"),
-            onDismissRequest = {
-                isFocused = false
-            }
+            items = listOf("기본", "UIUX", "개발", "서버", "디자인", "안드", "iOS")
         )
     }
 }
