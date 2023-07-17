@@ -73,4 +73,5 @@ dependencies {
     implementation(project(":core:designsystem"))
     implementation(project(":core:data"))
     implementation(project(":feature:settings"))
+    implementation(project(":feature:link"))
 }
