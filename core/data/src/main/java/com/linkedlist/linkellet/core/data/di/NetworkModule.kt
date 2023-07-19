@@ -1,10 +1,13 @@
 package com.linkedlist.linkellet.core.data.di
 
+import android.content.Context
 import com.linkedlist.linkellet.core.data.RetrofitFactory
 import com.linkedlist.linkellet.core.data.source.remote.api.AuthService
+import com.linkedlist.linkellet.core.data.source.remote.api.LinkService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -14,6 +17,15 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideAuthService(): AuthService
-     = RetrofitFactory.create()
+    fun provideAuthService(
+        @ApplicationContext context : Context
+    ): AuthService
+        = RetrofitFactory.create(context)
+
+    @Provides
+    @Singleton
+    fun provideLinkService(
+        @ApplicationContext context : Context
+    ): LinkService
+        = RetrofitFactory.create(context)
 }
