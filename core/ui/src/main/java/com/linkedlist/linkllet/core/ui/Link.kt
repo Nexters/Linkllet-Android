@@ -1,17 +1,24 @@
 package com.linkedlist.linkllet.core.ui
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
@@ -28,8 +35,11 @@ fun LinkItem(
     modifier: Modifier = Modifier,
     title: String,
     link : String,
-    date : String
+    date : String,
+    onDelete : () -> Unit = {}
 ) {
+    var dropdownState by remember { mutableStateOf(false) }
+
     OutlinedCard(
         modifier = modifier.wrapContentHeight(),
         colors = CardDefaults.cardColors(
@@ -95,11 +105,23 @@ fun LinkItem(
                     },
                 innerPadding = 8.dp,
                 onClick = {
-
+                    dropdownState = !dropdownState
                 }
             ) {
                 Icon(imageVector = Icons.Rounded.MoreVert, contentDescription = null)
+                DropdownMenu(
+                    modifier = Modifier.background(Color.White),
+                    expanded = dropdownState, onDismissRequest = { dropdownState = !dropdownState }) {
+                    DropdownMenuItem(text = {
+                        Text(text = "링크 삭제하기")
+                    }, onClick = {
+                        onDelete()
+                        dropdownState = !dropdownState
+                    })
+                }
             }
+
+
         }
     }
 }
