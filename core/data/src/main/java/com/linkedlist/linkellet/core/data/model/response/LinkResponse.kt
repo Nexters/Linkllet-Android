@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class LinkResponse(
-    val folderList : List<Link>
+    val articleList : List<Link>
 )
