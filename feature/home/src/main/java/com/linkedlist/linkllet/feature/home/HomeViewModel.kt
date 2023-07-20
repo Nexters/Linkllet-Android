@@ -2,6 +2,7 @@ package com.linkedlist.linkllet.feature.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.linkedlist.linkellet.core.data.repository.AuthRepository
 import com.linkedlist.linkellet.core.data.repository.LinkRepository
 import com.linkedlist.linkllet.core.ui.FolderModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,13 +20,25 @@ data class HomeUiState(
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
+    private val authRepository: AuthRepository,
     private val linkRepository: LinkRepository,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
     init {
-        fetchFolders()
+        signupAndFetchFolders()
+    }
+
+    private fun signupAndFetchFolders() {
+        viewModelScope.launch {
+            authRepository.signUp().collect { result ->
+                result.onSuccess {
+                    // fixme : 일단은 콜백으로 작성했으나 더 좋은 구조로 작성할 수 있는지 고민하기
+                    fetchFolders()
+                }
+            }
+        }
     }
 
     private fun fetchFolders() {
