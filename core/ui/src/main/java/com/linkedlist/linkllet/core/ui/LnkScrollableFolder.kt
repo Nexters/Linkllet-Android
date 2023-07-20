@@ -47,7 +47,7 @@ fun LnkScrollableFolder(
             .verticalScroll(rememberScrollState())
     ) {
         Surface(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .height(165.dp)
                 .clickable { addFolder() },
