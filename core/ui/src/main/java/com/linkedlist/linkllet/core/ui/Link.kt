@@ -1,19 +1,27 @@
 package com.linkedlist.linkllet.core.ui
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import com.linkedlist.linkllet.core.designsystem.theme.Color878787
+import com.linkedlist.linkllet.core.designsystem.theme.ColorEDEDED
+import com.linkedlist.linkllet.core.designsystem.theme.Typography
 
 @Composable
 fun LinkItem(
@@ -22,8 +30,12 @@ fun LinkItem(
     link : String,
     date : String
 ) {
-    Card(
-        modifier = modifier.wrapContentHeight()
+    OutlinedCard(
+        modifier = modifier.wrapContentHeight(),
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White
+        ),
+        border = BorderStroke(1.dp, color = ColorEDEDED)
     ) {
         ConstraintLayout(
             modifier = Modifier
@@ -36,22 +48,29 @@ fun LinkItem(
                 modifier = Modifier
                     .constrainAs(titleRefs) {
                         top.linkTo(parent.top, 20.dp)
-                        end.linkTo(moreRefs.start)
+                        end.linkTo(moreRefs.start,70.dp)
                         start.linkTo(parent.start, 24.dp)
                         width = Dimension.fillToConstraints
                     },
-                text = title
+                text = title,
+                style = Typography.titleMedium,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
 
             Text(
                 modifier = Modifier
                     .constrainAs(linkRefs) {
-                        top.linkTo(titleRefs.bottom, 8.dp)
-                        end.linkTo(parent.end, 8.dp)
+                        top.linkTo(titleRefs.bottom, 3.dp)
+                        end.linkTo(titleRefs.end)
                         start.linkTo(titleRefs.start)
                         width = Dimension.fillToConstraints
                     },
-                text = link
+                text = link,
+                style = Typography.bodySmall,
+                color = Color878787,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
 
             Text(
@@ -63,7 +82,8 @@ fun LinkItem(
                         bottom.linkTo(parent.bottom, 20.dp)
                         width = Dimension.fillToConstraints
                     },
-                text = "저장일 | ${date}"
+                text = "저장일 | ${date}",
+                style = Typography.bodyMedium
             )
 
 
