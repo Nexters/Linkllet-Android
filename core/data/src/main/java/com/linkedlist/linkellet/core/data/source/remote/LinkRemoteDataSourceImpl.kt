@@ -1,7 +1,7 @@
 package com.linkedlist.linkellet.core.data.source.remote
 
-import com.linkedlist.linkellet.core.data.model.Auth
 import com.linkedlist.linkellet.core.data.model.Folder
+import com.linkedlist.linkellet.core.data.model.Link
 import com.linkedlist.linkellet.core.data.model.request.AddLinkRequest
 import com.linkedlist.linkellet.core.data.source.remote.api.LinkService
 import javax.inject.Inject
@@ -24,6 +24,20 @@ class LinkRemoteDataSourceImpl @Inject constructor(
         }
     }
 
+    override suspend fun getLinks(id: Long): Result<List<Link>> {
+        return try {
+            val response = linkService.getLinks(id)
+            val links = response.body()?.articleList
+            if(response.isSuccessful && links != null){
+                Result.success(links)
+            }else {
+                Result.failure(Exception())
+            }
+        }catch (e: Exception){
+            Result.failure(e)
+        }
+    }
+
     override suspend fun addLink(
         id : Long,
         addLinkRequest : AddLinkRequest
@@ -32,6 +46,37 @@ class LinkRemoteDataSourceImpl @Inject constructor(
             val response = linkService.addLink(
                 id = id,
                 addLinkRequest = addLinkRequest
+            )
+            if(response.isSuccessful){
+                Result.success(Unit)
+            }else {
+                Result.failure(Exception())
+            }
+        }catch (e: Exception){
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun deleteFolder(id: Long): Result<Unit> {
+        return try {
+            val response = linkService.deleteFolder(
+                id = id
+            )
+            if(response.isSuccessful){
+                Result.success(Unit)
+            }else {
+                Result.failure(Exception())
+            }
+        }catch (e: Exception){
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun deleteLink(id: Long, articleId: Long): Result<Unit> {
+        return try {
+            val response = linkService.deleteLink(
+                id = id,
+                articleId = articleId
             )
             if(response.isSuccessful){
                 Result.success(Unit)

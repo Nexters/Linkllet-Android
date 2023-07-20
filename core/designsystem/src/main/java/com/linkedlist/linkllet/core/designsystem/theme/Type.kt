@@ -11,7 +11,12 @@ import com.linkedlist.linkllet.core.designsystem.R
 
 // Set of Material typography styles to start with
 val Typography = Typography(
-
+    titleLarge = TextStyle(
+        fontSize = 16.sp,
+        fontFamily = pretendard,
+        fontWeight = FontWeight(700),
+        color = Color.Black,
+    ),
     titleMedium = TextStyle(
         fontSize = 14.sp,
         fontFamily = pretendard,
