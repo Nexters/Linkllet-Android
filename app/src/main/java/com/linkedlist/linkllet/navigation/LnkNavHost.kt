@@ -23,7 +23,12 @@ fun LnkNavHost(
         startDestination = startDestination,
     ) {
         Home(navigateAddLink = navController::navigateToAddEditLink)
-        AddEditLink()
+        AddEditLink(
+            onBack = {
+                navController.navigateUp()
+            }
+
+        )
         Settings()
     }
 }

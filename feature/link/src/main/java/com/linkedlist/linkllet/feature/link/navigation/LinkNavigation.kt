@@ -24,8 +24,10 @@ fun NavController.navigateToAddEditLink(navOptions: NavOptions? = null) {
 //    }
 //}
 
-fun NavGraphBuilder.AddEditLink() {
+fun NavGraphBuilder.AddEditLink(
+    onBack : () -> Unit
+) {
     composable(route = addEditLinkRoute) {
-        AddEditLinkScreen()
+        AddEditLinkScreen(onBack = onBack)
     }
 }

@@ -29,7 +29,8 @@ import com.linkedlist.linkllet.core.ui.onTabClearFocusing
 @Composable
 fun AddEditLinkScreen(
     modifier: Modifier = Modifier,
-    viewModel : AddEditLinkViewModel = AddEditLinkViewModel()
+    viewModel : AddEditLinkViewModel = hiltViewModel(),
+    onBack : () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
     var dropdownState by remember { mutableStateOf(false) }
