@@ -14,29 +14,29 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.linkedlist.linkllet.core.designsystem.icon.LnkIcon
 
-public val LnkIcon.IcDropdownArrow: ImageVector
+public val LnkIcon.ArrowBack: ImageVector
     get() {
-        if (_icDropdownArrow != null) {
-            return _icDropdownArrow!!
+        if (_arrowBack != null) {
+            return _arrowBack!!
         }
-        _icDropdownArrow = Builder(name = "IcDropdownArrow", defaultWidth = 14.0.dp, defaultHeight =
-                8.0.dp, viewportWidth = 14.0f, viewportHeight = 8.0f).apply {
+        _arrowBack = Builder(name = "ArrowBack", defaultWidth = 28.0.dp, defaultHeight = 28.0.dp, viewportWidth
+                = 28.0f, viewportHeight = 28.0f).apply {
             path(fill = SolidColor(Color(0x00000000)), stroke = SolidColor(Color(0xFF000000)),
                     strokeLineWidth = 2.0f, strokeLineCap = Butt, strokeLineJoin = Miter,
                     strokeLineMiter = 4.0f, pathFillType = NonZero) {
-                moveTo(13.0f, 7.0f)
-                lineTo(7.0f, 2.0f)
-                lineTo(1.0f, 7.0f)
+                moveTo(18.0f, 6.0f)
+                lineTo(10.0f, 14.0f)
+                lineTo(18.0f, 22.0f)
             }
         }
         .build()
-        return _icDropdownArrow!!
+        return _arrowBack!!
     }
 
-private var _icDropdownArrow: ImageVector? = null
+private var _arrowBack: ImageVector? = null
 
 @Composable
 @Preview
-fun IcDropdownArrowPreview() {
-    Icon(imageVector = LnkIcon.IcDropdownArrow, contentDescription = "")
+fun ArrowBackPreview() {
+    Icon(imageVector = LnkIcon.ArrowBack, contentDescription = "")
 }
