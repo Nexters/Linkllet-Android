@@ -11,6 +11,8 @@ import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,7 +23,6 @@ import com.linkedlist.linkllet.core.designsystem.icon.LnkIcon
 import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.Clip
 import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.HomeBackground
 import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.Linkllet
-import com.linkedlist.linkllet.core.ui.FolderModel
 import com.linkedlist.linkllet.core.ui.LnkAppBar
 import com.linkedlist.linkllet.core.ui.LnkFloatingActionButton
 import com.linkedlist.linkllet.core.ui.LnkScrollableFolder
@@ -32,6 +33,8 @@ internal fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
     navigateAddLink: () -> Unit,
 ) {
+    val uiState by viewModel.uiState.collectAsState()
+
     Scaffold(
         topBar = {
             LnkAppBar(
@@ -67,15 +70,9 @@ internal fun HomeScreen(
                 modifier = Modifier.fillMaxHeight(),
                 contentAlignment = Alignment.BottomCenter,
             ) {
-                val dummyData = listOf(
-                    FolderModel(name = "기본", totalItems = 10, onClick = {}),
-                    FolderModel(name = "폴더1", totalItems = 11, onClick = {}),
-                    FolderModel(name = "폴더2", totalItems = 12, onClick = {}),
-                )
-
                 LnkScrollableFolder(
                     modifier = Modifier.padding(horizontal = 5.dp),
-                    folders = dummyData
+                    folders = uiState.folders
                 ) {}
             }
         }
