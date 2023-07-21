@@ -10,9 +10,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.linkedlist.linkllet.core.designsystem.icon.LnkIcon
 import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.X
 import com.linkedlist.linkllet.core.ui.LnkAppBar
@@ -24,7 +28,19 @@ import com.linkedlist.linkllet.core.ui.LnkTextFieldWithTitle
 @Composable
 fun AddEditFolderScreen(
     onBack: () -> Unit,
+    viewModel: AddEditFolderViewModel = hiltViewModel(),
 ) {
+    val folderName by viewModel.folderName.collectAsState()
+
+    LaunchedEffect(key1 = Unit) {
+        viewModel.eventFlow.collect {
+            when(it) {
+                is Event.CloseScreen -> onBack()
+                else -> {}
+            }
+        }
+    }
+
     Scaffold(
         topBar = {
             LnkAppBar(
@@ -40,13 +56,13 @@ fun AddEditFolderScreen(
                     .fillMaxWidth(),
             ) {
                 LnkTextFieldWithTitle(
-                    title = "폴더 제목", value = "",
-                    onValueChange = {}
+                    title = "폴더 제목", value = folderName,
+                    onValueChange = viewModel::updateFolderName
                 )
             }
             Spacer(modifier = Modifier.weight(1.0f))
             LnkButton(
-                onClick = { },
+                onClick = viewModel::addFolder,
                 buttonColor = Color.Black,
                 text = "저장하기",
                 textColor = Color.White,
