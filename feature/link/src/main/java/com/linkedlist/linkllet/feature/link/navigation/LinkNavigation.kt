@@ -3,31 +3,54 @@ package com.linkedlist.linkllet.feature.link.navigation
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
+import androidx.navigation.NavType
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.linkedlist.linkllet.feature.link.addeditlink.AddEditLinkScreen
+import com.linkedlist.linkllet.feature.link.links.LinksScreen
 
+const val FOLDER_ID = "folderId"
 
-const val linkRoute = "link"
+const val linksRoute = "links/{${FOLDER_ID}}"
 const val addEditLinkRoute = "addEditLink"
 
-fun NavController.navigateToLink(navOptions: NavOptions? = null) {
-    this.navigate(linkRoute, navOptions)
+fun NavController.navigateToLinks(
+    navOptions: NavOptions? = null,
+    folderId : Long
+) {
+    this.navigate("links/${folderId}", navOptions)
 }
 
 fun NavController.navigateToAddEditLink(navOptions: NavOptions? = null) {
     this.navigate(addEditLinkRoute, navOptions)
 }
 
-//fun NavGraphBuilder.Link(navigateLink: () -> Unit) {
-//    composable(route = linkRoute) {
-//        HomeScreen(navigateAddLink = navigateAddLink)
-//    }
-//}
+fun NavGraphBuilder.Links(
+    navigateAddLink: () -> Unit,
+    onBack: () -> Unit
+) {
+    composable(
+        route = linksRoute,
+        arguments = listOf(
+            navArgument(FOLDER_ID) {
+                type = NavType.LongType
+            }
+        )
+    ) {
+        LinksScreen(
+            navigateAddLink = navigateAddLink,
+            onBack = onBack,
+            title = ""
+        )
+    }
+}
 
 fun NavGraphBuilder.AddEditLink(
-    onBack : () -> Unit
+    onBack: () -> Unit
 ) {
     composable(route = addEditLinkRoute) {
-        AddEditLinkScreen(onBack = onBack)
+        AddEditLinkScreen(
+            onBack = onBack
+        )
     }
 }
