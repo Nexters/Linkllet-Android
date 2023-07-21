@@ -37,6 +37,7 @@ internal fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
     navigateToAddLink: () -> Unit,
     navigateToAddEditFolder: () -> Unit,
+    navigateToLinks: (Long) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -84,6 +85,7 @@ internal fun HomeScreen(
                     modifier = Modifier.padding(horizontal = 5.dp),
                     folders = uiState.folders,
                     addFolder = navigateToAddEditFolder,
+                    navigateToLinks = navigateToLinks,
                 )
             }
         }
@@ -106,5 +108,6 @@ fun HomeScreenPreview() {
     HomeScreen(
         navigateToAddLink = {},
         navigateToAddEditFolder = {},
+        navigateToLinks = {}
     )
 }
