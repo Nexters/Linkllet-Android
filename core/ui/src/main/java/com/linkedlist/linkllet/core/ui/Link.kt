@@ -1,12 +1,15 @@
 package com.linkedlist.linkllet.core.ui
 
+import android.content.Intent
+import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.MoreVert
-import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -21,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -34,14 +38,16 @@ import com.linkedlist.linkllet.core.designsystem.theme.Typography
 fun LinkItem(
     modifier: Modifier = Modifier,
     title: String,
-    link : String,
-    date : String,
-    onDelete : () -> Unit = {}
+    link: String,
+    date: String,
+    onDelete: () -> Unit = {}
 ) {
     var dropdownState by remember { mutableStateOf(false) }
-
+    val context = LocalContext.current
     OutlinedCard(
-        modifier = modifier.wrapContentHeight(),
+        modifier = modifier
+            .wrapContentHeight()
+        ,
         colors = CardDefaults.cardColors(
             containerColor = Color.White
         ),
@@ -50,7 +56,18 @@ fun LinkItem(
         ConstraintLayout(
             modifier = Modifier
                 .fillMaxWidth()
-                .wrapContentHeight()
+                .wrapContentHeight().clickable {
+                    try {
+                        context.startActivity(
+                            Intent(
+                                Intent.ACTION_VIEW,
+                                Uri.parse(link)
+                            )
+                        )
+                    }catch (e: Exception){
+                        Log.d("LinkCardClick","${e}")
+                    }
+                }
         ) {
             val (moreRefs, titleRefs, linkRefs, dateRefs) = createRefs()
 
@@ -58,7 +75,7 @@ fun LinkItem(
                 modifier = Modifier
                     .constrainAs(titleRefs) {
                         top.linkTo(parent.top, 20.dp)
-                        end.linkTo(moreRefs.start,70.dp)
+                        end.linkTo(moreRefs.start, 70.dp)
                         start.linkTo(parent.start, 24.dp)
                         width = Dimension.fillToConstraints
                     },
@@ -111,7 +128,8 @@ fun LinkItem(
                 Icon(imageVector = Icons.Rounded.MoreVert, contentDescription = null)
                 DropdownMenu(
                     modifier = Modifier.background(Color.White),
-                    expanded = dropdownState, onDismissRequest = { dropdownState = !dropdownState }) {
+                    expanded = dropdownState,
+                    onDismissRequest = { dropdownState = !dropdownState }) {
                     DropdownMenuItem(text = {
                         Text(text = "링크 삭제하기")
                     }, onClick = {
