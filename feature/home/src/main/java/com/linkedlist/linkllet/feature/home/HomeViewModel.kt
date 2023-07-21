@@ -41,7 +41,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun fetchFolders() {
+    fun fetchFolders() {
         viewModelScope.launch {
             linkRepository.getFolders().collectLatest { resultFolders ->
 
