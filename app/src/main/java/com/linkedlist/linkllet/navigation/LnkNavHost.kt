@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import com.linkedlist.linkllet.feature.home.navigation.Home
 import com.linkedlist.linkllet.feature.home.navigation.homeRoute
 import com.linkedlist.linkllet.feature.link.navigation.AddEditLink
+import com.linkedlist.linkllet.feature.link.navigation.Links
 import com.linkedlist.linkllet.feature.link.navigation.navigateToAddEditLink
 import com.linkedlist.linkllet.ui.LnkAppState
 import com.linkedlist.linkllet.ui.Settings
@@ -28,6 +29,12 @@ fun LnkNavHost(
                 navController.navigateUp()
             }
 
+        )
+        Links(
+            navigateAddLink = navController::navigateToAddEditLink,
+            onBack = {
+                navController.navigateUp()
+            }
         )
         Settings()
     }
