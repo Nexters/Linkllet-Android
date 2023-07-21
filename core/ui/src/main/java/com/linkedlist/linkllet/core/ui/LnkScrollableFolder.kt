@@ -20,6 +20,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.linkedlist.linkllet.core.designsystem.icon.LnkIcon
+import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.Plus
 
 // todo : model을 둘 위치 및 네이밍 컨벤션 논의 필요
 data class FolderModel(
@@ -62,7 +64,7 @@ fun LnkScrollableFolder(
             ) {
                 Icon(
                     modifier = Modifier.size(28.dp),
-                    imageVector = Icons.Rounded.Add, // fixme : 디자인 시스템에 추가한 아이콘으로 변경해야 함
+                    imageVector = LnkIcon.Plus,
                     contentDescription = "폴더 추가",
                     tint = Color(0xFF779CFF),
                 )
