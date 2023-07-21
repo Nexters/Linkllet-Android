@@ -1,9 +1,11 @@
 package com.linkedlist.linkllet.feature.home
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -15,6 +17,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -62,9 +65,10 @@ internal fun HomeScreen(
             Icon(
                 // fixme : 이미지 크기 가로 길이에 맞춰 세로 길이가 결정되어야 함.
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(1.0f)
+                    .aspectRatio(1.213f)
                     .padding(top = 25.dp, start = 18.dp, end = 18.dp),
-                imageVector = LnkIcon.HomeBackground, contentDescription = "배경"
+                imageVector = LnkIcon.HomeBackground, contentDescription = "배경",
             )
 
             Box(
