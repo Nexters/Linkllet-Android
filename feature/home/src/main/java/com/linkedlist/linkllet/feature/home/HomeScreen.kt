@@ -27,6 +27,7 @@ import com.linkedlist.linkllet.core.designsystem.icon.LnkIcon
 import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.Clip
 import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.HomeBackground
 import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.Linkllet
+import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.Settings
 import com.linkedlist.linkllet.core.ui.LnkAppBar
 import com.linkedlist.linkllet.core.ui.LnkFloatingActionButton
 import com.linkedlist.linkllet.core.ui.LnkScrollableFolder
@@ -99,7 +100,7 @@ fun AppBarTitle() {
 
 @Composable
 fun SettingsAction() {
-    Icon(imageVector = Icons.Rounded.Settings, contentDescription = "설정")
+    Icon(imageVector = LnkIcon.Settings, contentDescription = "설정")
 }
 
 @Composable
