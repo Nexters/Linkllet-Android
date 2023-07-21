@@ -1,5 +1,6 @@
 package com.linkedlist.linkellet.core.data.source.remote.api
 
+import com.linkedlist.linkellet.core.data.model.request.AddFolderRequest
 import com.linkedlist.linkellet.core.data.model.request.AddLinkRequest
 import com.linkedlist.linkellet.core.data.model.response.FolderResponse
 import com.linkedlist.linkellet.core.data.model.response.LinkResponse
@@ -11,6 +12,9 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface LinkService {
+
+    @POST("/api/v1/folders")
+    suspend fun addFolder(@Body folder: AddFolderRequest): Response<Unit>
 
     @GET("/api/v1/folders")
     suspend fun getFolders() : Response<FolderResponse>

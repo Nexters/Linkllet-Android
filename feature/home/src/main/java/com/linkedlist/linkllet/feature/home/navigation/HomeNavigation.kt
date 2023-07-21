@@ -12,8 +12,14 @@ fun NavController.navigateToHome(navOptions: NavOptions? = null) {
     this.navigate(homeRoute, navOptions)
 }
 
-fun NavGraphBuilder.Home(navigateAddLink: () -> Unit) {
+fun NavGraphBuilder.Home(
+    navigateAddLink: () -> Unit,
+    navigateToAddEdit: () -> Unit,
+) {
     composable(route = homeRoute) {
-        HomeScreen(navigateAddLink = navigateAddLink)
+        HomeScreen(
+            navigateToAddLink = navigateAddLink,
+            navigateToAddEditFolder = navigateToAddEdit,
+        )
     }
 }

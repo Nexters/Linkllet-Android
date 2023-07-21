@@ -31,7 +31,8 @@ import com.linkedlist.linkllet.core.ui.LnkScrollableFolder
 @Composable
 internal fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
-    navigateAddLink: () -> Unit,
+    navigateToAddLink: () -> Unit,
+    navigateToAddEditFolder: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -44,7 +45,7 @@ internal fun HomeScreen(
         },
         floatingActionButton = {
             LnkFloatingActionButton(
-                onClick = { navigateAddLink() }
+                onClick = { navigateToAddLink() }
             ) {
                 Icon(
                     imageVector = LnkIcon.Clip,
@@ -72,8 +73,9 @@ internal fun HomeScreen(
             ) {
                 LnkScrollableFolder(
                     modifier = Modifier.padding(horizontal = 5.dp),
-                    folders = uiState.folders
-                ) {}
+                    folders = uiState.folders,
+                    addFolder = navigateToAddEditFolder,
+                )
             }
         }
     }
@@ -93,6 +95,7 @@ fun SettingsAction() {
 @Preview
 fun HomeScreenPreview() {
     HomeScreen(
-        navigateAddLink = {}
+        navigateToAddLink = {},
+        navigateToAddEditFolder = {},
     )
 }
