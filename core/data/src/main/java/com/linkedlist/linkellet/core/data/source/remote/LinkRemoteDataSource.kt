@@ -6,6 +6,8 @@ import com.linkedlist.linkellet.core.data.model.request.AddLinkRequest
 
 interface LinkRemoteDataSource {
 
+    suspend fun addFolder(name: String): Result<Unit>
+
     suspend fun getFolders() : Result<List<Folder>>
 
     suspend fun getLinks(id : Long) : Result<List<Link>>
