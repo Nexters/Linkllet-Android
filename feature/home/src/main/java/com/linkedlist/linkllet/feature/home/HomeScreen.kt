@@ -47,6 +47,7 @@ internal fun HomeScreen(
     }
 
     Scaffold(
+        containerColor = Color.White,
         topBar = {
             LnkAppBar(
                 title = { AppBarTitle() },
