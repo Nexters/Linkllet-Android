@@ -16,8 +16,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun LnkFolder(
@@ -41,19 +43,42 @@ fun LnkFolder(
                 .fillMaxHeight()
                 .padding(start = 28.dp, top = 26.dp, end = 32.dp)
         ) {
-            Text(name, color = Color.White)
+            Text(
+                name,
+                color = Color.White,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold
+            )
             Spacer(modifier = Modifier.weight(1.0f))
-            Box(
-                modifier = Modifier
-                    .border(
-                        width = 1.dp, color = totalItemsBorder,
-                        shape = RoundedCornerShape(8.dp)
-                    )
-                    .padding(horizontal = 8.dp, vertical = 4.dp)
-                ,
-                contentAlignment = Alignment.Center
+            Surface(
+                shape = RoundedCornerShape(
+                    topStart = 8.dp,
+                    topEnd = 8.dp,
+                    bottomStart = 8.dp,
+                    bottomEnd = 8.dp
+                ),
             ) {
-                Text(totalItems.toString(), color = Color.White)
+                Box(
+                    modifier = Modifier
+                        .border(
+                            width = 1.dp, color = totalItemsBorder,
+                            shape = RoundedCornerShape(8.dp)
+                        )
+                        .background(color = color),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        totalItems.toString(),
+                        color = Color.White,
+                        modifier = Modifier
+                            .background(
+                                color = totalItemsBackground
+                            )
+                            .padding(horizontal = 8.dp, vertical = 4.dp),
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 12.sp
+                    )
+                }
             }
         }
     }

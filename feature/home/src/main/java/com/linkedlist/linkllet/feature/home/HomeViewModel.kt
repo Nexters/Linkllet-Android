@@ -41,13 +41,14 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun fetchFolders() {
+    fun fetchFolders() {
         viewModelScope.launch {
             linkRepository.getFolders().collectLatest { resultFolders ->
 
-                // todo : onClick과
                 val newFolders =
-                    resultFolders.getOrNull()?.map { FolderModel(name = it.name, onClick = {}, totalItems = it.size) } ?: emptyList()
+                    resultFolders.getOrNull()?.map {
+                        FolderModel(folderId = it.id, name = it.name, totalItems = it.size)
+                    } ?: emptyList()
 
                 _uiState.update {
                     it.copy(folders = newFolders)

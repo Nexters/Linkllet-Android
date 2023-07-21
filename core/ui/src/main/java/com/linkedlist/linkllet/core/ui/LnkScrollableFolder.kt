@@ -20,12 +20,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.linkedlist.linkllet.core.designsystem.icon.LnkIcon
+import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.Plus
 
 // todo : model을 둘 위치 및 네이밍 컨벤션 논의 필요
 data class FolderModel(
+    val folderId: Long,
     val name: String,
     val totalItems: Int,
-    val onClick: () -> Unit,
 )
 
 // todo : 디자인시스템에 컬러 추가 후 수정
@@ -41,6 +43,7 @@ fun LnkScrollableFolder(
     modifier: Modifier = Modifier,
     folders: List<FolderModel>,
     addFolder: () -> Unit,
+    navigateToLinks: (Long) -> Unit,
 ) {
     Box(
         modifier = modifier
@@ -62,7 +65,7 @@ fun LnkScrollableFolder(
             ) {
                 Icon(
                     modifier = Modifier.size(28.dp),
-                    imageVector = Icons.Rounded.Add, // fixme : 디자인 시스템에 추가한 아이콘으로 변경해야 함
+                    imageVector = LnkIcon.Plus,
                     contentDescription = "폴더 추가",
                     tint = Color(0xFF779CFF),
                 )
@@ -72,7 +75,8 @@ fun LnkScrollableFolder(
         RecursiveLnkScrollableFolder(
             modifier = Modifier.padding(top = 65.dp),
             folders = folders,
-            colorKey = 0
+            colorKey = 0,
+            navigateToLinks = navigateToLinks,
         )
     }
 }
@@ -82,13 +86,14 @@ internal fun RecursiveLnkScrollableFolder(
     modifier: Modifier = Modifier,
     folders: List<FolderModel>,
     colorKey: Int,
+    navigateToLinks: (Long) -> Unit,
 ) {
     if (folders.isEmpty()) return
 
     val currentFolder = folders.first()
 
     Box(modifier.clickable {
-        currentFolder.onClick()
+        navigateToLinks(currentFolder.folderId)
     }) {
         LnkFolder(
             color = colorMap[colorKey] ?: Color.Gray,
@@ -99,7 +104,8 @@ internal fun RecursiveLnkScrollableFolder(
             RecursiveLnkScrollableFolder(
                 modifier = Modifier.padding(top = 65.dp),
                 folders = folders.subList(1, folders.size),
-                colorKey = (colorKey + 1) % 3
+                colorKey = (colorKey + 1) % 3,
+                navigateToLinks = navigateToLinks,
             )
         }
     }
@@ -109,10 +115,10 @@ internal fun RecursiveLnkScrollableFolder(
 @Composable
 private fun LnkScrollableFolderPreview() {
     val sampleList = listOf(
-        FolderModel(name = "기본", totalItems = 10, onClick = {}),
-        FolderModel(name = "폴더1", totalItems = 11, onClick = {}),
-        FolderModel(name = "폴더2", totalItems = 12, onClick = {}),
+        FolderModel(name = "기본", totalItems = 10, folderId = 1),
+        FolderModel(name = "폴더1", totalItems = 11, folderId = 2),
+        FolderModel(name = "폴더2", totalItems = 12, folderId = 3),
     )
 
-    LnkScrollableFolder(folders = sampleList, addFolder = {})
+    LnkScrollableFolder(folders = sampleList, addFolder = {}, navigateToLinks = {})
 }

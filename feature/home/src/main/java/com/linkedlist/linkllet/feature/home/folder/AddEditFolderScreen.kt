@@ -18,8 +18,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.linkedlist.linkllet.core.designsystem.icon.LnkIcon
 import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.X
@@ -34,7 +36,7 @@ fun AddEditFolderScreen(
     onBack: () -> Unit,
     viewModel: AddEditFolderViewModel = hiltViewModel(),
 ) {
-    val folderName by viewModel.folderName.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
 
     LaunchedEffect(key1 = Unit) {
         viewModel.eventFlow.collect {
@@ -66,10 +68,11 @@ fun AddEditFolderScreen(
             ) {
                 LnkTextFieldWithTitle(
                     modifier = Modifier.fillMaxWidth(),
-                    title = "폴더 제목", value = folderName,
+                    title = "폴더 제목", value = uiState.folderName,
                     onValueChange = viewModel::updateFolderName,
                     isVisibleMaxLengthNotice = true,
                     maxLength = 10,
+                    isError = uiState.error,
                 )
             }
             Spacer(modifier = Modifier.weight(1.0f))
@@ -81,6 +84,7 @@ fun AddEditFolderScreen(
                 buttonColor = Color.Black,
                 text = "저장하기",
                 textColor = Color.White,
+                enabled = uiState.folderName.isNotEmpty(),
             )
         }
     }
@@ -88,7 +92,7 @@ fun AddEditFolderScreen(
 
 @Composable
 fun AppBarTitle() {
-    Text("폴더 추가하기")
+    Text("폴더 추가하기", fontWeight = FontWeight.Bold, fontSize = 16.sp)
 }
 
 @Composable
