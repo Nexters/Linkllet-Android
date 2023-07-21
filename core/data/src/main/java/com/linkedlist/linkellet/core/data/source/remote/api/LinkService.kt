@@ -14,7 +14,7 @@ import retrofit2.http.Path
 interface LinkService {
 
     @POST("/api/v1/folders")
-    suspend fun addFolder(folder: AddFolderRequest): Response<Unit>
+    suspend fun addFolder(@Body folder: AddFolderRequest): Response<Unit>
 
     @GET("/api/v1/folders")
     suspend fun getFolders() : Response<FolderResponse>
