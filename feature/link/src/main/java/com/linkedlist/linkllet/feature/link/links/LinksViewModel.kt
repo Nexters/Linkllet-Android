@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.linkedlist.linkellet.core.data.repository.LinkRepository
+import com.linkedlist.linkllet.feature.link.addeditlink.AddEditLinkError
 import com.linkedlist.linkllet.feature.link.navigation.FOLDER_ID
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,6 +29,10 @@ data class LinksUiState(
     val isLinkDeleted : Boolean = false
 )
 
+enum class LinksError{
+    READY, NETWORK_ERROR
+}
+
 @HiltViewModel
 class LinksViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
@@ -41,6 +46,9 @@ class LinksViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(LinksUiState())
     val uiState: StateFlow<LinksUiState> = _uiState.asStateFlow()
 
+    private val _error = MutableStateFlow<LinksError>(LinksError.READY)
+    val error : StateFlow<LinksError> = _error.asStateFlow()
+
     fun fetchLinks() {
         viewModelScope.launch {
             try {
@@ -48,7 +56,7 @@ class LinksViewModel @Inject constructor(
                     linkRepository.getLinks(
                         id = it
                     ).catch {
-                        //error
+                        _error.emit(LinksError.NETWORK_ERROR)
                     }.collect {
                         it.onSuccess {
                             _uiState.emit(
@@ -64,13 +72,13 @@ class LinksViewModel @Inject constructor(
                                 )
                             )
                         }.onFailure {
-                            //error
+                            _error.emit(LinksError.NETWORK_ERROR)
                         }
                     }
                 }
 
             }catch (e : Exception){
-                //error
+                _error.emit(LinksError.NETWORK_ERROR)
             }
         }
     }
@@ -82,7 +90,7 @@ class LinksViewModel @Inject constructor(
                     linkRepository.deleteFolder(
                         id = it
                     ).catch {
-                        //error
+                        _error.emit(LinksError.NETWORK_ERROR)
                     }.collect {
                         it.onSuccess {
                             _uiState.emit(
@@ -91,13 +99,13 @@ class LinksViewModel @Inject constructor(
                                 )
                             )
                         }.onFailure {
-                            //error
+                            _error.emit(LinksError.NETWORK_ERROR)
                         }
                     }
                 }
 
             }catch (e : Exception){
-                //error
+                _error.emit(LinksError.NETWORK_ERROR)
             }
         }
     }
@@ -110,7 +118,7 @@ class LinksViewModel @Inject constructor(
                         id = it,
                         articleId = linkId
                     ).catch {
-                        //error
+                        _error.emit(LinksError.NETWORK_ERROR)
                     }.collect {
                         it.onSuccess {
                             _uiState.emit(
@@ -119,13 +127,13 @@ class LinksViewModel @Inject constructor(
                                 )
                             )
                         }.onFailure {
-                            //error
+                            _error.emit(LinksError.NETWORK_ERROR)
                         }
                     }
                 }
 
             }catch (e : Exception){
-                //error
+                _error.emit(LinksError.NETWORK_ERROR)
             }
         }
     }
