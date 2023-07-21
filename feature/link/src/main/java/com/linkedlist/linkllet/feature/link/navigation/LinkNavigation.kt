@@ -27,7 +27,8 @@ fun NavController.navigateToAddEditLink(navOptions: NavOptions? = null) {
 
 fun NavGraphBuilder.Links(
     navigateAddLink: () -> Unit,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    onShowSnackbar: suspend (String) -> Boolean,
 ) {
     composable(
         route = linksRoute,
@@ -40,17 +41,20 @@ fun NavGraphBuilder.Links(
         LinksScreen(
             navigateAddLink = navigateAddLink,
             onBack = onBack,
+            onShowSnackbar = onShowSnackbar,
             title = ""
         )
     }
 }
 
 fun NavGraphBuilder.AddEditLink(
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    onShowSnackbar: suspend (String) -> Boolean,
 ) {
     composable(route = addEditLinkRoute) {
         AddEditLinkScreen(
-            onBack = onBack
+            onBack = onBack,
+            onShowSnackbar = onShowSnackbar
         )
     }
 }
