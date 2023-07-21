@@ -25,7 +25,6 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import com.linkedlist.linkllet.core.designsystem.theme.ColorCC000000
 import com.linkedlist.linkllet.core.designsystem.theme.Typography
-import com.linkedlist.linkllet.core.ui.LnkSnackbarHost
 import com.linkedlist.linkllet.navigation.LnkNavHost
 import kotlinx.coroutines.launch
 
