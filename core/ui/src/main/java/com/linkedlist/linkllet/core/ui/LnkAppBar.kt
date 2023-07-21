@@ -23,6 +23,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.linkedlist.linkllet.core.designsystem.icon.LnkIcon
+import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.ArrowBack
+import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.Settings
 
 @Composable
 fun LnkAppBar(
@@ -41,6 +44,7 @@ fun LnkAppBar(
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             backButton()
             Spacer(modifier = Modifier.weight(1.0f))
@@ -57,12 +61,12 @@ fun LnkAppBarPreview() {
         title = { Text("Linkllet") },
         backButton = {
             Icon(
-                imageVector = Icons.Rounded.ArrowBack,
+                imageVector = LnkIcon.ArrowBack,
                 contentDescription = "back"
             )
         },
         action = {
-            Icon(imageVector = Icons.Rounded.Settings, contentDescription = "settings")
+            Icon(imageVector = LnkIcon.Settings, contentDescription = "settings")
         },
     )
 }
@@ -73,7 +77,7 @@ fun LnkAppBarPreview2() {
     LnkAppBar(
         title = { Text("Linkllet") },
         action = {
-            Icon(imageVector = Icons.Rounded.Settings, contentDescription = "settings")
+            Icon(imageVector = LnkIcon.Settings, contentDescription = "settings")
         },
     )
 }

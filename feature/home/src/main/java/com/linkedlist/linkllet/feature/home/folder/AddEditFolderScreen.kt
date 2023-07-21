@@ -48,6 +48,7 @@ fun AddEditFolderScreen(
     }
 
     Scaffold(
+        containerColor = Color.White,
         topBar = {
             LnkAppBar(
                 title = { AppBarTitle() },

@@ -50,6 +50,7 @@ fun LnkScrollableFolder(
             .verticalScroll(rememberScrollState())
     ) {
         Surface(
+            color = Color.Transparent,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(165.dp)
