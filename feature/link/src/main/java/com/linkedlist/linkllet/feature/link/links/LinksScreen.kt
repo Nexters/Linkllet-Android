@@ -37,6 +37,7 @@ import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.Clip
 import com.linkedlist.linkllet.core.designsystem.theme.Typography
 import com.linkedlist.linkllet.core.ui.LinkItem
 import com.linkedlist.linkllet.core.ui.LnkAppBar
+import com.linkedlist.linkllet.core.ui.LnkDialog
 import com.linkedlist.linkllet.core.ui.LnkFloatingActionButton
 
 
@@ -45,11 +46,15 @@ import com.linkedlist.linkllet.core.ui.LnkFloatingActionButton
 fun LinksScreen(
     navigateAddLink: () -> Unit,
     onBack: () -> Unit,
+    onShowSnackbar: suspend (String) -> Boolean,
     title: String,
     viewModel: LinksViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
     var dropdownState by remember { mutableStateOf(false) }
+
+    var dialogFolderState by remember { mutableStateOf(false) }
+    var dialogLinkState by remember { mutableStateOf<Long?>(null) }
 
     LaunchedEffect(true) {
         viewModel.fetchLinks()
@@ -61,9 +66,37 @@ fun LinksScreen(
     }
 
     LaunchedEffect(key1 = uiState.isLinkDeleted) {
-        if(uiState.isLinkDeleted)
+        if(uiState.isLinkDeleted){
+            onShowSnackbar("링크를 삭제했어요.")
             viewModel.fetchLinks()
+        }
+
     }
+
+    LnkDialog(
+        text = "폴더를 삭제할건가요?",
+        visible = dialogFolderState ,
+        onDismissRequest = {
+            dialogFolderState = !dialogFolderState
+        },
+        onOk = {
+            viewModel.deleteFolder()
+        }
+    )
+
+    LnkDialog(
+        text = "링크를 삭제할건가요?",
+        visible = dialogLinkState != null,
+        onDismissRequest = {
+            dialogLinkState = null
+        },
+        onOk = {
+            dialogLinkState?.let {
+                viewModel.deleteLink(it)
+            }
+
+        }
+    )
 
     Scaffold(
         floatingActionButton = {
@@ -112,7 +145,7 @@ fun LinksScreen(
                         DropdownMenuItem(text = {
                             Text(text = "폴더 삭제하기")
                         }, onClick = {
-                            viewModel.deleteFolder()
+                            dialogFolderState = true
                             dropdownState = !dropdownState
                         })
                     }
@@ -134,7 +167,7 @@ fun LinksScreen(
                         link = it.link,
                         date = it.date,
                         onDelete = {
-                            viewModel.deleteLink(it.id)
+                            dialogLinkState = it.id
                         })
                     Spacer(modifier = Modifier.size(8.dp))
                 }

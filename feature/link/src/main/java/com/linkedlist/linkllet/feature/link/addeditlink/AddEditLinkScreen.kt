@@ -30,6 +30,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.linkedlist.linkllet.core.designsystem.theme.Typography
 import com.linkedlist.linkllet.core.ui.LnkAppBar
 import com.linkedlist.linkllet.core.ui.LnkButtonWithMargin
+import com.linkedlist.linkllet.core.ui.LnkDialog
 import com.linkedlist.linkllet.core.ui.LnkDropdownTextMenu
 import com.linkedlist.linkllet.core.ui.LnkTextFieldWithTitle
 import com.linkedlist.linkllet.core.ui.onTabClearFocusing
@@ -38,21 +39,46 @@ import com.linkedlist.linkllet.core.ui.onTabClearFocusing
 fun AddEditLinkScreen(
     modifier: Modifier = Modifier,
     viewModel : AddEditLinkViewModel = hiltViewModel(),
-    onBack : () -> Unit
+    onBack : () -> Unit,
+    onShowSnackbar: suspend (String) -> Boolean,
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val error by viewModel.error.collectAsState()
     var dropdownState by remember { mutableStateOf(false) }
+
+    var dialogState by remember { mutableStateOf(false) }
+
+    LnkDialog(
+        text = "작성한 내용이 취소됩니다. \n작성을 취소할건가요?",
+        visible = dialogState,
+        onDismissRequest = {
+            dialogState = !dialogState
+        },
+        onOk = {
+            onBack()
+        }
+    )
+
 
     LaunchedEffect(uiState.isLinkSaved){
         if(uiState.isLinkSaved) onBack()
     }
 
     LaunchedEffect(error){
-        if(error == AddEditLinkError.NETWORK_ERROR){
-            //snackbar
-            viewModel.updateError(AddEditLinkError.READY)
+        when(error){
+            AddEditLinkError.NETWORK_ERROR -> {
+                onShowSnackbar("링크를 저장할 수 없어요.")
+                viewModel.updateError(AddEditLinkError.READY)
+            }
+            AddEditLinkError.READY -> {
+
+            }
+            else -> {
+                onShowSnackbar("정보를 입력해주세요.")
+            }
+
         }
+
     }
 
 
@@ -74,7 +100,7 @@ fun AddEditLinkScreen(
             action = {
                 Icon(
                     modifier = Modifier.clickable {
-                        onBack()
+                        dialogState = !dialogState
                     },
                     imageVector = Icons.Rounded.Close, contentDescription = "settings")
             }

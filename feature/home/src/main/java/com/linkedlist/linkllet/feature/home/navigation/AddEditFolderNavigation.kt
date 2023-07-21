@@ -12,7 +12,10 @@ fun NavController.navigateToAddEditFolder(navOptions: NavOptions? = null) {
     this.navigate(addEditFolderRoute, navOptions)
 }
 
-fun NavGraphBuilder.AddEditFolder(onBack: () -> Unit) {
+fun NavGraphBuilder.AddEditFolder(
+    onBack: () -> Unit,
+    onShowSnackbar: suspend (String) -> Boolean,
+) {
     composable(route = addEditFolderRoute) {
         AddEditFolderScreen(onBack = onBack)
     }
