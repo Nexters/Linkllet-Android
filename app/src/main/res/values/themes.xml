@@ -3,9 +3,5 @@
 
     <style name="Theme.Linkllet" parent="android:Theme.Material.Light.NoActionBar" />
 
-    <style name="SplashScreenTheme" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">@color/white</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash</item>
-        <item name="postSplashScreenTheme">@style/Theme.Linkllet</item>
-    </style>
+
 </resources>
