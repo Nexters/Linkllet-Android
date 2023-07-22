@@ -22,6 +22,7 @@ data class AddEditLinkUiState(
     val link: String = "",
     val title: String = "",
     val folders: List<Folder> = emptyList(),
+    val isButtonEmphasized : Boolean = false,
     val isLoading: Boolean = false,
     val isLinkSaved: Boolean = false
 )
@@ -39,8 +40,21 @@ class AddEditLinkViewModel @Inject constructor(
     private val _error = MutableStateFlow<AddEditLinkError>(AddEditLinkError.READY)
     val error : StateFlow<AddEditLinkError> = _error.asStateFlow()
 
+    private val _snackbarState = MutableStateFlow("")
+    val snackbarState: StateFlow<String> = _snackbarState.asStateFlow()
+
     init {
         fetchFolders()
+    }
+
+    fun updateIsButtonEmphasized(emphasized : Boolean){
+        _uiState.value = uiState.value.copy(
+            isButtonEmphasized = emphasized
+        )
+    }
+
+    fun updateSnackbarState(state : String){
+        _snackbarState.value = state
     }
 
     fun updateError(error : AddEditLinkError){
@@ -110,6 +124,8 @@ class AddEditLinkViewModel @Inject constructor(
                         }
 
                     }
+                }else {
+                    _snackbarState.emit("정보를 입력해주세요.")
                 }
             }catch (e: Exception){
                 _error.emit(AddEditLinkError.NETWORK_ERROR)
@@ -122,6 +138,10 @@ class AddEditLinkViewModel @Inject constructor(
         _uiState.update {
             it.copy(link = link)
         }
+
+        if(link.isNotBlank() && uiState.value.title.isNotBlank()) _uiState.value = uiState.value.copy(isButtonEmphasized = true)
+        else _uiState.value = uiState.value.copy(isButtonEmphasized = false)
+
         if(error.value == AddEditLinkError.TITLE_LINK_BLANK) _error.value = AddEditLinkError.TITLE_BLANK
         else if(error.value == AddEditLinkError.LINK_BLANK) _error.value = AddEditLinkError.READY
     }
@@ -130,6 +150,10 @@ class AddEditLinkViewModel @Inject constructor(
         _uiState.update {
             it.copy(title = title)
         }
+
+        if(title.isNotBlank() && uiState.value.link.isNotBlank()) _uiState.value = uiState.value.copy(isButtonEmphasized = true)
+        else _uiState.value = uiState.value.copy(isButtonEmphasized = false)
+
         if(error.value == AddEditLinkError.TITLE_LINK_BLANK) _error.value = AddEditLinkError.LINK_BLANK
         else if(error.value == AddEditLinkError.TITLE_BLANK) _error.value = AddEditLinkError.READY
     }
