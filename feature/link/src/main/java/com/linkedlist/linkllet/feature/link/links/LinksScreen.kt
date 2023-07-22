@@ -27,13 +27,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.linkedlist.linkllet.core.designsystem.icon.LnkIcon
 import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.Clip
+import com.linkedlist.linkllet.core.designsystem.theme.Color878787
 import com.linkedlist.linkllet.core.designsystem.theme.Typography
 import com.linkedlist.linkllet.core.ui.LinkItem
 import com.linkedlist.linkllet.core.ui.LnkAppBar
@@ -47,7 +50,6 @@ fun LinksScreen(
     navigateAddLink: () -> Unit,
     onBack: () -> Unit,
     onShowSnackbar: suspend (String) -> Boolean,
-    title: String,
     viewModel: LinksViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -115,7 +117,7 @@ fun LinksScreen(
             LnkAppBar(
                 title = {
                     Text(
-                        text = title,
+                        text = uiState.folderTitle,
                         style = Typography.titleLarge,
                         overflow = TextOverflow.Ellipsis,
                         maxLines = 1,
@@ -130,48 +132,64 @@ fun LinksScreen(
                     )
                 },
                 action = {
-                    Text(
-                        modifier = Modifier
-                            .clickable {
+                    Box(){
+                        Text(
+                            modifier = Modifier
+                                .clickable {
+                                    dropdownState = !dropdownState
+                                },
+                            text = "편집",
+                            style = Typography.titleMedium
+                        )
+                        DropdownMenu(
+                            modifier = Modifier.background(Color.White),
+                            expanded = dropdownState,
+                            onDismissRequest = { dropdownState = !dropdownState }) {
+                            DropdownMenuItem(text = {
+                                Text(text = "폴더 삭제하기")
+                            }, onClick = {
+                                dialogFolderState = true
                                 dropdownState = !dropdownState
-                            },
-                        text = "편집",
-                        style = Typography.titleMedium
-                    )
-                    DropdownMenu(
-                        modifier = Modifier.background(Color.White),
-                        expanded = dropdownState,
-                        onDismissRequest = { dropdownState = !dropdownState }) {
-                        DropdownMenuItem(text = {
-                            Text(text = "폴더 삭제하기")
-                        }, onClick = {
-                            dialogFolderState = true
-                            dropdownState = !dropdownState
-                        })
+                            })
+                        }
                     }
 
-                }
 
+                },
+                modifier = Modifier.shadow(elevation = 4.dp), // fixme : 임시 그림자
             )
         }
     ) { padding ->
-        Box(modifier = Modifier.padding(padding)) {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(start = 16.dp, end = 20.dp, top = 20.dp),
-                state = rememberLazyListState()
-            ) {
-                items(uiState.links) {
-                    LinkItem(
-                        title = it.title,
-                        link = it.link,
-                        date = it.date,
-                        onDelete = {
-                            dialogLinkState = it.id
-                        })
-                    Spacer(modifier = Modifier.size(8.dp))
+        Box(modifier = Modifier
+            .background(Color.White)
+            .fillMaxSize()
+            .padding(padding)) {
+            if(uiState.links.isNotEmpty()){
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(start = 16.dp, end = 20.dp, top = 20.dp),
+                    state = rememberLazyListState()
+                ) {
+                    items(uiState.links) {
+                        LinkItem(
+                            title = it.title,
+                            link = it.link,
+                            date = it.date,
+                            onDelete = {
+                                dialogLinkState = it.id
+                            })
+                        Spacer(modifier = Modifier.size(8.dp))
+                    }
                 }
+            }else {
+                Text(
+                    modifier = Modifier.align(Alignment.Center),
+                    text = "링크를 저장해 주세요.",
+                    style = Typography.labelMedium,
+                    color = Color878787
+                )
             }
+
         }
 
     }

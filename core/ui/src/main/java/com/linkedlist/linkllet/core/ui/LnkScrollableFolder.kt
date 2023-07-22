@@ -43,7 +43,7 @@ fun LnkScrollableFolder(
     modifier: Modifier = Modifier,
     folders: List<FolderModel>,
     addFolder: () -> Unit,
-    navigateToLinks: (Long) -> Unit,
+    navigateToLinks: (Long,String) -> Unit,
 ) {
     Box(
         modifier = modifier
@@ -87,14 +87,14 @@ internal fun RecursiveLnkScrollableFolder(
     modifier: Modifier = Modifier,
     folders: List<FolderModel>,
     colorKey: Int,
-    navigateToLinks: (Long) -> Unit,
+    navigateToLinks: (Long,String) -> Unit,
 ) {
     if (folders.isEmpty()) return
 
     val currentFolder = folders.first()
 
     Box(modifier.clickable {
-        navigateToLinks(currentFolder.folderId)
+        navigateToLinks(currentFolder.folderId,currentFolder.name)
     }) {
         LnkFolder(
             color = colorMap[colorKey] ?: Color.Gray,
@@ -121,5 +121,5 @@ private fun LnkScrollableFolderPreview() {
         FolderModel(name = "폴더2", totalItems = 12, folderId = 3),
     )
 
-    LnkScrollableFolder(folders = sampleList, addFolder = {}, navigateToLinks = {})
+    LnkScrollableFolder(folders = sampleList, addFolder = {}, navigateToLinks = {_,_ ->})
 }

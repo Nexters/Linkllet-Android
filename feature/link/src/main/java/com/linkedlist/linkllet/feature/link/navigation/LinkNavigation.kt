@@ -10,15 +10,17 @@ import com.linkedlist.linkllet.feature.link.addeditlink.AddEditLinkScreen
 import com.linkedlist.linkllet.feature.link.links.LinksScreen
 
 const val FOLDER_ID = "folderId"
+const val FOLDER_TITLE = "folderTitle"
 
-const val linksRoute = "links/{${FOLDER_ID}}"
+const val linksRoute = "links/{${FOLDER_ID}}/{${FOLDER_TITLE}}"
 const val addEditLinkRoute = "addEditLink"
 
 fun NavController.navigateToLinks(
     navOptions: NavOptions? = null,
-    folderId : Long
+    folderId : Long,
+    title : String
 ) {
-    this.navigate("links/${folderId}", navOptions)
+    this.navigate("links/${folderId}/${title}", navOptions)
 }
 
 fun NavController.navigateToAddEditLink(navOptions: NavOptions? = null) {
@@ -30,19 +32,22 @@ fun NavGraphBuilder.Links(
     onBack: () -> Unit,
     onShowSnackbar: suspend (String) -> Boolean,
 ) {
+
     composable(
         route = linksRoute,
         arguments = listOf(
             navArgument(FOLDER_ID) {
                 type = NavType.LongType
+            },
+            navArgument(FOLDER_TITLE) {
+                type = NavType.StringType
             }
         )
     ) {
         LinksScreen(
             navigateAddLink = navigateAddLink,
             onBack = onBack,
-            onShowSnackbar = onShowSnackbar,
-            title = ""
+            onShowSnackbar = onShowSnackbar
         )
     }
 }

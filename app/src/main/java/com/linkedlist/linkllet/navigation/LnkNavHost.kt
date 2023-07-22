@@ -30,7 +30,9 @@ fun LnkNavHost(
         Home(
             navigateAddLink = navController::navigateToAddEditLink,
             navigateToAddEdit = navController::navigateToAddEditFolder,
-            navigateToLinks = { navController.navigateToLinks(folderId = it) },
+            navigateToLinks = { id, title ->
+                navController.navigateToLinks(folderId = id,title = title )
+            },
         )
         AddEditLink(
             onBack = {

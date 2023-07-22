@@ -1,17 +1,21 @@
 package com.linkedlist.linkllet.feature.link.links
 
+import android.annotation.SuppressLint
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.linkedlist.linkellet.core.data.repository.LinkRepository
-import com.linkedlist.linkllet.feature.link.addeditlink.AddEditLinkError
 import com.linkedlist.linkllet.feature.link.navigation.FOLDER_ID
+import com.linkedlist.linkllet.feature.link.navigation.FOLDER_TITLE
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.TimeZone
 import javax.inject.Inject
 
 
@@ -23,6 +27,7 @@ data class Link(
 )
 
 data class LinksUiState(
+    val folderTitle : String = "",
     val links: List<Link> = emptyList(),
     val isLoading: Boolean = false,
     val isFolderDeleted : Boolean = false,
@@ -42,8 +47,11 @@ class LinksViewModel @Inject constructor(
     private val folderId = savedStateHandle.get<Long?>(
         key = FOLDER_ID
     )
+    private val folderTitle = savedStateHandle.get<String?>(
+        key = FOLDER_TITLE
+    )
 
-    private val _uiState = MutableStateFlow(LinksUiState())
+    private val _uiState = MutableStateFlow(LinksUiState(folderTitle = folderTitle ?: ""))
     val uiState: StateFlow<LinksUiState> = _uiState.asStateFlow()
 
     private val _error = MutableStateFlow<LinksError>(LinksError.READY)
@@ -66,7 +74,7 @@ class LinksViewModel @Inject constructor(
                                             id = it.id,
                                             title = it.name,
                                             link = it.url,
-                                            date = "2023.07.20"
+                                            date = formatDateString(it.createAt)
                                         )
                                     }
                                 )
@@ -135,6 +143,24 @@ class LinksViewModel @Inject constructor(
             }catch (e : Exception){
                 _error.emit(LinksError.NETWORK_ERROR)
             }
+        }
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    fun formatDateString(input: String): String { /// 수정 필요.
+        try {
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+            dateFormat.timeZone = TimeZone.getTimeZone("UTC")
+            val date = dateFormat.parse(input)
+
+            // 원하는 출력 형식으로 포맷팅할 SimpleDateFormat을 생성합니다.
+            val outputFormat = SimpleDateFormat("yyyy.MM.dd")
+
+            // Date 객체를 원하는 형식으로 포맷팅합니다.
+            return outputFormat.format(date)
+        }catch (e: Exception){
+            Log.e("123123",e.toString())
+            return ""
         }
     }
 }
