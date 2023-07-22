@@ -6,5 +6,6 @@ import kotlinx.serialization.Serializable
 data class Link(
     val id : Long,
     val name : String,
-    val url : String
+    val url : String,
+    val createAt : String
 )
