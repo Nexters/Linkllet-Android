@@ -132,25 +132,28 @@ fun LinksScreen(
                     )
                 },
                 action = {
-                    Text(
-                        modifier = Modifier
-                            .clickable {
+                    Box(){
+                        Text(
+                            modifier = Modifier
+                                .clickable {
+                                    dropdownState = !dropdownState
+                                },
+                            text = "편집",
+                            style = Typography.titleMedium
+                        )
+                        DropdownMenu(
+                            modifier = Modifier.background(Color.White),
+                            expanded = dropdownState,
+                            onDismissRequest = { dropdownState = !dropdownState }) {
+                            DropdownMenuItem(text = {
+                                Text(text = "폴더 삭제하기")
+                            }, onClick = {
+                                dialogFolderState = true
                                 dropdownState = !dropdownState
-                            },
-                        text = "편집",
-                        style = Typography.titleMedium
-                    )
-                    DropdownMenu(
-                        modifier = Modifier.background(Color.White),
-                        expanded = dropdownState,
-                        onDismissRequest = { dropdownState = !dropdownState }) {
-                        DropdownMenuItem(text = {
-                            Text(text = "폴더 삭제하기")
-                        }, onClick = {
-                            dialogFolderState = true
-                            dropdownState = !dropdownState
-                        })
+                            })
+                        }
                     }
+
 
                 },
                 modifier = Modifier.shadow(elevation = 4.dp), // fixme : 임시 그림자
