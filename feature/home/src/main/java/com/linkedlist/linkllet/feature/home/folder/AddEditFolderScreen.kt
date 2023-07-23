@@ -1,5 +1,6 @@
 package com.linkedlist.linkllet.feature.home.folder
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
@@ -27,8 +29,10 @@ import com.linkedlist.linkllet.core.designsystem.icon.LnkIcon
 import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.X
 import com.linkedlist.linkllet.core.ui.LnkAppBar
 import com.linkedlist.linkllet.core.ui.LnkButton
+import com.linkedlist.linkllet.core.ui.LnkDialog
 import com.linkedlist.linkllet.core.ui.LnkIconButton
 import com.linkedlist.linkllet.core.ui.LnkTextFieldWithTitle
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -37,6 +41,20 @@ fun AddEditFolderScreen(
     viewModel: AddEditFolderViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val coroutineScope = rememberCoroutineScope()
+
+    BackHandler(enabled = true) {
+        coroutineScope.launch {
+            viewModel.navigateUp()
+        }
+    }
+
+    LnkDialog(
+        text = "작성한 내용이 삭제됩니다.\n작성을 취소할 건가요?",
+        visible = uiState.cancelDialogVisibility,
+        onDismissRequest = viewModel::hideCancelDialog,
+        onOk = { onBack() }
+    )
 
     LaunchedEffect(key1 = Unit) {
         viewModel.eventFlow.collect {
@@ -52,7 +70,7 @@ fun AddEditFolderScreen(
         topBar = {
             LnkAppBar(
                 title = { AppBarTitle() },
-                action = { Close(onBack = onBack) },
+                action = { Close(onBack = viewModel::navigateUp) },
                 modifier = Modifier.shadow(elevation = 4.dp), // fixme : 임시 그림자
             )
         }

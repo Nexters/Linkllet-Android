@@ -20,6 +20,7 @@ sealed class Event {
 data class AddEditFolderUiState(
     val folderName: String = "",
     val error: Boolean = false,
+    val cancelDialogVisibility: Boolean = false,
 )
 
 @HiltViewModel
@@ -54,6 +55,20 @@ class AddEditFolderViewModel @Inject constructor(
                     _eventFlow.emit(Event.CloseScreen)
                 }
             }
+        }
+    }
+
+    fun navigateUp() {
+        if(uiState.value.folderName.trim().isBlank()) {
+            viewModelScope.launch {
+                _eventFlow.emit(Event.CloseScreen)
+            }
+        } else _uiState.update { it.copy(cancelDialogVisibility = true) }
+    }
+
+    fun hideCancelDialog() {
+        _uiState.update {
+            it.copy(cancelDialogVisibility = false)
         }
     }
 }
