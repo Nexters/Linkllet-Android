@@ -28,7 +28,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.linkedlist.linkllet.core.designsystem.icon.LnkIcon
 import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.X
 import com.linkedlist.linkllet.core.ui.LnkAppBar
-import com.linkedlist.linkllet.core.ui.LnkButton
+import com.linkedlist.linkllet.core.ui.LnkButtonWithMargin
 import com.linkedlist.linkllet.core.ui.LnkDialog
 import com.linkedlist.linkllet.core.ui.LnkIconButton
 import com.linkedlist.linkllet.core.ui.LnkTextFieldWithTitle
@@ -99,15 +99,10 @@ fun AddEditFolderScreen(
                 )
             }
             Spacer(modifier = Modifier.weight(1.0f))
-            LnkButton(
-                modifier = Modifier
-                    .padding(horizontal = 24.dp, vertical = 14.dp)
-                    .height(50.dp),
+            LnkButtonWithMargin(
                 onClick = viewModel::addFolder,
-                buttonColor = Color.Black,
                 text = "저장하기",
-                textColor = Color.White,
-                enabled = uiState.folderName.isNotEmpty(),
+                isEmphasized = uiState.folderName.isNotEmpty(),
             )
         }
     }
