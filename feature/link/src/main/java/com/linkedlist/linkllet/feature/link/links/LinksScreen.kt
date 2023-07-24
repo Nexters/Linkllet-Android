@@ -69,8 +69,8 @@ fun LinksScreen(
 
     LaunchedEffect(key1 = uiState.isLinkDeleted) {
         if(uiState.isLinkDeleted){
-            onShowSnackbar("링크를 삭제했어요.")
             viewModel.fetchLinks()
+            onShowSnackbar("링크를 삭제했어요.")
         }
 
     }
