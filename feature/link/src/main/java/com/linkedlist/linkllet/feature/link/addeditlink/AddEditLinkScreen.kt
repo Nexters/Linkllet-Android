@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -30,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.linkedlist.linkllet.core.designsystem.theme.Typography
@@ -141,7 +143,10 @@ fun AddEditLinkScreen(
                         },
                         isError = error == AddEditLinkError.LINK_BLANK || error == AddEditLinkError.TITLE_LINK_BLANK,
                         hint = "링크를 붙여주세요.",
-                        isVisibleMaxLengthNotice = false
+                        isVisibleMaxLengthNotice = false,
+                        keyboardOptions = KeyboardOptions.Default.copy(
+                            imeAction = ImeAction.Next
+                        )
                     )
                     Spacer(modifier = Modifier.size(40.dp))
 
@@ -155,6 +160,9 @@ fun AddEditLinkScreen(
                         isError = error == AddEditLinkError.TITLE_BLANK || error == AddEditLinkError.TITLE_LINK_BLANK,
                         hint = "제목을 입력해 주세요.",
                         maxLength = 10,
+                        keyboardOptions = KeyboardOptions.Default.copy(
+                            imeAction = ImeAction.Done
+                        ),
                         isVisibleMaxLengthNotice = true
                     )
 
