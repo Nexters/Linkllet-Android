@@ -47,7 +47,7 @@ import com.linkedlist.linkllet.core.ui.LnkFloatingActionButton
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LinksScreen(
-    navigateAddLink: () -> Unit,
+    navigateAddLink: (Long) -> Unit,
     onBack: () -> Unit,
     onShowSnackbar: suspend (String) -> Boolean,
     viewModel: LinksViewModel = hiltViewModel()
@@ -103,7 +103,9 @@ fun LinksScreen(
     Scaffold(
         floatingActionButton = {
             LnkFloatingActionButton(
-                onClick = { navigateAddLink() }
+                onClick = { navigateAddLink(
+                    viewModel.folderId ?: -1
+                ) }
             ) {
                 Icon(
                     imageVector = LnkIcon.Clip,
