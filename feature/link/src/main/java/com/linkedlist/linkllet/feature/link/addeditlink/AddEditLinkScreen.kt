@@ -1,5 +1,6 @@
 package com.linkedlist.linkllet.feature.link.addeditlink
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -58,6 +59,10 @@ fun AddEditLinkScreen(
     var dialogState by remember { mutableStateOf(false) }
 
     val focusManager = LocalFocusManager.current
+
+    BackHandler() {
+        dialogState = true
+    }
 
     LnkDialog(
         text = "작성한 내용이 취소됩니다. \n작성을 취소할건가요?",
