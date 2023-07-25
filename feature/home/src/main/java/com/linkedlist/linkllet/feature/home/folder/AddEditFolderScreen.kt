@@ -1,5 +1,6 @@
 package com.linkedlist.linkllet.feature.home.folder
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
@@ -26,22 +28,42 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.linkedlist.linkllet.core.designsystem.icon.LnkIcon
 import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.X
 import com.linkedlist.linkllet.core.ui.LnkAppBar
-import com.linkedlist.linkllet.core.ui.LnkButton
+import com.linkedlist.linkllet.core.ui.LnkButtonWithMargin
+import com.linkedlist.linkllet.core.ui.LnkDialog
 import com.linkedlist.linkllet.core.ui.LnkIconButton
 import com.linkedlist.linkllet.core.ui.LnkTextFieldWithTitle
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddEditFolderScreen(
     onBack: () -> Unit,
     viewModel: AddEditFolderViewModel = hiltViewModel(),
+    onShowSnackbar: suspend (String) -> Boolean,
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val coroutineScope = rememberCoroutineScope()
+
+    BackHandler(enabled = true) {
+        coroutineScope.launch {
+            viewModel.navigateUp()
+        }
+    }
+
+    LnkDialog(
+        text = "작성한 내용이 삭제됩니다.\n작성을 취소할 건가요?",
+        visible = uiState.cancelDialogVisibility,
+        onDismissRequest = viewModel::hideCancelDialog,
+        onOk = { onBack() }
+    )
 
     LaunchedEffect(key1 = Unit) {
-        viewModel.eventFlow.collect {
+        viewModel.eventsFlow.collect {
             when (it) {
                 is Event.CloseScreen -> onBack()
+                is Event.ShowToast -> {
+                    onShowSnackbar(it.message)
+                }
                 else -> {}
             }
         }
@@ -52,7 +74,7 @@ fun AddEditFolderScreen(
         topBar = {
             LnkAppBar(
                 title = { AppBarTitle() },
-                action = { Close(onBack = onBack) },
+                action = { Close(onBack = viewModel::navigateUp) },
                 modifier = Modifier.shadow(elevation = 4.dp), // fixme : 임시 그림자
             )
         }
@@ -77,15 +99,10 @@ fun AddEditFolderScreen(
                 )
             }
             Spacer(modifier = Modifier.weight(1.0f))
-            LnkButton(
-                modifier = Modifier
-                    .padding(horizontal = 24.dp, vertical = 14.dp)
-                    .height(50.dp),
+            LnkButtonWithMargin(
                 onClick = viewModel::addFolder,
-                buttonColor = Color.Black,
                 text = "저장하기",
-                textColor = Color.White,
-                enabled = uiState.folderName.isNotEmpty(),
+                isEmphasized = uiState.folderName.isNotEmpty(),
             )
         }
     }
@@ -106,5 +123,5 @@ fun Close(onBack: () -> Unit) {
 @Composable
 @Preview
 fun AddEditFolderScreenPreview() {
-    AddEditFolderScreen(onBack = {})
+    AddEditFolderScreen(onBack = {}, onShowSnackbar = { _: String -> true })
 }

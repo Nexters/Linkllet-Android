@@ -17,6 +17,6 @@ fun NavGraphBuilder.AddEditFolder(
     onShowSnackbar: suspend (String) -> Boolean,
 ) {
     composable(route = addEditFolderRoute) {
-        AddEditFolderScreen(onBack = onBack)
+        AddEditFolderScreen(onBack = onBack, onShowSnackbar = onShowSnackbar)
     }
 }
