@@ -5,6 +5,10 @@ plugins {
     id 'com.google.dagger.hilt.android'
 }
 
+static def getRevisionCount() {
+    return Integer.parseInt('git rev-list --count HEAD'.execute().text.trim())
+}
+
 android {
     namespace 'com.linkedlist.linkllet'
     compileSdk 33
@@ -13,7 +17,7 @@ android {
         applicationId "com.linkedlist.linkllet"
         minSdk 24
         targetSdk 33
-        versionCode 1
+        versionCode getRevisionCount()
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
