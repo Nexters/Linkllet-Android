@@ -1,5 +1,10 @@
 package com.linkedlist.linkllet.feature.link.links
 
+import android.util.Log
+import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -34,6 +39,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.accompanist.web.AccompanistWebChromeClient
+import com.google.accompanist.web.WebContent
+import com.google.accompanist.web.WebView
+import com.google.accompanist.web.WebViewState
+import com.google.accompanist.web.rememberWebViewNavigator
 import com.linkedlist.linkllet.core.designsystem.icon.LnkIcon
 import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.Clip
 import com.linkedlist.linkllet.core.designsystem.theme.Color878787
@@ -52,11 +62,38 @@ fun LinksScreen(
     onShowSnackbar: suspend (String) -> Boolean,
     viewModel: LinksViewModel = hiltViewModel()
 ) {
+    val webViewClient = AccompanistWebChromeClient()
+    val webViewNavigator = rememberWebViewNavigator()
+
     val uiState by viewModel.uiState.collectAsState()
     var dropdownState by remember { mutableStateOf(false) }
 
     var dialogFolderState by remember { mutableStateOf(false) }
     var dialogLinkState by remember { mutableStateOf<Long?>(null) }
+    
+    var webviewState by remember {
+        mutableStateOf<WebViewState?>(null)
+    }
+
+    BackHandler() {
+        if(webViewNavigator.canGoBack){
+            webViewNavigator.navigateBack()
+        }else if(webviewState != null){
+            webviewState = null
+        }else {
+            onBack()
+        }
+    }
+
+    LaunchedEffect(key1 = Unit){
+        viewModel.eventsFlow.collect {
+            when(it){
+                is Event.ShowLink -> {
+                    webviewState = WebViewState(WebContent.Url(it.url))
+                }
+            }
+        }
+    }
 
     LaunchedEffect(true) {
         viewModel.fetchLinks()
@@ -74,6 +111,7 @@ fun LinksScreen(
         }
 
     }
+
 
     LnkDialog(
         text = "폴더를 삭제할건가요?",
@@ -99,100 +137,121 @@ fun LinksScreen(
 
         }
     )
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ){
+        Scaffold(
+            floatingActionButton = {
+                LnkFloatingActionButton(
+                    onClick = { navigateAddLink(
+                        viewModel.folderId ?: -1
+                    ) }
+                ) {
+                    Icon(
+                        imageVector = LnkIcon.Clip,
+                        contentDescription = "링크 추가",
+                        tint = Color.White
+                    )
+                }
+            },
+            floatingActionButtonPosition = FabPosition.End,
+            topBar = {
+                LnkAppBar(
+                    title = {
+                        Text(
+                            text = uiState.folderTitle,
+                            style = Typography.titleLarge,
+                            overflow = TextOverflow.Ellipsis,
+                            maxLines = 1,
+                        )
+                    },
+                    backButton = {
+                        Icon(
+                            modifier = Modifier.clickable {
+                                onBack()
+                            },
+                            imageVector = Icons.Rounded.ArrowBack, contentDescription = "back"
+                        )
+                    },
+                    action = {
+                        Box(){
+                            Text(
+                                modifier = Modifier
+                                    .clickable {
+                                        dropdownState = !dropdownState
+                                    },
+                                text = "편집",
+                                style = Typography.titleMedium
+                            )
+                            DropdownMenu(
+                                modifier = Modifier.background(Color.White),
+                                expanded = dropdownState,
+                                onDismissRequest = { dropdownState = !dropdownState }) {
+                                DropdownMenuItem(text = {
+                                    Text(text = "폴더 삭제하기")
+                                }, onClick = {
+                                    dialogFolderState = true
+                                    dropdownState = !dropdownState
+                                })
+                            }
+                        }
 
-    Scaffold(
-        floatingActionButton = {
-            LnkFloatingActionButton(
-                onClick = { navigateAddLink(
-                    viewModel.folderId ?: -1
-                ) }
-            ) {
-                Icon(
-                    imageVector = LnkIcon.Clip,
-                    contentDescription = "링크 추가",
-                    tint = Color.White
+
+                    },
+                    modifier = Modifier.shadow(elevation = 4.dp), // fixme : 임시 그림자
                 )
             }
-        },
-        floatingActionButtonPosition = FabPosition.End,
-        topBar = {
-            LnkAppBar(
-                title = {
-                    Text(
-                        text = uiState.folderTitle,
-                        style = Typography.titleLarge,
-                        overflow = TextOverflow.Ellipsis,
-                        maxLines = 1,
-                    )
-                },
-                backButton = {
-                    Icon(
-                        modifier = Modifier.clickable {
-                            onBack()
-                        },
-                        imageVector = Icons.Rounded.ArrowBack, contentDescription = "back"
-                    )
-                },
-                action = {
-                    Box(){
-                        Text(
-                            modifier = Modifier
-                                .clickable {
-                                    dropdownState = !dropdownState
+        ) { padding ->
+            Box(modifier = Modifier
+                .background(Color.White)
+                .fillMaxSize()
+                .padding(padding)) {
+                if(uiState.links.isNotEmpty()){
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(start = 16.dp, end = 20.dp, top = 20.dp),
+                        state = rememberLazyListState()
+                    ) {
+                        items(uiState.links) {
+                            LinkItem(
+                                title = it.title,
+                                link = it.link,
+                                date = it.date,
+                                onDelete = {
+                                    dialogLinkState = it.id
                                 },
-                            text = "편집",
-                            style = Typography.titleMedium
-                        )
-                        DropdownMenu(
-                            modifier = Modifier.background(Color.White),
-                            expanded = dropdownState,
-                            onDismissRequest = { dropdownState = !dropdownState }) {
-                            DropdownMenuItem(text = {
-                                Text(text = "폴더 삭제하기")
-                            }, onClick = {
-                                dialogFolderState = true
-                                dropdownState = !dropdownState
-                            })
+                                onClick = {
+                                    viewModel.selectLink(it.link)
+                                }
+                            )
+                            Spacer(modifier = Modifier.size(8.dp))
                         }
                     }
-
-
-                },
-                modifier = Modifier.shadow(elevation = 4.dp), // fixme : 임시 그림자
-            )
-        }
-    ) { padding ->
-        Box(modifier = Modifier
-            .background(Color.White)
-            .fillMaxSize()
-            .padding(padding)) {
-            if(uiState.links.isNotEmpty()){
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(start = 16.dp, end = 20.dp, top = 20.dp),
-                    state = rememberLazyListState()
-                ) {
-                    items(uiState.links) {
-                        LinkItem(
-                            title = it.title,
-                            link = it.link,
-                            date = it.date,
-                            onDelete = {
-                                dialogLinkState = it.id
-                            })
-                        Spacer(modifier = Modifier.size(8.dp))
-                    }
+                }else {
+                    Text(
+                        modifier = Modifier.align(Alignment.Center),
+                        text = "링크를 저장해 주세요.",
+                        style = Typography.labelMedium,
+                        color = Color878787
+                    )
                 }
-            }else {
-                Text(
-                    modifier = Modifier.align(Alignment.Center),
-                    text = "링크를 저장해 주세요.",
-                    style = Typography.labelMedium,
-                    color = Color878787
-                )
             }
 
+        }
+        AnimatedVisibility(
+            visible = webviewState != null,
+            enter = expandVertically(),
+            exit = shrinkVertically()
+        ) {
+            webviewState?.let {
+                WebView(
+                    state = it,
+                    chromeClient = webViewClient,
+                    navigator = webViewNavigator
+                )
+            }
         }
 
     }
+
 }

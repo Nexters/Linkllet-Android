@@ -40,7 +40,8 @@ fun LinkItem(
     title: String,
     link: String,
     date: String,
-    onDelete: () -> Unit = {}
+    onDelete: () -> Unit = {},
+    onClick : () -> Unit = {}
 ) {
     var dropdownState by remember { mutableStateOf(false) }
     val context = LocalContext.current
@@ -58,12 +59,7 @@ fun LinkItem(
                 .fillMaxWidth()
                 .wrapContentHeight().clickable {
                     try {
-                        context.startActivity(
-                            Intent(
-                                Intent.ACTION_VIEW,
-                                Uri.parse(link)
-                            )
-                        )
+                        onClick()
                     }catch (e: Exception){
                         Log.d("LinkCardClick","${e}")
                     }
