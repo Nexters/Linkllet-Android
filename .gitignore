@@ -13,3 +13,7 @@
 .externalNativeBuild
 .cxx
 local.properties
+key.properties
+linkllet_key.jks
+private_key.pepk
+/app/release
