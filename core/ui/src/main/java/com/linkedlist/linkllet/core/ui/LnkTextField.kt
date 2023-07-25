@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
@@ -43,6 +45,8 @@ fun LnkTextFieldWithTitle(
     onValueChange: (String) -> Unit,
     maxLines : Int = 1,
     maxLength : Int = Int.MAX_VALUE,
+    keyboardActions : KeyboardActions = KeyboardActions.Default,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     isVisibleMaxLengthNotice : Boolean = false
 ) {
     Column(
@@ -61,7 +65,9 @@ fun LnkTextFieldWithTitle(
             isError = isError,
             hint = hint,
             maxLength = maxLength,
-            maxLines = maxLines
+            maxLines = maxLines,
+            keyboardActions = keyboardActions,
+            keyboardOptions = keyboardOptions
         )
         Spacer(modifier = Modifier.height(10.dp))
         if(isVisibleMaxLengthNotice){
@@ -95,6 +101,8 @@ fun LnkBasicTextFiled(
     isError : Boolean = false,
     maxLines: Int = 1,
     maxLength: Int = 10,
+    keyboardActions : KeyboardActions = KeyboardActions.Default,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     focusRequester: FocusRequester = FocusRequester()
     ) {
 
@@ -109,12 +117,15 @@ fun LnkBasicTextFiled(
                 isFocused = it.hasFocus
         },
         value = value,
+        singleLine = true,
         maxLines = maxLines,
         onValueChange = {
             if(it.length > maxLength) onValueChange(value)
             else onValueChange(it)
         },
         textStyle = Typography.bodyMedium,
+        keyboardActions = keyboardActions,
+        keyboardOptions = keyboardOptions,
         decorationBox = { innerTextField ->
             OutlinedCard(
                 border = BorderStroke(

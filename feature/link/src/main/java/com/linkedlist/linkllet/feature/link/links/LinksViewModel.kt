@@ -44,7 +44,7 @@ class LinksViewModel @Inject constructor(
     private val linkRepository: LinkRepository
 ) : ViewModel() {
 
-    private val folderId = savedStateHandle.get<Long?>(
+    val folderId = savedStateHandle.get<Long?>(
         key = FOLDER_ID
     )
     private val folderTitle = savedStateHandle.get<String?>(

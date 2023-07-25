@@ -13,7 +13,7 @@ const val FOLDER_ID = "folderId"
 const val FOLDER_TITLE = "folderTitle"
 
 const val linksRoute = "links/{${FOLDER_ID}}/{${FOLDER_TITLE}}"
-const val addEditLinkRoute = "addEditLink"
+const val addEditLinkRoute = "addEditLink/{${FOLDER_ID}}"
 
 fun NavController.navigateToLinks(
     navOptions: NavOptions? = null,
@@ -23,12 +23,15 @@ fun NavController.navigateToLinks(
     this.navigate("links/${folderId}/${title}", navOptions)
 }
 
-fun NavController.navigateToAddEditLink(navOptions: NavOptions? = null) {
-    this.navigate(addEditLinkRoute, navOptions)
+fun NavController.navigateToAddEditLink(
+    navOptions: NavOptions? = null,
+    folderId : Long? = -1
+) {
+    this.navigate("addEditLink/${folderId}", navOptions)
 }
 
 fun NavGraphBuilder.Links(
-    navigateAddLink: () -> Unit,
+    navigateAddLink: (Long) -> Unit,
     onBack: () -> Unit,
     onShowSnackbar: suspend (String) -> Boolean,
 ) {
@@ -56,7 +59,14 @@ fun NavGraphBuilder.AddEditLink(
     onBack: () -> Unit,
     onShowSnackbar: suspend (String) -> Boolean,
 ) {
-    composable(route = addEditLinkRoute) {
+    composable(
+        route = addEditLinkRoute,
+        arguments = listOf(
+            navArgument(FOLDER_ID) {
+                type = NavType.LongType
+            }
+        )
+    ) {
         AddEditLinkScreen(
             onBack = onBack,
             onShowSnackbar = onShowSnackbar
