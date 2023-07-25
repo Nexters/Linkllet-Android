@@ -4,17 +4,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material3.Card
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
@@ -29,7 +25,7 @@ import androidx.compose.ui.window.DialogProperties
 import com.linkedlist.linkllet.core.designsystem.icon.LnkIcon
 import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.O
 import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.X
-import com.linkedlist.linkllet.core.designsystem.theme.ColorEDEDED
+import com.linkedlist.linkllet.core.designsystem.theme.Gray200
 import com.linkedlist.linkllet.core.designsystem.theme.Typography
 
 @Composable
@@ -62,7 +58,7 @@ fun LnkDialog(
                             color = Color.Black
                         )
                     }
-                    Divider(modifier = Modifier.fillMaxWidth(), color = ColorEDEDED)
+                    Divider(modifier = Modifier.fillMaxWidth(), color = Gray200)
                     Spacer(modifier = Modifier.size(12.dp))
                     Box(
                         modifier = Modifier

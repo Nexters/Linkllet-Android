@@ -36,7 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.linkedlist.linkllet.core.designsystem.icon.LnkIcon
 import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.Clip
-import com.linkedlist.linkllet.core.designsystem.theme.Color878787
+import com.linkedlist.linkllet.core.designsystem.theme.Gray600
 import com.linkedlist.linkllet.core.designsystem.theme.Typography
 import com.linkedlist.linkllet.core.ui.LinkItem
 import com.linkedlist.linkllet.core.ui.LnkAppBar
@@ -186,7 +186,7 @@ fun LinksScreen(
                     modifier = Modifier.align(Alignment.Center),
                     text = "링크를 저장해 주세요.",
                     style = Typography.labelMedium,
-                    color = Color878787
+                    color = Gray600
                 )
             }
 

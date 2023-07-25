@@ -30,7 +30,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import com.linkedlist.linkllet.core.designsystem.theme.ColorBCBCBC
 import com.linkedlist.linkllet.core.designsystem.theme.ColorE0E0E0
-import com.linkedlist.linkllet.core.designsystem.theme.ColorF4F4F4
+import com.linkedlist.linkllet.core.designsystem.theme.Gray100
 import com.linkedlist.linkllet.core.designsystem.theme.Typography
 
 @Composable
@@ -121,10 +121,10 @@ fun LnkBasicTextFiled(
                     width = 2.dp,
                     color =
                         if(isFocused) ColorE0E0E0
-                        else if(isError) Color.Red else ColorF4F4F4
+                        else if(isError) Color.Red else Gray100
                 ),
                 colors = CardDefaults.cardColors(
-                    containerColor = if(isFocused) Color.White else ColorF4F4F4
+                    containerColor = if(isFocused) Color.White else Gray100
                 )
 
             ){
