@@ -15,11 +15,13 @@ import javax.inject.Inject
 
 sealed class Event {
     object CloseScreen : Event()
+    data class ShowToast(val message: String) : Event()
 }
 
 data class AddEditFolderUiState(
     val folderName: String = "",
     val error: Boolean = false,
+    val cancelDialogVisibility: Boolean = false,
 )
 
 @HiltViewModel
@@ -29,8 +31,8 @@ class AddEditFolderViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(AddEditFolderUiState())
     val uiState: StateFlow<AddEditFolderUiState> = _uiState.asStateFlow()
 
-    private val _eventFlow: MutableSharedFlow<Event> = MutableSharedFlow()
-    val eventFlow = _eventFlow.asSharedFlow()
+    private val _eventsFlow: MutableSharedFlow<Event> = MutableSharedFlow()
+    val eventsFlow = _eventsFlow.asSharedFlow()
 
     fun updateFolderName(newFolderName: String) {
         _uiState.update {
@@ -45,15 +47,33 @@ class AddEditFolderViewModel @Inject constructor(
         val folderName = uiState.value.folderName
         if(folderName.trim().isBlank()) {
             _uiState.update { it.copy(folderName = folderName.trim(), error = true) }
+            viewModelScope.launch {
+                _eventsFlow.emit(Event.ShowToast("폴더 제목을 입력해 주세요"))
+            }
             return
         }
 
         viewModelScope.launch {
             linkRepository.addFolder(uiState.value.folderName).collect { result ->
                 result.onSuccess {
-                    _eventFlow.emit(Event.CloseScreen)
+                    _eventsFlow.emit(Event.ShowToast("폴더가 추가되었어요"))
+                    _eventsFlow.emit(Event.CloseScreen)
                 }
             }
+        }
+    }
+
+    fun navigateUp() {
+        if(uiState.value.folderName.trim().isBlank()) {
+            viewModelScope.launch {
+                _eventsFlow.emit(Event.CloseScreen)
+            }
+        } else _uiState.update { it.copy(cancelDialogVisibility = true) }
+    }
+
+    fun hideCancelDialog() {
+        _uiState.update {
+            it.copy(cancelDialogVisibility = false)
         }
     }
 }
