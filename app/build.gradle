@@ -5,6 +5,10 @@ plugins {
     id 'com.google.dagger.hilt.android'
 }
 
+static def getRevisionCount() {
+    return Integer.parseInt('git rev-list --count HEAD'.execute().text.trim())
+}
+
 android {
     namespace 'com.linkedlist.linkllet'
     compileSdk 33
@@ -13,7 +17,7 @@ android {
         applicationId "com.linkedlist.linkllet"
         minSdk 24
         targetSdk 33
-        versionCode 1
+        versionCode getRevisionCount()
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -22,10 +26,23 @@ android {
         }
     }
 
+    Properties keystoreProperties = new Properties()
+    keystoreProperties.load(project.rootProject.file('key.properties').newDataInputStream())
+
+    signingConfigs {
+        release {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
     compileOptions {

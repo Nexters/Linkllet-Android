@@ -70,7 +70,7 @@ fun LinksScreen(
 
     var dialogFolderState by remember { mutableStateOf(false) }
     var dialogLinkState by remember { mutableStateOf<Long?>(null) }
-    
+
     var webviewState by remember {
         mutableStateOf<WebViewState?>(null)
     }
@@ -111,7 +111,6 @@ fun LinksScreen(
         }
 
     }
-
 
     LnkDialog(
         text = "폴더를 삭제할건가요?",
@@ -232,7 +231,7 @@ fun LinksScreen(
                         modifier = Modifier.align(Alignment.Center),
                         text = "링크를 저장해 주세요.",
                         style = Typography.labelMedium,
-                        color = Color878787
+                        color = Gray600
                     )
                 }
             }
@@ -253,5 +252,4 @@ fun LinksScreen(
         }
 
     }
-
 }
