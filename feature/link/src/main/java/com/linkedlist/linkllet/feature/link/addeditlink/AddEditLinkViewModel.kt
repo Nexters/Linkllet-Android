@@ -126,7 +126,6 @@ class AddEditLinkViewModel @Inject constructor(
                         name = uiState.value.title,
                         url = uiState.value.link
                     ).catch {
-                        Log.d("asdasd",it.message.toString())
                         _error.emit(AddEditLinkError.NETWORK_ERROR)
                     }.collect {
                         it.onSuccess {
@@ -134,7 +133,6 @@ class AddEditLinkViewModel @Inject constructor(
                                 isLinkSaved = true
                             ))
                         }.onFailure {
-                            Log.d("asdasd1",it.message.toString())
                             if(it.message == null) _error.emit(AddEditLinkError.NETWORK_ERROR)
                             else {
                                 it.message?.let {
