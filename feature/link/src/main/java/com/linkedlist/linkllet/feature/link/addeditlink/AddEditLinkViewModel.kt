@@ -1,5 +1,6 @@
 package com.linkedlist.linkllet.feature.link.addeditlink
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -125,6 +126,7 @@ class AddEditLinkViewModel @Inject constructor(
                         name = uiState.value.title,
                         url = uiState.value.link
                     ).catch {
+                        Log.d("asdasd",it.message.toString())
                         _error.emit(AddEditLinkError.NETWORK_ERROR)
                     }.collect {
                         it.onSuccess {
@@ -132,7 +134,13 @@ class AddEditLinkViewModel @Inject constructor(
                                 isLinkSaved = true
                             ))
                         }.onFailure {
-                            _error.emit(AddEditLinkError.NETWORK_ERROR)
+                            Log.d("asdasd1",it.message.toString())
+                            if(it.message == null) _error.emit(AddEditLinkError.NETWORK_ERROR)
+                            else {
+                                it.message?.let {
+                                    _snackbarState.emit(it)
+                                }
+                            }
                         }
 
                     }

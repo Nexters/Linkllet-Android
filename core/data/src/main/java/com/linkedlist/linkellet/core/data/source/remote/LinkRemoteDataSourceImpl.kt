@@ -1,11 +1,13 @@
 package com.linkedlist.linkellet.core.data.source.remote
 
+import android.util.Log
 import com.linkedlist.linkellet.core.data.model.Folder
 import com.linkedlist.linkellet.core.data.model.Link
 import com.linkedlist.linkellet.core.data.model.request.AddFolderRequest
 import com.linkedlist.linkellet.core.data.model.request.AddLinkRequest
 import com.linkedlist.linkellet.core.data.source.remote.api.LinkService
-import java.lang.RuntimeException
+import okhttp3.ResponseBody
+import org.json.JSONObject
 import javax.inject.Inject
 
 class LinkRemoteDataSourceImpl @Inject constructor(
@@ -61,8 +63,8 @@ class LinkRemoteDataSourceImpl @Inject constructor(
             )
             if(response.isSuccessful){
                 Result.success(Unit)
-            }else {
-                Result.failure(Exception())
+            } else {
+                Result.failure(Exception(errorBodyToMessage(response.errorBody(),"링크를 저장할 수 없어요.")))
             }
         }catch (e: Exception){
             Result.failure(e)
@@ -97,6 +99,15 @@ class LinkRemoteDataSourceImpl @Inject constructor(
             }
         }catch (e: Exception){
             Result.failure(e)
+        }
+    }
+
+    fun errorBodyToMessage(errorBody : ResponseBody?,defaultMessage : String) : String {
+        try {
+            return JSONObject(errorBody?.string()!!).getString("message")
+        }catch (e:Exception){
+            Log.e("errorBodyError",e.toString())
+            return defaultMessage
         }
     }
 }
