@@ -16,12 +16,14 @@ fun NavGraphBuilder.Home(
     navigateAddLink: () -> Unit,
     navigateToAddEdit: () -> Unit,
     navigateToLinks: (Long,String) -> Unit,
+    onShowSnackbar: suspend (String) -> Boolean,
 ) {
     composable(route = homeRoute) {
         HomeScreen(
             navigateToAddLink = navigateAddLink,
             navigateToAddEditFolder = navigateToAddEdit,
             navigateToLinks = navigateToLinks,
+            onShowSnackbar = onShowSnackbar,
         )
     }
 }

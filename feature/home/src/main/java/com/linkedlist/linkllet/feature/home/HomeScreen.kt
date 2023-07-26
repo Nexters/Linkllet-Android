@@ -31,6 +31,7 @@ import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.Settings
 import com.linkedlist.linkllet.core.ui.LnkAppBar
 import com.linkedlist.linkllet.core.ui.LnkFloatingActionButton
 import com.linkedlist.linkllet.core.ui.LnkScrollableFolder
+import kotlinx.coroutines.flow.collect
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -39,11 +40,19 @@ internal fun HomeScreen(
     navigateToAddLink: () -> Unit,
     navigateToAddEditFolder: () -> Unit,
     navigateToLinks: (Long,String) -> Unit,
+    onShowSnackbar: suspend (String) -> Boolean,
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
     LaunchedEffect(Unit) {
         viewModel.fetchFolders()
+
+        viewModel.eventsFlow.collect {
+            when(it) {
+                is Event.Error -> onShowSnackbar(it.message)
+                else -> {}
+            }
+        }
     }
 
     Scaffold(
@@ -110,6 +119,7 @@ fun HomeScreenPreview() {
     HomeScreen(
         navigateToAddLink = {},
         navigateToAddEditFolder = {},
-        navigateToLinks = {_,_ ->}
+        navigateToLinks = {_,_ ->},
+        onShowSnackbar = {_ -> true },
     )
 }
