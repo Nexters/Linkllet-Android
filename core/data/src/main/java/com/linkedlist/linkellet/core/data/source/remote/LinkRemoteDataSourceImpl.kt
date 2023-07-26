@@ -18,7 +18,7 @@ class LinkRemoteDataSourceImpl @Inject constructor(
         return try {
             val response = linkService.addFolder(folder = AddFolderRequest(name = name))
             if(response.isSuccessful) Result.success(Unit)
-            else Result.failure(RuntimeException())
+            else Result.failure(Exception(errorBodyToMessage(response.errorBody(),"폴더 저장에 실패했어요.")))
         } catch (e: Exception) {
             Result.failure(e)
         }

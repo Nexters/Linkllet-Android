@@ -59,7 +59,12 @@ class AddEditFolderViewModel @Inject constructor(
                     _eventsFlow.emit(Event.CloseScreen)
                     _eventsFlow.emit(Event.ShowToast("폴더가 추가되었어요"))
                 }.onFailure {
-                    _eventsFlow.emit(Event.ShowToast("폴더 저장에 실패했어요"))
+                    if(it.message == null) _eventsFlow.emit(Event.ShowToast("폴더 저장에 실패했어요"))
+                    else {
+                        it.message?.let {
+                            _eventsFlow.emit(Event.ShowToast(it))
+                        }
+                    }
                 }
             }
         }
