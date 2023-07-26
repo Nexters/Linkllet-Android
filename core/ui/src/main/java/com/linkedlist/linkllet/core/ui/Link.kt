@@ -30,8 +30,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import com.linkedlist.linkllet.core.designsystem.theme.Color878787
-import com.linkedlist.linkllet.core.designsystem.theme.ColorEDEDED
+import com.linkedlist.linkllet.core.designsystem.theme.Gray600
+import com.linkedlist.linkllet.core.designsystem.theme.Gray200
 import com.linkedlist.linkllet.core.designsystem.theme.Typography
 
 @Composable
@@ -51,7 +51,7 @@ fun LinkItem(
         colors = CardDefaults.cardColors(
             containerColor = Color.White
         ),
-        border = BorderStroke(1.dp, color = ColorEDEDED)
+        border = BorderStroke(1.dp, color = Gray200)
     ) {
         ConstraintLayout(
             modifier = Modifier
@@ -95,7 +95,7 @@ fun LinkItem(
                     },
                 text = link,
                 style = Typography.bodySmall,
-                color = Color878787,
+                color = Gray600,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
