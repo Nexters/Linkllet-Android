@@ -56,8 +56,10 @@ class AddEditFolderViewModel @Inject constructor(
         viewModelScope.launch {
             linkRepository.addFolder(uiState.value.folderName).collect { result ->
                 result.onSuccess {
-                    _eventsFlow.emit(Event.ShowToast("폴더가 추가되었어요"))
                     _eventsFlow.emit(Event.CloseScreen)
+                    _eventsFlow.emit(Event.ShowToast("폴더가 추가되었어요"))
+                }.onFailure {
+                    _eventsFlow.emit(Event.ShowToast("폴더 저장에 실패했어요"))
                 }
             }
         }
