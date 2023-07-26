@@ -9,8 +9,10 @@ import com.linkedlist.linkellet.core.data.repository.LinkRepository
 import com.linkedlist.linkllet.feature.link.navigation.FOLDER_ID
 import com.linkedlist.linkllet.feature.link.navigation.FOLDER_TITLE
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
@@ -18,6 +20,9 @@ import java.text.SimpleDateFormat
 import java.util.TimeZone
 import javax.inject.Inject
 
+sealed class Event {
+    data class ShowLink(val url: String) : Event()
+}
 
 data class Link(
     val id : Long,
@@ -56,6 +61,9 @@ class LinksViewModel @Inject constructor(
 
     private val _error = MutableStateFlow<LinksError>(LinksError.READY)
     val error : StateFlow<LinksError> = _error.asStateFlow()
+
+    private val _eventsFlow: MutableSharedFlow<Event> = MutableSharedFlow()
+    val eventsFlow = _eventsFlow.asSharedFlow()
 
     fun fetchLinks() {
         viewModelScope.launch {
@@ -146,6 +154,12 @@ class LinksViewModel @Inject constructor(
         }
     }
 
+    fun selectLink(url : String) {
+        viewModelScope.launch {
+            _eventsFlow.emit(Event.ShowLink(url))
+        }
+    }
+
     @SuppressLint("SimpleDateFormat")
     fun formatDateString(input: String): String { /// 수정 필요.
         try {
@@ -159,7 +173,6 @@ class LinksViewModel @Inject constructor(
             // Date 객체를 원하는 형식으로 포맷팅합니다.
             return outputFormat.format(date)
         }catch (e: Exception){
-            Log.e("123123",e.toString())
             return ""
         }
     }
