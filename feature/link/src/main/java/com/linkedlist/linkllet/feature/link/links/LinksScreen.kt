@@ -1,6 +1,5 @@
 package com.linkedlist.linkllet.feature.link.links
 
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
@@ -46,7 +45,7 @@ import com.google.accompanist.web.WebViewState
 import com.google.accompanist.web.rememberWebViewNavigator
 import com.linkedlist.linkllet.core.designsystem.icon.LnkIcon
 import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.Clip
-import com.linkedlist.linkllet.core.designsystem.theme.Color878787
+import com.linkedlist.linkllet.core.designsystem.theme.Gray600
 import com.linkedlist.linkllet.core.designsystem.theme.Typography
 import com.linkedlist.linkllet.core.ui.LinkItem
 import com.linkedlist.linkllet.core.ui.LnkAppBar
