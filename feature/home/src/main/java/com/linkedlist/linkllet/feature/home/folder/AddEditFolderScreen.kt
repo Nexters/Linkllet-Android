@@ -32,6 +32,7 @@ import com.linkedlist.linkllet.core.ui.LnkButtonWithMargin
 import com.linkedlist.linkllet.core.ui.LnkDialog
 import com.linkedlist.linkllet.core.ui.LnkIconButton
 import com.linkedlist.linkllet.core.ui.LnkTextFieldWithTitle
+import com.linkedlist.linkllet.core.ui.onTabClearFocusing
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -71,6 +72,7 @@ fun AddEditFolderScreen(
 
     Scaffold(
         containerColor = Color.White,
+        modifier = Modifier.onTabClearFocusing(),
         topBar = {
             LnkAppBar(
                 title = { AppBarTitle() },
@@ -96,6 +98,7 @@ fun AddEditFolderScreen(
                     isVisibleMaxLengthNotice = true,
                     maxLength = 10,
                     isError = uiState.error,
+                    hint = "제목을 입력해 주세요."
                 )
             }
             Spacer(modifier = Modifier.weight(1.0f))
