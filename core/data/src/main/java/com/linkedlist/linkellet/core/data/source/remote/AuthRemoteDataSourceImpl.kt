@@ -30,6 +30,8 @@ class AuthRemoteDataSourceImpl @Inject constructor(
                 else Result.failure(Exception())
             }
         }catch (e: Exception){
+            println("d아아악")
+            e.printStackTrace()
             Result.failure(e)
         }
     }

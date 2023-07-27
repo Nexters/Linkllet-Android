@@ -33,6 +33,7 @@ fun LnkNavHost(
             navigateToLinks = { id, title ->
                 navController.navigateToLinks(folderId = id,title = title )
             },
+            onShowSnackbar = onShowSnackbar
         )
         AddEditLink(
             onBack = {
