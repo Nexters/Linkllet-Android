@@ -49,6 +49,7 @@ fun LnkScrollableFolder(
     Box(
         modifier = modifier
             .verticalScroll(rememberScrollState())
+            .padding(top = 240.dp)
     ) {
         Surface(
             color = Color.Transparent,
