@@ -10,8 +10,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -22,6 +20,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.linkedlist.linkllet.core.designsystem.icon.LnkIcon
 import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.Plus
+import com.linkedlist.linkllet.core.designsystem.theme.blue400
+import com.linkedlist.linkllet.core.designsystem.theme.blue500
+import com.linkedlist.linkllet.core.designsystem.theme.blue600
 
 // todo : model을 둘 위치 및 네이밍 컨벤션 논의 필요
 data class FolderModel(
@@ -32,9 +33,9 @@ data class FolderModel(
 
 // todo : 디자인시스템에 컬러 추가 후 수정
 private val colorMap = mapOf(
-    0 to Color(0xFF779CFF),
-    1 to Color(0xFF4F7EFE),
-    2 to Color(0xFF3467F0),
+    0 to blue400,
+    1 to blue500,
+    2 to blue600,
 )
 private val addButtonBackground = Color(0xCCDAE3FB)
 
@@ -43,7 +44,7 @@ fun LnkScrollableFolder(
     modifier: Modifier = Modifier,
     folders: List<FolderModel>,
     addFolder: () -> Unit,
-    navigateToLinks: (Long,String) -> Unit,
+    navigateToLinks: (Long, String) -> Unit,
 ) {
     Box(
         modifier = modifier
@@ -73,40 +74,33 @@ fun LnkScrollableFolder(
             }
         }
 
-        RecursiveLnkScrollableFolder(
+        LnkScrollableFolders(
             modifier = Modifier.padding(top = 65.dp),
             folders = folders,
-            colorKey = 0,
             navigateToLinks = navigateToLinks,
         )
     }
 }
 
 @Composable
-internal fun RecursiveLnkScrollableFolder(
+internal fun LnkScrollableFolders(
     modifier: Modifier = Modifier,
     folders: List<FolderModel>,
-    colorKey: Int,
-    navigateToLinks: (Long,String) -> Unit,
+    navigateToLinks: (Long, String) -> Unit,
 ) {
     if (folders.isEmpty()) return
 
-    val currentFolder = folders.first()
-
-    Box(modifier.clickable {
-        navigateToLinks(currentFolder.folderId,currentFolder.name)
-    }) {
-        LnkFolder(
-            color = colorMap[colorKey] ?: Color.Gray,
-            name = currentFolder.name,
-            totalItems = currentFolder.totalItems,
-        )
-        if (folders.size > 1) {
-            RecursiveLnkScrollableFolder(
-                modifier = Modifier.padding(top = 65.dp),
-                folders = folders.subList(1, folders.size),
-                colorKey = (colorKey + 1) % 3,
-                navigateToLinks = navigateToLinks,
+    Box(modifier = modifier) {
+        folders.forEachIndexed { index, it ->
+            LnkFolder(
+                Modifier
+                    .padding(top = 65.dp * index)
+                    .clickable {
+                    navigateToLinks(it.folderId, it.name)
+                },
+                color = colorMap[index % 3] ?: Color.Gray,
+                name = it.name,
+                totalItems = it.totalItems,
             )
         }
     }
@@ -121,5 +115,5 @@ private fun LnkScrollableFolderPreview() {
         FolderModel(name = "폴더2", totalItems = 12, folderId = 3),
     )
 
-    LnkScrollableFolder(folders = sampleList, addFolder = {}, navigateToLinks = {_,_ ->})
+    LnkScrollableFolder(folders = sampleList, addFolder = {}, navigateToLinks = { _, _ -> })
 }
