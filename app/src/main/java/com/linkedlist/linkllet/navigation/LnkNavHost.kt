@@ -12,7 +12,7 @@ import com.linkedlist.linkllet.feature.link.navigation.Links
 import com.linkedlist.linkllet.feature.link.navigation.navigateToAddEditLink
 import com.linkedlist.linkllet.feature.link.navigation.navigateToLinks
 import com.linkedlist.linkllet.ui.LnkAppState
-import com.linkedlist.linkllet.ui.Settings
+import linkedlist.linkllet.feature.settings.navigation.Settings
 
 @Composable
 fun LnkNavHost(
