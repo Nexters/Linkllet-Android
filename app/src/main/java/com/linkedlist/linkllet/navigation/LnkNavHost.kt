@@ -13,6 +13,7 @@ import com.linkedlist.linkllet.feature.link.navigation.navigateToAddEditLink
 import com.linkedlist.linkllet.feature.link.navigation.navigateToLinks
 import com.linkedlist.linkllet.ui.LnkAppState
 import linkedlist.linkllet.feature.settings.navigation.Settings
+import linkedlist.linkllet.feature.settings.navigation.navigateToSettings
 
 @Composable
 fun LnkNavHost(
@@ -33,6 +34,7 @@ fun LnkNavHost(
             navigateToLinks = { id, title ->
                 navController.navigateToLinks(folderId = id,title = title )
             },
+            navigateToSettings = navController::navigateToSettings,
             onShowSnackbar = onShowSnackbar
         )
         AddEditLink(

@@ -1,5 +1,6 @@
 package com.linkedlist.linkllet.feature.home
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -40,6 +41,7 @@ internal fun HomeScreen(
     navigateToAddLink: () -> Unit,
     navigateToAddEditFolder: () -> Unit,
     navigateToLinks: (Long,String) -> Unit,
+    navigateToSettings: () -> Unit,
     onShowSnackbar: suspend (String) -> Boolean,
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -60,7 +62,7 @@ internal fun HomeScreen(
         topBar = {
             LnkAppBar(
                 title = { AppBarTitle() },
-                action = { SettingsAction() },
+                action = { SettingsAction(navigateToSettings = navigateToSettings) },
             )
         },
         floatingActionButton = {
@@ -109,8 +111,14 @@ fun AppBarTitle() {
 }
 
 @Composable
-fun SettingsAction() {
-    Icon(imageVector = LnkIcon.Settings, contentDescription = "설정")
+fun SettingsAction(navigateToSettings: () -> Unit) {
+    Icon(
+        modifier = Modifier.clickable {
+            navigateToSettings()
+        },
+        imageVector = LnkIcon.Settings,
+        contentDescription = "설정",
+    )
 }
 
 @Composable
@@ -120,6 +128,7 @@ fun HomeScreenPreview() {
         navigateToAddLink = {},
         navigateToAddEditFolder = {},
         navigateToLinks = {_,_ ->},
+        navigateToSettings = {},
         onShowSnackbar = {_ -> true },
     )
 }
