@@ -83,7 +83,7 @@ fun LnkTextFieldWithTitle(
                     .wrapContentHeight()
                     .weight(1f))
                 Text(
-                    modifier = Modifier.padding(start = 8.dp),
+                    modifier = Modifier.padding(end = 8.dp),
                     text = "${value.length} / ${maxLength}",
                     style = Typography.labelSmall
                 )
