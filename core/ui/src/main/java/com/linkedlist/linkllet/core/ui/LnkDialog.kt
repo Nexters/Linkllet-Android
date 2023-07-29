@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -55,7 +56,8 @@ fun LnkDialog(
                             text= text,
                             maxLines = 3,
                             style = Typography.bodySmall,
-                            color = Color.Black
+                            color = Color.Black,
+                            textAlign = TextAlign.Center
                         )
                     }
                     Divider(modifier = Modifier.fillMaxWidth(), color = Gray200)
