@@ -172,27 +172,30 @@ fun LinksScreen(
                         )
                     },
                     action = {
-                        Box(){
-                            Text(
-                                modifier = Modifier
-                                    .clickable {
+                        if(uiState.folderType != "DEFAULT"){
+                            Box(){
+                                Text(
+                                    modifier = Modifier
+                                        .clickable {
+                                            dropdownState = !dropdownState
+                                        },
+                                    text = "편집",
+                                    style = Typography.titleMedium
+                                )
+                                DropdownMenu(
+                                    modifier = Modifier.background(Color.White),
+                                    expanded = dropdownState,
+                                    onDismissRequest = { dropdownState = !dropdownState }) {
+                                    DropdownMenuItem(text = {
+                                        Text(text = "폴더 삭제하기")
+                                    }, onClick = {
+                                        dialogFolderState = true
                                         dropdownState = !dropdownState
-                                    },
-                                text = "편집",
-                                style = Typography.titleMedium
-                            )
-                            DropdownMenu(
-                                modifier = Modifier.background(Color.White),
-                                expanded = dropdownState,
-                                onDismissRequest = { dropdownState = !dropdownState }) {
-                                DropdownMenuItem(text = {
-                                    Text(text = "폴더 삭제하기")
-                                }, onClick = {
-                                    dialogFolderState = true
-                                    dropdownState = !dropdownState
-                                })
+                                    })
+                                }
                             }
                         }
+
 
 
                     },

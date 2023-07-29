@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.linkedlist.linkellet.core.data.repository.LinkRepository
 import com.linkedlist.linkllet.feature.link.navigation.FOLDER_ID
 import com.linkedlist.linkllet.feature.link.navigation.FOLDER_TITLE
+import com.linkedlist.linkllet.feature.link.navigation.FOLDER_TYPE
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,6 +34,7 @@ data class Link(
 
 data class LinksUiState(
     val folderTitle : String = "",
+    val folderType : String = "",
     val links: List<Link> = emptyList(),
     val isLoading: Boolean = false,
     val isFolderDeleted : Boolean = false,
@@ -55,8 +57,11 @@ class LinksViewModel @Inject constructor(
     private val folderTitle = savedStateHandle.get<String?>(
         key = FOLDER_TITLE
     )
+    private val folderType = savedStateHandle.get<String?>(
+        key = FOLDER_TYPE
+    )
 
-    private val _uiState = MutableStateFlow(LinksUiState(folderTitle = folderTitle ?: ""))
+    private val _uiState = MutableStateFlow(LinksUiState(folderTitle = folderTitle ?: "",folderType = folderType ?: ""))
     val uiState: StateFlow<LinksUiState> = _uiState.asStateFlow()
 
     private val _error = MutableStateFlow<LinksError>(LinksError.READY)
