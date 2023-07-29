@@ -1,6 +1,7 @@
 package com.linkedlist.linkllet.core.ui
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -13,8 +14,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CardColors
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -41,6 +45,9 @@ import androidx.compose.ui.window.PopupPositionProvider
 import com.linkedlist.linkllet.core.designsystem.icon.LnkIcon
 import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.BtnRadio
 import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.IcDropdownArrow
+import com.linkedlist.linkllet.core.designsystem.theme.Gray100
+import com.linkedlist.linkllet.core.designsystem.theme.Gray200
+import com.linkedlist.linkllet.core.designsystem.theme.Gray400
 import com.linkedlist.linkllet.core.designsystem.theme.Typography
 
 @Composable
@@ -54,7 +61,12 @@ fun LnkDropdownTextMenu(
 ) {
     OutlinedCard(
         modifier = modifier.wrapContentHeight(),
-        shape = RoundedCornerShape(12.dp)
+        shape = RoundedCornerShape(12.dp),
+        border = BorderStroke(1.dp, Gray200),
+        colors = CardDefaults.outlinedCardColors(
+            containerColor = Gray100
+        )
+
     ) {
         LnkDropdownTextItem(
             itemText = selectedText,
@@ -66,7 +78,10 @@ fun LnkDropdownTextMenu(
         )
 
         AnimatedVisibility(visible = isFocused && items.isNotEmpty()) {
-            Divider()
+            Divider(
+                modifier = Modifier.padding(horizontal = 12.dp),
+                color = Gray400
+            )
             LazyColumn(
                 modifier = Modifier.height(
                     (49 * (if (items.size > 4) 4 else items.size)).dp
@@ -127,7 +142,9 @@ fun LnkDropdownTextItem(
                 )
                 if(!isHeader){
                     Icon(
-                        modifier = Modifier.size(6.dp).align(Alignment.Center),
+                        modifier = Modifier
+                            .size(6.dp)
+                            .align(Alignment.Center),
                         imageVector =  LnkIcon.BtnRadio,
                         contentDescription = null,
                         tint = Color.White
