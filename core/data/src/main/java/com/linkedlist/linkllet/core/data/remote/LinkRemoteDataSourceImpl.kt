@@ -14,100 +14,47 @@ class LinkRemoteDataSourceImpl @Inject constructor(
     private val linkService: LinkService
 ) : LinkRemoteDataSource {
 
-    override suspend fun addFolder(name: String): Result<Unit> {
-        return try {
-            val response = linkService.addFolder(folder = AddFolderRequest(name = name))
-            if(response.isSuccessful) Result.success(Unit)
-            else Result.failure(Exception(errorBodyToMessage(response.errorBody(),"폴더 저장에 실패했어요.")))
-        } catch (e: Exception) {
-            Result.failure(e)
+    override suspend fun addFolder(name: String): Result<Unit> =
+        linkService.addFolder(folder = AddFolderRequest(name = name)).runCatching {
+            if (!isSuccessful) throw RuntimeException(errorBody().toMessage("폴더 저장에 실패했어요."))
         }
-    }
 
-    override suspend fun getFolders(): Result<List<Folder>> {
-        return try {
-            val response = linkService.getFolders()
-            val folders = response.body()?.folderList
-            if(response.isSuccessful && folders != null){
-                Result.success(folders)
-            }else {
-                Result.failure(Exception())
-            }
-        }catch (e: Exception){
-            Result.failure(e)
+    override suspend fun getFolders(): Result<List<Folder>> =
+        linkService.getFolders().runCatching {
+            if (!isSuccessful) throw RuntimeException(errorBody().toMessage("폴더 조회에 실패했어요."))
+            body()?.folderList ?: emptyList()
         }
-    }
 
-    override suspend fun getLinks(id: Long): Result<List<Link>> {
-        return try {
-            val response = linkService.getLinks(id)
-            val links = response.body()?.articleList
-            if(response.isSuccessful && links != null){
-                Result.success(links)
-            }else {
-                Result.failure(Exception())
-            }
-        }catch (e: Exception){
-            Result.failure(e)
+    override suspend fun getLinks(id: Long): Result<List<Link>> =
+        linkService.getLinks(id).runCatching {
+            if (!isSuccessful) throw RuntimeException(errorBody().toMessage("링크 조회에 실패했어요."))
+            body()?.articleList ?: emptyList()
         }
-    }
 
     override suspend fun addLink(
-        id : Long,
-        addLinkRequest : AddLinkRequest
-    ): Result<Unit> {
+        id: Long,
+        addLinkRequest: AddLinkRequest
+    ): Result<Unit> = linkService.addLink(id = id, addLinkRequest = addLinkRequest).runCatching {
+        if (!isSuccessful) throw RuntimeException(errorBody().toMessage("링크를 저장할 수 없어요."))
+    }
+
+    override suspend fun deleteFolder(id: Long): Result<Unit> =
+        linkService.deleteFolder(id = id).runCatching {
+            if (!isSuccessful) throw RuntimeException(errorBody().toMessage("폴더를 삭제할 수 없어요."))
+        }
+
+    override suspend fun deleteLink(id: Long, articleId: Long): Result<Unit> =
+        linkService.deleteLink(id = id, articleId = articleId).runCatching {
+            if (!isSuccessful) throw RuntimeException(errorBody().toMessage("링크를 삭제할 수 없어요."))
+        }
+
+    private fun ResponseBody?.toMessage(defaultMessage: String): String {
         return try {
-            val response = linkService.addLink(
-                id = id,
-                addLinkRequest = addLinkRequest
-            )
-            if(response.isSuccessful){
-                Result.success(Unit)
-            } else {
-                Result.failure(Exception(errorBodyToMessage(response.errorBody(),"링크를 저장할 수 없어요.")))
-            }
-        }catch (e: Exception){
-            Result.failure(e)
+            JSONObject(this?.string()!!).getString("message")
+        } catch (e: Exception) {
+            Log.e("errorBodyError", e.toString())
+            defaultMessage
         }
     }
 
-    override suspend fun deleteFolder(id: Long): Result<Unit> {
-        return try {
-            val response = linkService.deleteFolder(
-                id = id
-            )
-            if(response.isSuccessful){
-                Result.success(Unit)
-            }else {
-                Result.failure(Exception())
-            }
-        }catch (e: Exception){
-            Result.failure(e)
-        }
-    }
-
-    override suspend fun deleteLink(id: Long, articleId: Long): Result<Unit> {
-        return try {
-            val response = linkService.deleteLink(
-                id = id,
-                articleId = articleId
-            )
-            if(response.isSuccessful){
-                Result.success(Unit)
-            }else {
-                Result.failure(Exception())
-            }
-        }catch (e: Exception){
-            Result.failure(e)
-        }
-    }
-
-    fun errorBodyToMessage(errorBody : ResponseBody?,defaultMessage : String) : String {
-        try {
-            return JSONObject(errorBody?.string()!!).getString("message")
-        }catch (e:Exception){
-            Log.e("errorBodyError",e.toString())
-            return defaultMessage
-        }
-    }
 }
