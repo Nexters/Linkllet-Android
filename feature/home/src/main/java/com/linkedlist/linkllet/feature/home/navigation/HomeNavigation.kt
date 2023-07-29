@@ -17,7 +17,7 @@ fun NavGraphBuilder.Home(
     navigateToAddEdit: () -> Unit,
     navigateToLinks: (Long,String) -> Unit,
     navigateToSettings: () -> Unit,
-    onShowSnackbar: suspend (String) -> Boolean,
+    onShowSnackbar: suspend (String) -> Unit,
 ) {
     composable(route = homeRoute) {
         HomeScreen(

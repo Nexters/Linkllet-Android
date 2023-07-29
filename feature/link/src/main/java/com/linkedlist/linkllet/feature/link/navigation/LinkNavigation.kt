@@ -33,7 +33,7 @@ fun NavController.navigateToAddEditLink(
 fun NavGraphBuilder.Links(
     navigateAddLink: (Long) -> Unit,
     onBack: () -> Unit,
-    onShowSnackbar: suspend (String) -> Boolean,
+    onShowSnackbar: suspend (String) -> Unit,
 ) {
 
     composable(
@@ -57,7 +57,7 @@ fun NavGraphBuilder.Links(
 
 fun NavGraphBuilder.AddEditLink(
     onBack: () -> Unit,
-    onShowSnackbar: suspend (String) -> Boolean,
+    onShowSnackbar: suspend (String) -> Unit,
 ) {
     composable(
         route = addEditLinkRoute,

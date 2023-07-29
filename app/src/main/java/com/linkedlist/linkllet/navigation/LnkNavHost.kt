@@ -20,7 +20,7 @@ fun LnkNavHost(
     appState: LnkAppState,
     modifier: Modifier = Modifier,
     startDestination: String = homeRoute,
-    onShowSnackbar: suspend (String) -> Boolean,
+    onShowSnackbar: suspend (String) -> Unit,
 ) {
     val navController = appState.navController
     NavHost(

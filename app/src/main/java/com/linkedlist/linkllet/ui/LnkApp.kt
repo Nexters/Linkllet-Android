@@ -34,6 +34,7 @@ fun LnkApp(
     appState: LnkAppState = rememberLnkAppState(),
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
     val height = LocalConfiguration.current.screenHeightDp
 
     Scaffold(
@@ -46,14 +47,18 @@ fun LnkApp(
                 hostState = snackbarHostState,
                 snackbar = {
                     Card(
-                        modifier =Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 20.dp),
                         shape = RoundedCornerShape(12.dp),
                         colors = CardDefaults.cardColors(
                             containerColor = ColorCC000000
                         )
                     ) {
                         Box(
-                            Modifier.fillMaxSize().padding(vertical = 16.dp, horizontal = 20.dp)
+                            Modifier
+                                .fillMaxSize()
+                                .padding(vertical = 16.dp, horizontal = 20.dp)
                         ) {
                             Text(
                                 modifier = Modifier.align(Alignment.Center),
@@ -72,11 +77,12 @@ fun LnkApp(
             appState = appState,
             modifier = Modifier.padding(innerPadding),
             onShowSnackbar = {
-                snackbarHostState.showSnackbar(
-                    message = it,
-                    duration = SnackbarDuration.Short,
-
-                ) == SnackbarResult.ActionPerformed
+                coroutineScope.launch {
+                    snackbarHostState.showSnackbar(
+                        message = it,
+                        duration = SnackbarDuration.Short,
+                        )
+                }
             }
         )
     }

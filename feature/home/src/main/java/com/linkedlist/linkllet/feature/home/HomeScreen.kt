@@ -42,7 +42,7 @@ internal fun HomeScreen(
     navigateToAddEditFolder: () -> Unit,
     navigateToLinks: (Long,String) -> Unit,
     navigateToSettings: () -> Unit,
-    onShowSnackbar: suspend (String) -> Boolean,
+    onShowSnackbar: suspend (String) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsState()
 

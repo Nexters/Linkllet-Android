@@ -58,7 +58,7 @@ import com.linkedlist.linkllet.core.ui.LnkFloatingActionButton
 fun LinksScreen(
     navigateAddLink: (Long) -> Unit,
     onBack: () -> Unit,
-    onShowSnackbar: suspend (String) -> Boolean,
+    onShowSnackbar: suspend (String) -> Unit,
     viewModel: LinksViewModel = hiltViewModel()
 ) {
     val webViewClient = AccompanistWebChromeClient()
