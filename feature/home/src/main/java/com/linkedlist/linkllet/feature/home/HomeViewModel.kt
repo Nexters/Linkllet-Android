@@ -2,8 +2,8 @@ package com.linkedlist.linkllet.feature.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.linkedlist.linkellet.core.data.repository.AuthRepository
-import com.linkedlist.linkellet.core.data.repository.LinkRepository
+import com.linkedlist.linkllet.core.data.repository.AuthRepository
+import com.linkedlist.linkllet.core.data.repository.LinkRepository
 import com.linkedlist.linkllet.core.ui.FolderModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
