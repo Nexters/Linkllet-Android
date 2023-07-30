@@ -51,6 +51,7 @@ import com.linkedlist.linkllet.core.ui.LinkItem
 import com.linkedlist.linkllet.core.ui.LnkAppBar
 import com.linkedlist.linkllet.core.ui.LnkDialog
 import com.linkedlist.linkllet.core.ui.LnkFloatingActionButton
+import com.linkedlist.linkllet.feature.link.navigation.FOLDER_TYPE
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -172,7 +173,7 @@ fun LinksScreen(
                         )
                     },
                     action = {
-                        if(uiState.folderType != "DEFAULT"){
+                        if(uiState.folderType != FolderType.DEFAULT){
                             Box(){
                                 Text(
                                     modifier = Modifier

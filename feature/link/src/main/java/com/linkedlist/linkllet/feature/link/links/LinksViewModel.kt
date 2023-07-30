@@ -34,12 +34,16 @@ data class Link(
 
 data class LinksUiState(
     val folderTitle : String = "",
-    val folderType : String = "",
+    val folderType : FolderType,
     val links: List<Link> = emptyList(),
     val isLoading: Boolean = false,
     val isFolderDeleted : Boolean = false,
     val isLinkDeleted : Boolean = false
 )
+
+enum class FolderType {
+    DEFAULT, PERSONALIZED
+}
 
 enum class LinksError{
     READY, NETWORK_ERROR
@@ -61,7 +65,12 @@ class LinksViewModel @Inject constructor(
         key = FOLDER_TYPE
     )
 
-    private val _uiState = MutableStateFlow(LinksUiState(folderTitle = folderTitle ?: "",folderType = folderType ?: ""))
+    private val _uiState = MutableStateFlow(
+        LinksUiState(
+            folderTitle = folderTitle ?: "",
+            folderType = folderType.toFolderType()
+        )
+    )
     val uiState: StateFlow<LinksUiState> = _uiState.asStateFlow()
 
     private val _error = MutableStateFlow<LinksError>(LinksError.READY)
@@ -162,6 +171,14 @@ class LinksViewModel @Inject constructor(
     fun selectLink(url : String) {
         viewModelScope.launch {
             _eventsFlow.emit(Event.ShowLink(url))
+        }
+    }
+
+    private fun String?.toFolderType() : FolderType {
+        return try {
+            FolderType.valueOf(this ?: FolderType.DEFAULT.name)
+        }catch (e: Exception){
+            FolderType.DEFAULT
         }
     }
 
