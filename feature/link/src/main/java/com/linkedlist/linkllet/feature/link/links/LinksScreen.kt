@@ -51,6 +51,7 @@ import com.linkedlist.linkllet.core.ui.LinkItem
 import com.linkedlist.linkllet.core.ui.LnkAppBar
 import com.linkedlist.linkllet.core.ui.LnkDialog
 import com.linkedlist.linkllet.core.ui.LnkFloatingActionButton
+import com.linkedlist.linkllet.feature.link.navigation.FOLDER_TYPE
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -58,7 +59,7 @@ import com.linkedlist.linkllet.core.ui.LnkFloatingActionButton
 fun LinksScreen(
     navigateAddLink: (Long) -> Unit,
     onBack: () -> Unit,
-    onShowSnackbar: suspend (String) -> Boolean,
+    onShowSnackbar: suspend (String) -> Unit,
     viewModel: LinksViewModel = hiltViewModel()
 ) {
     val webViewClient = AccompanistWebChromeClient()
@@ -172,27 +173,30 @@ fun LinksScreen(
                         )
                     },
                     action = {
-                        Box(){
-                            Text(
-                                modifier = Modifier
-                                    .clickable {
+                        if(uiState.folderType != FolderType.DEFAULT){
+                            Box(){
+                                Text(
+                                    modifier = Modifier
+                                        .clickable {
+                                            dropdownState = !dropdownState
+                                        },
+                                    text = "편집",
+                                    style = Typography.titleMedium
+                                )
+                                DropdownMenu(
+                                    modifier = Modifier.background(Color.White),
+                                    expanded = dropdownState,
+                                    onDismissRequest = { dropdownState = !dropdownState }) {
+                                    DropdownMenuItem(text = {
+                                        Text(text = "폴더 삭제하기")
+                                    }, onClick = {
+                                        dialogFolderState = true
                                         dropdownState = !dropdownState
-                                    },
-                                text = "편집",
-                                style = Typography.titleMedium
-                            )
-                            DropdownMenu(
-                                modifier = Modifier.background(Color.White),
-                                expanded = dropdownState,
-                                onDismissRequest = { dropdownState = !dropdownState }) {
-                                DropdownMenuItem(text = {
-                                    Text(text = "폴더 삭제하기")
-                                }, onClick = {
-                                    dialogFolderState = true
-                                    dropdownState = !dropdownState
-                                })
+                                    })
+                                }
                             }
                         }
+
 
 
                     },

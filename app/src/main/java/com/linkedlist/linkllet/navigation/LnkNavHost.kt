@@ -20,7 +20,7 @@ fun LnkNavHost(
     appState: LnkAppState,
     modifier: Modifier = Modifier,
     startDestination: String = homeRoute,
-    onShowSnackbar: suspend (String) -> Boolean,
+    onShowSnackbar: suspend (String) -> Unit,
 ) {
     val navController = appState.navController
     NavHost(
@@ -31,8 +31,8 @@ fun LnkNavHost(
         Home(
             navigateAddLink = navController::navigateToAddEditLink,
             navigateToAddEdit = navController::navigateToAddEditFolder,
-            navigateToLinks = { id, title ->
-                navController.navigateToLinks(folderId = id,title = title )
+            navigateToLinks = { id, title,type ->
+                navController.navigateToLinks(folderId = id,title = title,type = type )
             },
             navigateToSettings = navController::navigateToSettings,
             onShowSnackbar = onShowSnackbar

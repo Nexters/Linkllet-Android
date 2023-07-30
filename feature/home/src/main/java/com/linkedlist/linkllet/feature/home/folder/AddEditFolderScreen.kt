@@ -40,7 +40,7 @@ import kotlinx.coroutines.launch
 fun AddEditFolderScreen(
     onBack: () -> Unit,
     viewModel: AddEditFolderViewModel = hiltViewModel(),
-    onShowSnackbar: suspend (String) -> Boolean,
+    onShowSnackbar: suspend (String) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val coroutineScope = rememberCoroutineScope()
@@ -126,5 +126,5 @@ fun Close(onBack: () -> Unit) {
 @Composable
 @Preview
 fun AddEditFolderScreenPreview() {
-    AddEditFolderScreen(onBack = {}, onShowSnackbar = { _: String -> true })
+    AddEditFolderScreen(onBack = {}, onShowSnackbar = { _: String -> Unit })
 }

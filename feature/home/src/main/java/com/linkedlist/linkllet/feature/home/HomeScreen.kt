@@ -40,9 +40,9 @@ internal fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
     navigateToAddLink: () -> Unit,
     navigateToAddEditFolder: () -> Unit,
-    navigateToLinks: (Long,String) -> Unit,
+    navigateToLinks: (Long,String,String) -> Unit,
     navigateToSettings: () -> Unit,
-    onShowSnackbar: suspend (String) -> Boolean,
+    onShowSnackbar: suspend (String) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -127,7 +127,7 @@ fun HomeScreenPreview() {
     HomeScreen(
         navigateToAddLink = {},
         navigateToAddEditFolder = {},
-        navigateToLinks = {_,_ ->},
+        navigateToLinks = {_,_,_ ->},
         navigateToSettings = {},
         onShowSnackbar = {_ -> true },
     )

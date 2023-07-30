@@ -15,9 +15,9 @@ fun NavController.navigateToHome(navOptions: NavOptions? = null) {
 fun NavGraphBuilder.Home(
     navigateAddLink: () -> Unit,
     navigateToAddEdit: () -> Unit,
-    navigateToLinks: (Long,String) -> Unit,
+    navigateToLinks: (Long,String,String) -> Unit,
     navigateToSettings: () -> Unit,
-    onShowSnackbar: suspend (String) -> Boolean,
+    onShowSnackbar: suspend (String) -> Unit,
 ) {
     composable(route = homeRoute) {
         HomeScreen(

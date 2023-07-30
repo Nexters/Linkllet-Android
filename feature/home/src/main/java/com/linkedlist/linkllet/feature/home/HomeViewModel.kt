@@ -62,7 +62,7 @@ class HomeViewModel @Inject constructor(
 
                 val newFolders =
                     resultFolders.getOrNull()?.map {
-                        FolderModel(folderId = it.id, name = it.name, totalItems = it.size)
+                        FolderModel(folderId = it.id, name = it.name, totalItems = it.size, type = it.type)
                     } ?: emptyList()
 
                 _uiState.update {

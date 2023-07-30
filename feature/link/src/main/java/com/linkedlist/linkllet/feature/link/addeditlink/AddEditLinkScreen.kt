@@ -49,7 +49,7 @@ fun AddEditLinkScreen(
     modifier: Modifier = Modifier,
     viewModel : AddEditLinkViewModel = hiltViewModel(),
     onBack : () -> Unit,
-    onShowSnackbar: suspend (String) -> Boolean,
+    onShowSnackbar: suspend (String) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val error by viewModel.error.collectAsState()
