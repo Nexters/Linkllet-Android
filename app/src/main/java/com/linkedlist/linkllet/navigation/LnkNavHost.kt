@@ -58,6 +58,10 @@ fun LnkNavHost(
             },
             onShowSnackbar = onShowSnackbar
         )
-        Settings()
+        Settings(
+            onBack = {
+                navController.navigateUp()
+            }
+        )
     }
 }

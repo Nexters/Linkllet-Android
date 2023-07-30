@@ -8,9 +8,9 @@ import linkedlist.linkllet.feature.settings.SettingsScreen
 
 const val settingsRoute = "settings"
 
-fun NavGraphBuilder.Settings() {
+fun NavGraphBuilder.Settings(onBack: () -> Unit) {
     composable(route = settingsRoute) {
-        SettingsScreen()
+        SettingsScreen(onBack = { onBack() })
     }
 }
 
