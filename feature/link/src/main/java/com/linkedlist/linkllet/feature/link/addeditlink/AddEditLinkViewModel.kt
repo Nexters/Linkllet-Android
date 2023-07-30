@@ -4,8 +4,8 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.linkedlist.linkellet.core.data.model.Folder
-import com.linkedlist.linkellet.core.data.repository.LinkRepository
+import com.linkedlist.linkllet.core.data.model.Folder
+import com.linkedlist.linkllet.core.data.repository.LinkRepository
 import com.linkedlist.linkllet.feature.link.navigation.FOLDER_ID
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
