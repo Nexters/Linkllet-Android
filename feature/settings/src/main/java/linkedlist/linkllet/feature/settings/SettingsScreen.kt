@@ -42,6 +42,7 @@ fun SettingsScreen(
         text = "해당 기능은 현재 준비중입니다 :)",
         visible = uiState.dialogVisibility,
         onDismissRequest = viewModel::hideDialog,
+        hasCancel = false
     )
 
     Scaffold(
