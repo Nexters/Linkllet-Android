@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import com.linkedlist.linkllet.core.designsystem.theme.ColorCC000000
 import com.linkedlist.linkllet.core.designsystem.theme.Typography
 import com.linkedlist.linkllet.navigation.LnkNavHost
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -77,14 +78,18 @@ fun LnkApp(
             appState = appState,
             modifier = Modifier.padding(innerPadding),
             onShowSnackbar = {
-                coroutineScope.launch {
+                val job = coroutineScope.launch {
                     snackbarHostState.showSnackbar(
                         message = it,
-                        duration = SnackbarDuration.Short,
+                        duration = SnackbarDuration.Indefinite,
                         )
+                }
+
+                coroutineScope.launch {
+                    delay(2000L)
+                    job.cancel()
                 }
             }
         )
     }
-
 }
