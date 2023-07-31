@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -23,22 +24,24 @@ import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.ArrowRight
 fun SettingItem(
     modifier: Modifier = Modifier,
     name: String,
-    onClick: () -> Unit,
+    onClick: (() -> Unit)?,
 ) {
     Row(modifier = modifier
         .padding(horizontal = 24.dp)
-        .clickable { onClick() }
+        .clickable { onClick?.invoke() }
         .height(48.dp)
         .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        Text(name, fontSize = 14.sp, fontWeight = FontWeight.Bold)
-        Icon(
-            modifier = Modifier.size(16.dp),
-            imageVector = LnkIcon.ArrowRight,
-            contentDescription = name
-        )
+        Text(name, fontSize = 14.sp, fontWeight = FontWeight.Bold, color = Color.Black)
+        if(onClick != null) {
+            Icon(
+                modifier = Modifier.size(16.dp),
+                imageVector = LnkIcon.ArrowRight,
+                contentDescription = name
+            )
+        }
     }
 }
 
