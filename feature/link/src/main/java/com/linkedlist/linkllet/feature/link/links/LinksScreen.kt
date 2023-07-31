@@ -51,7 +51,7 @@ import com.linkedlist.linkllet.core.ui.LinkItem
 import com.linkedlist.linkllet.core.ui.LnkAppBar
 import com.linkedlist.linkllet.core.ui.LnkDialog
 import com.linkedlist.linkllet.core.ui.LnkFloatingActionButton
-import com.linkedlist.linkllet.feature.link.navigation.FOLDER_TYPE
+import com.linkedlist.linkllet.feature.link.model.FolderType
 
 
 @OptIn(ExperimentalMaterial3Api::class)
