@@ -61,7 +61,9 @@ fun AddEditLinkScreen(
     val focusManager = LocalFocusManager.current
 
     BackHandler() {
-        dialogState = true
+        if(viewModel.getChangedInputs())
+            dialogState = true
+        else onBack()
     }
 
     LnkDialog(
@@ -115,9 +117,11 @@ fun AddEditLinkScreen(
                 action = {
                     Icon(
                         modifier = Modifier.clickable {
-                            dialogState = !dialogState
+                            if(viewModel.getChangedInputs())
+                                dialogState = !dialogState
+                            else onBack()
                         },
-                        imageVector = Icons.Rounded.Close, contentDescription = "settings")
+                        imageVector = Icons.Rounded.Close, contentDescription = "close")
                 },
                 modifier = Modifier.shadow(elevation = 4.dp), // fixme : 임시 그림자
 

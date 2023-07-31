@@ -1,11 +1,13 @@
 package com.linkedlist.linkllet.feature.link.addeditlink
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.linkedlist.linkllet.core.data.model.Folder
 import com.linkedlist.linkllet.core.data.repository.LinkRepository
+import com.linkedlist.linkllet.feature.link.model.FolderType
+import com.linkedlist.linkllet.feature.link.model.FolderUiModel
+import com.linkedlist.linkllet.feature.link.model.toFolderType
+import com.linkedlist.linkllet.feature.link.model.toFolderUiModel
 import com.linkedlist.linkllet.feature.link.navigation.FOLDER_ID
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,12 +17,6 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
-data class FolderUiModel(
-    val id : Long,
-    val name: String = "",
-    val isSelected: Boolean = false
-)
 
 data class AddEditLinkUiState(
     val link: String = "",
@@ -55,6 +51,12 @@ class AddEditLinkViewModel @Inject constructor(
 
     init {
         fetchFolders()
+    }
+
+    fun getChangedInputs() : Boolean {
+        return uiState.value.title.trim().isNotBlank() || uiState.value.link.trim().isNotBlank()
+                || if(folderId != -1L) uiState.value.folders.find { it.isSelected }?.id != folderId
+                    else uiState.value.folders.find { it.isSelected }?.folderType != FolderType.DEFAULT
     }
 
     fun updateIsButtonEmphasized(emphasized : Boolean){
@@ -98,7 +100,7 @@ class AddEditLinkViewModel @Inject constructor(
                                 uiState.value.copy(
                                     folders = it.map {
                                         if(folderId == -1L ) {
-                                            it.toFolderUiModel(it.type == "DEFAULT")
+                                            it.toFolderUiModel(it.type.toFolderType() == FolderType.DEFAULT)
                                         }else {
                                             it.toFolderUiModel(it.id == folderId)
                                         }
@@ -123,8 +125,8 @@ class AddEditLinkViewModel @Inject constructor(
                 if(checkTitleAndLink()){
                     linkRepository.addLink(
                         id = uiState.value.folders.firstOrNull{it.isSelected}?.id ?: 0,
-                        name = uiState.value.title,
-                        url = uiState.value.link
+                        name = uiState.value.title.trim(),
+                        url = uiState.value.link.trim()
                     ).catch {
                         _error.emit(AddEditLinkError.NETWORK_ERROR)
                     }.collect {
@@ -186,10 +188,3 @@ class AddEditLinkViewModel @Inject constructor(
     }
 }
 
-fun Folder.toFolderUiModel(selected : Boolean = false) : FolderUiModel {
-    return FolderUiModel(
-        id = id,
-        name = name,
-        isSelected = selected
-    )
-}
