@@ -35,7 +35,8 @@ fun LnkDialog(
     visible: Boolean,
     onDismissRequest: () -> Unit,
     onOk : () -> Unit = {},
-    onCancel : () -> Unit = {}
+    onCancel: () -> Unit = {},
+    hasCancel: Boolean = true,
 ) {
     if (visible) {
         CustomAlertDialog(
@@ -67,15 +68,16 @@ fun LnkDialog(
                             .fillMaxWidth()
                             .wrapContentHeight()
                     ) {
-                        LnkIconButton(
-                            modifier = Modifier.align(Alignment.CenterStart),
-                            onClick = {
-                                onCancel()
-                                onDismissRequest()
+                        if(hasCancel) {
+                            LnkIconButton(
+                                modifier = Modifier.align(Alignment.CenterStart),
+                                onClick = {
+                                    onCancel()
+                                    onDismissRequest()
+                                }
+                            ) {
+                                Icon(imageVector = LnkIcon.X, contentDescription = "취소")
                             }
-                        ) {
-                            Icon(imageVector = LnkIcon.X, contentDescription = null)
-
                         }
 
                         LnkIconButton(
@@ -85,7 +87,7 @@ fun LnkDialog(
                                 onDismissRequest()
                             }
                         ) {
-                            Icon(imageVector = LnkIcon.O, contentDescription = null)
+                            Icon(imageVector = LnkIcon.O, contentDescription = "확인")
                         }
                     }
                 }
