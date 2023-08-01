@@ -1,11 +1,13 @@
 package com.linkedlist.linkllet.feature.link.links
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.linkedlist.linkllet.core.data.repository.LinkRepository
+import com.linkedlist.linkllet.feature.link.model.FolderType
+import com.linkedlist.linkllet.feature.link.model.LinkUiModel
+import com.linkedlist.linkllet.feature.link.model.toFolderType
 import com.linkedlist.linkllet.feature.link.navigation.FOLDER_ID
 import com.linkedlist.linkllet.feature.link.navigation.FOLDER_TITLE
 import com.linkedlist.linkllet.feature.link.navigation.FOLDER_TYPE
@@ -25,25 +27,14 @@ sealed class Event {
     data class ShowLink(val url: String) : Event()
 }
 
-data class Link(
-    val id : Long,
-    val title : String,
-    val link : String,
-    val date : String
-)
-
 data class LinksUiState(
     val folderTitle : String = "",
     val folderType : FolderType,
-    val links: List<Link> = emptyList(),
+    val links: List<LinkUiModel> = emptyList(),
     val isLoading: Boolean = false,
     val isFolderDeleted : Boolean = false,
     val isLinkDeleted : Boolean = false
 )
-
-enum class FolderType {
-    DEFAULT, PERSONALIZED
-}
 
 enum class LinksError{
     READY, NETWORK_ERROR
@@ -92,7 +83,7 @@ class LinksViewModel @Inject constructor(
                             _uiState.emit(
                                 uiState.value.copy(
                                     links = it.map {
-                                        Link(
+                                        LinkUiModel(
                                             id = it.id,
                                             title = it.name,
                                             link = it.url,
@@ -171,14 +162,6 @@ class LinksViewModel @Inject constructor(
     fun selectLink(url : String) {
         viewModelScope.launch {
             _eventsFlow.emit(Event.ShowLink(url))
-        }
-    }
-
-    private fun String?.toFolderType() : FolderType {
-        return try {
-            FolderType.valueOf(this ?: FolderType.DEFAULT.name)
-        }catch (e: Exception){
-            FolderType.DEFAULT
         }
     }
 
