@@ -81,7 +81,7 @@ fun LnkApp(
                 val job = coroutineScope.launch {
                     snackbarHostState.showSnackbar(
                         message = it,
-                        duration = SnackbarDuration.Indefinite,
+                        duration = SnackbarDuration.Short,
                         )
                 }
 
