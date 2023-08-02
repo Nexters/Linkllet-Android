@@ -15,6 +15,7 @@ import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -36,7 +37,7 @@ fun LnkAppBar(
 ) {
     Box(
         modifier = modifier
-            .background(color = Color.White)
+            .background(color = MaterialTheme.colorScheme.background)
             .padding(horizontal = 18.dp)
             .fillMaxWidth()
             .height(60.dp),
