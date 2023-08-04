@@ -65,8 +65,8 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             _loading.value = true
             linkRepository.getFolders().collect { result ->
-                result.onSuccess { foldersResponse ->
-                    val folders = foldersResponse.map {
+                result.mapCatching { folders ->
+                    folders.map {
                         FolderModel(
                             folderId = it.id,
                             name = it.name,
@@ -74,6 +74,7 @@ class HomeViewModel @Inject constructor(
                             type = it.type
                         )
                     }
+                }.onSuccess { folders ->
                     _uiState.update { it.copy(folders = folders) }
                     _loading.value = false
                 }.onFailure {
