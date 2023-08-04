@@ -12,7 +12,6 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.net.ConnectException
@@ -34,6 +33,12 @@ class HomeViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
+    private val _error = MutableStateFlow(false)
+    val error: StateFlow<Boolean> = _error.asStateFlow()
+
+    private val _loading = MutableStateFlow(false)
+    val loading: StateFlow<Boolean> = _loading.asStateFlow()
+
     private val _eventsFlow = MutableSharedFlow<Event>()
     val eventsFlow: SharedFlow<Event> = _eventsFlow.asSharedFlow()
 
@@ -48,7 +53,7 @@ class HomeViewModel @Inject constructor(
                     // fixme : 일단은 콜백으로 작성했으나 더 좋은 구조로 작성할 수 있는지 고민하기
                     fetchFolders()
                 }.onFailure {
-                    if(it is ConnectException) {
+                    if (it is ConnectException) {
                         _eventsFlow.emit(Event.Error("네트워크 연결을 확인해 주세요"))
                     }
                 }
@@ -58,15 +63,22 @@ class HomeViewModel @Inject constructor(
 
     fun fetchFolders() {
         viewModelScope.launch {
-            linkRepository.getFolders().collectLatest { resultFolders ->
-
-                val newFolders =
-                    resultFolders.getOrNull()?.map {
-                        FolderModel(folderId = it.id, name = it.name, totalItems = it.size, type = it.type)
-                    } ?: emptyList()
-
-                _uiState.update {
-                    it.copy(folders = newFolders)
+            _loading.value = true
+            linkRepository.getFolders().collect { result ->
+                result.onSuccess { foldersResponse ->
+                    val folders = foldersResponse.map {
+                        FolderModel(
+                            folderId = it.id,
+                            name = it.name,
+                            totalItems = it.size,
+                            type = it.type
+                        )
+                    }
+                    _uiState.update { it.copy(folders = folders) }
+                    _loading.value = false
+                }.onFailure {
+                    _loading.value = false
+                    _error.value = false
                 }
             }
         }
