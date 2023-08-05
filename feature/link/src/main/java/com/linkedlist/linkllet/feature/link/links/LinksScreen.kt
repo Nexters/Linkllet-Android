@@ -91,25 +91,21 @@ fun LinksScreen(
                 is Event.ShowLink -> {
                     webviewState = WebViewState(WebContent.Url(it.url))
                 }
+                is Event.LinkDeleted -> {
+                    onShowSnackbar("링크를 삭제했어요.")
+                }
+                is Event.FolderDeleted -> {
+                    onBack()
+                }
+                is Event.Error -> {
+                    onShowSnackbar(it.message)
+                }
             }
         }
     }
 
-    LaunchedEffect(true) {
+    LaunchedEffect(Unit) {
         viewModel.fetchLinks()
-    }
-
-    LaunchedEffect(key1 = uiState.isFolderDeleted) {
-        if(uiState.isFolderDeleted)
-            onBack()
-    }
-
-    LaunchedEffect(key1 = uiState.isLinkDeleted) {
-        if(uiState.isLinkDeleted){
-            viewModel.fetchLinks()
-            onShowSnackbar("링크를 삭제했어요.")
-        }
-
     }
 
     LnkDialog(
@@ -136,6 +132,7 @@ fun LinksScreen(
 
         }
     )
+
     Box(
         modifier = Modifier.fillMaxSize()
     ){
@@ -253,6 +250,5 @@ fun LinksScreen(
                 )
             }
         }
-
     }
 }
