@@ -96,7 +96,6 @@ internal fun HomeScreen(
                 LnkScrollableFolder(
                     modifier = Modifier.padding(horizontal = 5.dp),
                     folders = uiState.folders,
-                    addFolder = navigateToAddEditFolder,
                     navigateToLinks = navigateToLinks,
                 )
             }
