@@ -52,7 +52,6 @@ internal fun HomeScreen(
         viewModel.eventsFlow.collect {
             when(it) {
                 is Event.Error -> onShowSnackbar(it.message)
-                else -> {}
             }
         }
     }
