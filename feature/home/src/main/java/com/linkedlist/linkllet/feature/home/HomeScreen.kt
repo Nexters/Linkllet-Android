@@ -62,6 +62,7 @@ internal fun HomeScreen(
         topBar = {
             LnkAppBar(
                 title = { AppBarTitle() },
+                leadingButton = { SettingsAction(navigateToSettings) },
                 action = { AddFolderAction(navigateToAddEditFolder) },
             )
         },
