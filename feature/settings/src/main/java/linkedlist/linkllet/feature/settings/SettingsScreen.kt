@@ -35,6 +35,7 @@ import com.linkedlist.linkllet.core.ui.SettingItem
 fun SettingsScreen(
     viewModel: SettingsViewModel = hiltViewModel(),
     onBack: () -> Unit,
+    navigateToFeedback: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -82,5 +83,5 @@ fun SettingsScreen(
 @Preview(showBackground = true)
 @Composable
 fun SettingsScreenPreview() {
-    SettingsScreen(onBack = {})
+    SettingsScreen(onBack = {}, navigateToFeedback = {})
 }

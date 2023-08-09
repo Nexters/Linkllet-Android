@@ -12,7 +12,9 @@ import com.linkedlist.linkllet.feature.link.navigation.Links
 import com.linkedlist.linkllet.feature.link.navigation.navigateToAddEditLink
 import com.linkedlist.linkllet.feature.link.navigation.navigateToLinks
 import com.linkedlist.linkllet.ui.LnkAppState
+import linkedlist.linkllet.feature.settings.navigation.Feedback
 import linkedlist.linkllet.feature.settings.navigation.Settings
+import linkedlist.linkllet.feature.settings.navigation.navigateToFeedback
 import linkedlist.linkllet.feature.settings.navigation.navigateToSettings
 
 @Composable
@@ -59,9 +61,9 @@ fun LnkNavHost(
             onShowSnackbar = onShowSnackbar
         )
         Settings(
-            onBack = {
-                navController.navigateUp()
-            }
+            onBack = navController::navigateUp,
+            navigateToFeedback = navController::navigateToFeedback,
         )
+        Feedback(onBack = navController::navigateUp)
     }
 }
