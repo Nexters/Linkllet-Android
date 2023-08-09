@@ -221,7 +221,40 @@ fun AddEditLinkScreen(
             )
         }
     }
+}
 
 
-
+@Composable
+fun AddFolderButton(
+    onClick : () -> Unit
+){
+    OutlinedCard(
+        shape = RoundedCornerShape(14.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White
+        ),
+        border = BorderStroke(width = 1.dp, color = Gray200),
+    ) {
+        Row(
+            modifier = Modifier
+                .clickable {
+                    onClick()
+                }
+                .padding(horizontal = 10.dp, vertical = 5.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "폴더 추가",
+                style = Typography.bodySmall,
+                color = Color.Black
+            )
+            Icon(
+                modifier = Modifier
+                    .size(12.dp)
+                    .padding(start = 3.dp),
+                imageVector = LnkIcon.Plus,
+                contentDescription = ""
+            )
+        }
+    }
 }
