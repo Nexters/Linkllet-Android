@@ -1,11 +1,16 @@
 package linkedlist.linkllet.feature.settings
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 sealed class SettingModel {
@@ -22,6 +27,10 @@ data class SettingsUiState(
     val dialogVisibility: Boolean = false,
 )
 
+sealed class Event() {
+    object SendFeedback : Event()
+}
+
 @HiltViewModel
 class SettingsViewModel @Inject constructor() : ViewModel() {
     private val _uiState = MutableStateFlow(
@@ -29,7 +38,10 @@ class SettingsViewModel @Inject constructor() : ViewModel() {
             settings = listOf(
                 SettingModel.Item(name = "알림 설정", ::showDialog),
                 SettingModel.Item(name = "사용 방법", ::showDialog),
-                SettingModel.Item(name = "서비스 의견 보내기", ::showDialog),
+                SettingModel.Item(
+                    name = "서비스 의견 보내기",
+                    action = { emitEvent(Event.SendFeedback) }
+                ),
                 SettingModel.Divider,
                 SettingModel.Item(name = "링크 휴지통", ::showDialog),
                 SettingModel.Divider,
@@ -39,6 +51,15 @@ class SettingsViewModel @Inject constructor() : ViewModel() {
         )
     )
     val uiState: StateFlow<SettingsUiState> = _uiState.asStateFlow()
+
+    private val _eventsFlow = MutableSharedFlow<Event>()
+    val eventFlow: SharedFlow<Event> = _eventsFlow.asSharedFlow()
+
+    fun emitEvent(event: Event) {
+        viewModelScope.launch {
+            _eventsFlow.emit(event)
+        }
+    }
 
     fun showDialog() {
         _uiState.update {

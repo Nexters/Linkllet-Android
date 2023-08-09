@@ -39,6 +39,14 @@ fun SettingsScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
+    LaunchedEffect(Unit) {
+        viewModel.eventFlow.collect { event ->
+            when(event) {
+                is Event.SendFeedback -> navigateToFeedback()
+            }
+        }
+    }
+
     LnkDialog(
         text = "해당 기능은 현재 준비중입니다 :)",
         visible = uiState.dialogVisibility,
