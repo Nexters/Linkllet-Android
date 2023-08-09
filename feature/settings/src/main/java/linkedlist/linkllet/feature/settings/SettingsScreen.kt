@@ -65,7 +65,8 @@ fun SettingsScreen(
                 if(it is SettingModel.Item) {
                     SettingItem(
                         name = it.name,
-                        onClick = viewModel::showDialog
+                        onClick = it.action,
+                        active = it.action != viewModel::showDialog
                     )
                 } else {
                     Divider(

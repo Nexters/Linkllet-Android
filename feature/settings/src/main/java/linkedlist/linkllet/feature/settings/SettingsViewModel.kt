@@ -10,7 +10,8 @@ import javax.inject.Inject
 
 sealed class SettingModel {
     data class Item(
-        val name: String
+        val name: String,
+        val action: () -> Unit,
     ) : SettingModel()
 
     object Divider : SettingModel()
@@ -26,14 +27,14 @@ class SettingsViewModel @Inject constructor() : ViewModel() {
     private val _uiState = MutableStateFlow(
         SettingsUiState(
             settings = listOf(
-                SettingModel.Item(name = "알림 설정"),
-                SettingModel.Item(name = "사용 방법"),
-                SettingModel.Item(name = "서비스 의견 보내기"),
+                SettingModel.Item(name = "알림 설정", ::showDialog),
+                SettingModel.Item(name = "사용 방법", ::showDialog),
+                SettingModel.Item(name = "서비스 의견 보내기", ::showDialog),
                 SettingModel.Divider,
-                SettingModel.Item(name = "링크 휴지통"),
+                SettingModel.Item(name = "링크 휴지통", ::showDialog),
                 SettingModel.Divider,
-                SettingModel.Item(name = "제작자 소개"),
-                SettingModel.Item(name = "현재 버전"),
+                SettingModel.Item(name = "제작자 소개", ::showDialog),
+                SettingModel.Item(name = "현재 버전", ::showDialog),
             )
         )
     )
