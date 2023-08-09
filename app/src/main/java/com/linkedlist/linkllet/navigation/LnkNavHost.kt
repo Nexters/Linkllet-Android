@@ -38,6 +38,7 @@ fun LnkNavHost(
             onShowSnackbar = onShowSnackbar
         )
         AddEditLink(
+            navigateAddFolder = navController::navigateToAddEditFolder,
             onBack = {
                 navController.navigateUp()
             },
