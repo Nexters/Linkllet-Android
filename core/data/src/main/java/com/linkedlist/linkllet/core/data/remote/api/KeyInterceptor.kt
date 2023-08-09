@@ -1,4 +1,4 @@
-package com.linkedlist.linkllet.core.data.source.remote.api
+package com.linkedlist.linkllet.core.data.remote.api
 
 import android.annotation.SuppressLint
 import android.content.Context

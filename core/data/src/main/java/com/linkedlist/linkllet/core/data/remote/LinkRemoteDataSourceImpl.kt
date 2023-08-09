@@ -1,11 +1,11 @@
-package com.linkedlist.linkllet.core.data.source.remote
+package com.linkedlist.linkllet.core.data.remote
 
 import android.util.Log
 import com.linkedlist.linkllet.core.data.model.Folder
 import com.linkedlist.linkllet.core.data.model.Link
 import com.linkedlist.linkllet.core.data.model.request.AddFolderRequest
 import com.linkedlist.linkllet.core.data.model.request.AddLinkRequest
-import com.linkedlist.linkllet.core.data.source.remote.api.LinkService
+import com.linkedlist.linkllet.core.data.remote.api.LinkService
 import okhttp3.ResponseBody
 import org.json.JSONObject
 import javax.inject.Inject

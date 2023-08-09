@@ -1,7 +1,7 @@
 package com.linkedlist.linkllet.core.data.repository
 
 import com.linkedlist.linkllet.core.data.model.Auth.*
-import com.linkedlist.linkllet.core.data.source.remote.AuthRemoteDataSource
+import com.linkedlist.linkllet.core.data.remote.AuthRemoteDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
