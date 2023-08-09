@@ -8,4 +8,8 @@ class FakeAuthRepository : AuthRepository {
     override fun signUp(): Flow<Result<Boolean>> = flow {
         emit(Result.success(false))
     }
+
+    override fun addFeedback(content: String): Flow<Result<Unit>> {
+        TODO("Not yet implemented")
+    }
 }

@@ -32,6 +32,6 @@ class AuthRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun addFeedback(content: String): Result<Unit> = runCatching {
         val response = authService.addFeedback(AddFeedbackRequest(feedback = content))
-        if(!response.isSuccessful) throw RuntimeException(message = "피드백 전송에 실패했어요.")
+        if(!response.isSuccessful) throw RuntimeException("피드백 전송에 실패했어요.")
     }
 }
