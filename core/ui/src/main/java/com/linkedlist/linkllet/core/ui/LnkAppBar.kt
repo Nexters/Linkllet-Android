@@ -33,6 +33,7 @@ fun LnkAppBar(
     modifier: Modifier = Modifier,
     title: @Composable () -> Unit,
     backButton: @Composable () -> Unit = {},
+    leadingButton: @Composable () -> Unit = {},
     action: @Composable () -> Unit = {}
 ) {
     Box(
@@ -48,6 +49,7 @@ fun LnkAppBar(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             backButton()
+            leadingButton()
             Spacer(modifier = Modifier.weight(1.0f))
             action()
         }

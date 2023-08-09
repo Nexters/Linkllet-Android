@@ -25,6 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.linkedlist.linkllet.core.designsystem.icon.LnkIcon
+import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.AddFolder
 import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.Clip
 import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.HomeBackground
 import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.Linkllet
@@ -52,7 +53,6 @@ internal fun HomeScreen(
         viewModel.eventsFlow.collect {
             when(it) {
                 is Event.Error -> onShowSnackbar(it.message)
-                else -> {}
             }
         }
     }
@@ -62,7 +62,8 @@ internal fun HomeScreen(
         topBar = {
             LnkAppBar(
                 title = { AppBarTitle() },
-                action = { SettingsAction(navigateToSettings = navigateToSettings) },
+                leadingButton = { SettingsAction(navigateToSettings) },
+                action = { AddFolderAction(navigateToAddEditFolder) },
             )
         },
         floatingActionButton = {
@@ -97,7 +98,6 @@ internal fun HomeScreen(
                 LnkScrollableFolder(
                     modifier = Modifier.padding(horizontal = 5.dp),
                     folders = uiState.folders,
-                    addFolder = navigateToAddEditFolder,
                     navigateToLinks = navigateToLinks,
                 )
             }
@@ -117,6 +117,17 @@ fun SettingsAction(navigateToSettings: () -> Unit) {
             navigateToSettings()
         },
         imageVector = LnkIcon.Settings,
+        contentDescription = "설정",
+    )
+}
+
+@Composable
+fun AddFolderAction(navigateToAddEditFolder: () -> Unit) {
+    Icon(
+        modifier = Modifier.clickable {
+            navigateToAddEditFolder()
+        },
+        imageVector = LnkIcon.AddFolder,
         contentDescription = "설정",
     )
 }

@@ -65,7 +65,6 @@ fun AddEditFolderScreen(
                 is Event.ShowToast -> {
                     onShowSnackbar(it.message)
                 }
-                else -> {}
             }
         }
     }
