@@ -19,36 +19,37 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.linkedlist.linkllet.core.designsystem.icon.LnkIcon
 import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.ArrowRight
+import com.linkedlist.linkllet.core.designsystem.theme.Gray600
 
 @Composable
 fun SettingItem(
     modifier: Modifier = Modifier,
     name: String,
-    onClick: (() -> Unit)?,
+    onClick: () -> Unit,
+    active: Boolean = true,
 ) {
     Row(modifier = modifier
         .padding(horizontal = 24.dp)
-        .clickable { onClick?.invoke() }
+        .clickable { onClick() }
         .height(48.dp)
         .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        Text(name, fontSize = 14.sp, fontWeight = FontWeight.Bold, color = Color.Black)
-        if(onClick != null) {
-            Icon(
-                modifier = Modifier.size(16.dp),
-                imageVector = LnkIcon.ArrowRight,
-                contentDescription = name
-            )
-        }
+        val color = if(active) Color.Black else Gray600
+
+        Text(name, fontSize = 14.sp, fontWeight = FontWeight.Bold, color = color)
+        Icon(
+            modifier = Modifier.size(16.dp),
+            imageVector = LnkIcon.ArrowRight,
+            contentDescription = name,
+            tint = color
+        )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun SettingItemPreview() {
-    SettingItem(name = "현재 버전") {
-
-    }
+    SettingItem(name = "현재 버전", onClick = {})
 }

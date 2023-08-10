@@ -1,9 +1,7 @@
 package com.linkedlist.linkllet.core.data
 
 import android.content.Context
-import com.linkedlist.linkllet.core.data.source.remote.api.KeyInterceptor
-import com.linkedlist.linkllet.core.data.BuildConfig
-import dagger.hilt.android.qualifiers.ApplicationContext
+import com.linkedlist.linkllet.core.data.remote.api.KeyInterceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit

@@ -2,8 +2,8 @@ package com.linkedlist.linkllet.core.data.di
 
 import android.content.Context
 import com.linkedlist.linkllet.core.data.RetrofitFactory
-import com.linkedlist.linkllet.core.data.source.remote.api.AuthService
-import com.linkedlist.linkllet.core.data.source.remote.api.LinkService
+import com.linkedlist.linkllet.core.data.remote.api.AuthService
+import com.linkedlist.linkllet.core.data.remote.api.LinkService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

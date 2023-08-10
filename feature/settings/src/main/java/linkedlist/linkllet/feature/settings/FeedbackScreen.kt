@@ -1,17 +1,18 @@
 package linkedlist.linkllet.feature.settings
 
-import android.content.pm.PackageManager
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Divider
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -24,42 +25,33 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.linkedlist.linkllet.core.designsystem.icon.LnkIcon
 import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.X
-import com.linkedlist.linkllet.core.designsystem.theme.Gray200
 import com.linkedlist.linkllet.core.designsystem.theme.Typography
 import com.linkedlist.linkllet.core.ui.LnkAppBar
-import com.linkedlist.linkllet.core.ui.LnkDialog
-import com.linkedlist.linkllet.core.ui.SettingItem
+import com.linkedlist.linkllet.core.ui.LnkButtonWithMargin
+import com.linkedlist.linkllet.core.ui.LnkTextFieldWithTitle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen(
-    viewModel: SettingsViewModel = hiltViewModel(),
+fun FeedbackScreen(
+    viewModel: FeedbackViewModel = hiltViewModel(),
     onBack: () -> Unit,
-    navigateToFeedback: () -> Unit,
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val content by viewModel.content.collectAsState()
 
     LaunchedEffect(Unit) {
-        viewModel.eventFlow.collect { event ->
+        viewModel.eventsFlow.collect { event ->
             when(event) {
-                is Event.SendFeedback -> navigateToFeedback()
+                is FeedbackEvent.CloseScreen -> onBack()
             }
         }
     }
-
-    LnkDialog(
-        text = "해당 기능은 현재 준비중입니다 :)",
-        visible = uiState.dialogVisibility,
-        onDismissRequest = viewModel::hideDialog,
-        hasCancel = false
-    )
 
     Scaffold(
         containerColor = Color.White,
         topBar = {
             LnkAppBar(
                 Modifier.shadow(elevation = 4.dp), // fixme : 임시 그림자
-                title = { Text("설정", style = Typography.titleMedium) },
+                title = { Text("서비스 의견 보내기", style = Typography.titleMedium) },
                 action = {
                     Icon(
                         modifier = Modifier.clickable { onBack() },
@@ -68,28 +60,30 @@ fun SettingsScreen(
                 }
             )
         }
-    ) { padding ->
-        LazyColumn(modifier = Modifier.padding(padding)) {
-            items(uiState.settings) {
-                if(it is SettingModel.Item) {
-                    SettingItem(
-                        name = it.name,
-                        onClick = it.action,
-                        active = it.action != viewModel::showDialog
-                    )
-                } else {
-                    Divider(
-                        modifier = Modifier.height(10.dp),
-                        color = Gray200,
-                    )
-                }
-            }
+    ) {
+        Column(Modifier.padding(it)) {
+            LnkTextFieldWithTitle(
+                modifier = Modifier
+                    .padding(horizontal = 18.dp)
+                    .padding(top = 20.dp),
+                title = "의견",
+                value = content,
+                onValueChange = viewModel::updateContent,
+                maxLength = 200,
+                maxLines = 5,
+                isVisibleMaxLengthNotice = true,
+            )
+            Spacer(modifier = Modifier.weight(1.0f))
+            LnkButtonWithMargin(
+                text = "저장하기",
+                onClick = viewModel::sendFeedback
+            )
         }
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-fun SettingsScreenPreview() {
-    SettingsScreen(onBack = {}, navigateToFeedback = {})
+@Preview
+fun FeedbackScreenPreview() {
+    FeedbackScreen(onBack = {})
 }

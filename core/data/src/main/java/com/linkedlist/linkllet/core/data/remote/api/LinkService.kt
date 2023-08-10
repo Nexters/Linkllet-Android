@@ -1,4 +1,4 @@
-package com.linkedlist.linkllet.core.data.source.remote.api
+package com.linkedlist.linkllet.core.data.remote.api
 
 import com.linkedlist.linkllet.core.data.model.request.AddFolderRequest
 import com.linkedlist.linkllet.core.data.model.request.AddLinkRequest
