@@ -2,13 +2,11 @@ package com.linkedlist.linkllet.feature.home
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
@@ -19,7 +17,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -29,11 +26,11 @@ import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.AddFolder
 import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.Clip
 import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.HomeBackground
 import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.Linkllet
+import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.Search
 import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.Settings
 import com.linkedlist.linkllet.core.ui.LnkAppBar
 import com.linkedlist.linkllet.core.ui.LnkFloatingActionButton
 import com.linkedlist.linkllet.core.ui.LnkScrollableFolder
-import kotlinx.coroutines.flow.collect
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -63,7 +60,7 @@ internal fun HomeScreen(
             LnkAppBar(
                 title = { AppBarTitle() },
                 leadingButton = { SettingsAction(navigateToSettings) },
-                action = { AddFolderAction(navigateToAddEditFolder) },
+                action = { HomeActions(navigateToAddEditFolder) },
             )
         },
         floatingActionButton = {
@@ -122,14 +119,23 @@ fun SettingsAction(navigateToSettings: () -> Unit) {
 }
 
 @Composable
-fun AddFolderAction(navigateToAddEditFolder: () -> Unit) {
-    Icon(
-        modifier = Modifier.clickable {
-            navigateToAddEditFolder()
-        },
-        imageVector = LnkIcon.AddFolder,
-        contentDescription = "설정",
-    )
+fun HomeActions(navigateToAddEditFolder: () -> Unit) {
+    Row {
+        Icon(
+            modifier = Modifier.clickable {
+                navigateToAddEditFolder()
+            },
+            imageVector = LnkIcon.Search,
+            contentDescription = "검색",
+        )
+        Icon(
+            modifier = Modifier.clickable {
+                navigateToAddEditFolder()
+            },
+            imageVector = LnkIcon.AddFolder,
+            contentDescription = "폴더 추가",
+        )
+    }
 }
 
 @Composable
