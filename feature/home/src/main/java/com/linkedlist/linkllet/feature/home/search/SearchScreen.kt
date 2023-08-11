@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -25,6 +26,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -32,6 +34,7 @@ import com.linkedlist.linkllet.core.designsystem.icon.LnkIcon
 import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.Search
 import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.X
 import com.linkedlist.linkllet.core.designsystem.theme.Gray100
+import com.linkedlist.linkllet.core.designsystem.theme.Gray600
 import com.linkedlist.linkllet.core.designsystem.theme.Typography
 import com.linkedlist.linkllet.core.ui.LnkAppBar
 
@@ -42,6 +45,7 @@ fun SearchScreen(
     onBack: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val empty by viewModel.empty.collectAsState(initial = false)
 
     Scaffold(
         topBar = {
@@ -61,8 +65,26 @@ fun SearchScreen(
                 modifier = Modifier.padding(top = 20.dp),
                 value = uiState.keyword,
                 onValueChange = viewModel::updateKeyword,
-                search = {},
+                search = viewModel::search,
             )
+
+            when {
+                empty -> {
+                    Box(
+                        modifier = Modifier.fillMaxHeight()
+                            .padding(bottom = 70.dp), // 검색바 크기만큼 보정
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Text(
+                            text = "검색 결과가 없습니다.",
+                            modifier = Modifier.fillMaxWidth(),
+                            style = TextStyle(color = Gray600, fontWeight = FontWeight.Medium),
+                            textAlign = TextAlign.Center,
+                        )
+                    }
+                }
+                else -> {}
+            }
         }
     }
 }
@@ -99,7 +121,8 @@ fun SearchBar(
             )
         }
         Icon(
-            modifier = Modifier.padding(end = 16.dp)
+            modifier = Modifier
+                .padding(end = 16.dp)
                 .clickable { search() },
             imageVector = LnkIcon.Search,
             contentDescription = "검색",
