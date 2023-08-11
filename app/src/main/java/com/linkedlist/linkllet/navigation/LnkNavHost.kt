@@ -5,8 +5,10 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import com.linkedlist.linkllet.feature.home.navigation.AddEditFolder
 import com.linkedlist.linkllet.feature.home.navigation.Home
+import com.linkedlist.linkllet.feature.home.navigation.Search
 import com.linkedlist.linkllet.feature.home.navigation.homeRoute
 import com.linkedlist.linkllet.feature.home.navigation.navigateToAddEditFolder
+import com.linkedlist.linkllet.feature.home.navigation.navigateToSearch
 import com.linkedlist.linkllet.feature.link.navigation.AddEditLink
 import com.linkedlist.linkllet.feature.link.navigation.Links
 import com.linkedlist.linkllet.feature.link.navigation.navigateToAddEditLink
@@ -37,6 +39,7 @@ fun LnkNavHost(
                 navController.navigateToLinks(folderId = id,title = title,type = type )
             },
             navigateToSettings = navController::navigateToSettings,
+            navigateToSearch = navController::navigateToSearch,
             onShowSnackbar = onShowSnackbar
         )
         AddEditLink(
@@ -66,5 +69,6 @@ fun LnkNavHost(
             navigateToFeedback = navController::navigateToFeedback,
         )
         Feedback(onBack = navController::navigateUp)
+        Search(onBack = navController::navigateUp)
     }
 }

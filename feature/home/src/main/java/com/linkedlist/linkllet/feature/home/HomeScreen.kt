@@ -40,6 +40,7 @@ internal fun HomeScreen(
     navigateToAddEditFolder: () -> Unit,
     navigateToLinks: (Long,String,String) -> Unit,
     navigateToSettings: () -> Unit,
+    navigateToSearch: () -> Unit,
     onShowSnackbar: suspend (String) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -60,7 +61,7 @@ internal fun HomeScreen(
             LnkAppBar(
                 title = { AppBarTitle() },
                 leadingButton = { SettingsAction(navigateToSettings) },
-                action = { HomeActions(navigateToAddEditFolder) },
+                action = { HomeActions(navigateToSearch, navigateToAddEditFolder) },
             )
         },
         floatingActionButton = {
@@ -119,11 +120,14 @@ fun SettingsAction(navigateToSettings: () -> Unit) {
 }
 
 @Composable
-fun HomeActions(navigateToAddEditFolder: () -> Unit) {
+fun HomeActions(
+    navigateToSearch: () -> Unit,
+    navigateToAddEditFolder: () -> Unit,
+) {
     Row {
         Icon(
             modifier = Modifier.clickable {
-                navigateToAddEditFolder()
+                navigateToSearch()
             },
             imageVector = LnkIcon.Search,
             contentDescription = "검색",
@@ -146,6 +150,7 @@ fun HomeScreenPreview() {
         navigateToAddEditFolder = {},
         navigateToLinks = {_,_,_ ->},
         navigateToSettings = {},
+        navigateToSearch = {},
         onShowSnackbar = {_ -> true },
     )
 }
