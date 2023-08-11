@@ -61,6 +61,7 @@ fun NavGraphBuilder.Links(
 }
 
 fun NavGraphBuilder.AddEditLink(
+    navigateAddFolder : () -> Unit,
     onBack: () -> Unit,
     onShowSnackbar: suspend (String) -> Unit,
 ) {
@@ -73,6 +74,7 @@ fun NavGraphBuilder.AddEditLink(
         )
     ) {
         AddEditLinkScreen(
+            navigateAddFolder = navigateAddFolder,
             onBack = onBack,
             onShowSnackbar = onShowSnackbar
         )

@@ -1,9 +1,9 @@
 package com.linkedlist.linkllet.core.data.di
 
-import com.linkedlist.linkllet.core.data.source.remote.AuthRemoteDataSource
-import com.linkedlist.linkllet.core.data.source.remote.AuthRemoteDataSourceImpl
-import com.linkedlist.linkllet.core.data.source.remote.LinkRemoteDataSource
-import com.linkedlist.linkllet.core.data.source.remote.LinkRemoteDataSourceImpl
+import com.linkedlist.linkllet.core.data.remote.AuthRemoteDataSource
+import com.linkedlist.linkllet.core.data.remote.AuthRemoteDataSourceImpl
+import com.linkedlist.linkllet.core.data.remote.LinkRemoteDataSource
+import com.linkedlist.linkllet.core.data.remote.LinkRemoteDataSourceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

@@ -1,4 +1,4 @@
-package com.linkedlist.linkllet.core.data.source.remote
+package com.linkedlist.linkllet.core.data.remote
 
 import com.linkedlist.linkllet.core.data.model.Folder
 import com.linkedlist.linkllet.core.data.model.Link

@@ -3,7 +3,7 @@ package com.linkedlist.linkllet.core.data.repository
 import com.linkedlist.linkllet.core.data.model.Folder
 import com.linkedlist.linkllet.core.data.model.Link
 import com.linkedlist.linkllet.core.data.model.request.AddLinkRequest
-import com.linkedlist.linkllet.core.data.source.remote.LinkRemoteDataSource
+import com.linkedlist.linkllet.core.data.remote.LinkRemoteDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject

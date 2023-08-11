@@ -49,10 +49,6 @@ class AddEditLinkViewModel @Inject constructor(
     private val _snackbarState = MutableStateFlow("")
     val snackbarState: StateFlow<String> = _snackbarState.asStateFlow()
 
-    init {
-        fetchFolders()
-    }
-
     fun getChangedInputs() : Boolean {
         return uiState.value.title.trim().isNotBlank() || uiState.value.link.trim().isNotBlank()
                 || if(folderId != -1L) uiState.value.folders.find { it.isSelected }?.id != folderId

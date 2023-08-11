@@ -57,9 +57,9 @@ fun LnkTextFieldWithTitle(
             text = title,
             style = Typography.titleMedium
         )
-        Spacer(modifier.height(16.dp))
+        Spacer(Modifier.height(16.dp))
         LnkBasicTextFiled(
-            modifier = modifier,
+            modifier = Modifier,
             value = value,
             onValueChange = onValueChange,
             isError = isError,
@@ -112,12 +112,13 @@ fun LnkBasicTextFiled(
 
     BasicTextField(
         modifier = modifier
+            .fillMaxWidth()
             .focusRequester(focusRequester)
             .onFocusChanged {
                 isFocused = it.hasFocus
         },
         value = value,
-        singleLine = true,
+        singleLine = maxLines == 1,
         maxLines = maxLines,
         onValueChange = {
             if(it.length > maxLength) onValueChange(value)
