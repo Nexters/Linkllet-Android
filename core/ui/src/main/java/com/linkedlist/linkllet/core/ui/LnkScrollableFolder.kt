@@ -3,6 +3,8 @@ package com.linkedlist.linkllet.core.ui
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,7 +35,9 @@ fun LnkScrollableFolder(
     folders: List<FolderModel>,
     navigateToLinks: (Long, String, String) -> Unit,
 ) {
-    Box(modifier = modifier) {
+    Box(modifier = modifier
+        .verticalScroll(rememberScrollState())
+        .padding(top = 330.dp)) {
         folders.forEachIndexed { index, it ->
             LnkFolder(
                 Modifier
