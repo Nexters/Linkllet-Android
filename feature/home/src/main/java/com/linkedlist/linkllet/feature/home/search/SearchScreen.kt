@@ -1,10 +1,8 @@
 package com.linkedlist.linkllet.feature.home.search
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -36,6 +34,7 @@ import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.X
 import com.linkedlist.linkllet.core.designsystem.theme.Gray100
 import com.linkedlist.linkllet.core.designsystem.theme.Gray600
 import com.linkedlist.linkllet.core.designsystem.theme.Typography
+import com.linkedlist.linkllet.core.ui.LinkItem
 import com.linkedlist.linkllet.core.ui.LnkAppBar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -45,7 +44,7 @@ fun SearchScreen(
     onBack: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    val empty by viewModel.empty.collectAsState(initial = false)
+    val state by viewModel.state.collectAsState()
 
     Scaffold(
         topBar = {
@@ -59,19 +58,50 @@ fun SearchScreen(
         Column(
             modifier = Modifier
                 .padding(padding)
-                .padding(horizontal = 16.dp)
         ) {
             SearchBar(
-                modifier = Modifier.padding(top = 20.dp),
+                modifier = Modifier
+                    .padding(top = 20.dp, bottom = 30.dp)
+                    .padding(horizontal = 16.dp),
                 value = uiState.keyword,
                 onValueChange = viewModel::updateKeyword,
                 search = viewModel::search,
             )
 
-            when {
-                empty -> {
+            when (state) {
+                is SearchState.BeforeToSearch -> {}
+                is SearchState.Success -> {
+                    LazyColumn {
+                        item {
+                            Text(
+                                "링크 검색 결과 (${uiState.links.size})",
+                                modifier = Modifier.padding(
+                                    start = 24.dp,
+                                    bottom = 20.dp
+                                ),
+                                style = TextStyle(
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 14.sp,
+                                    color = Color.Black,
+                                )
+                            )
+                        }
+                        items(uiState.links.size) { index ->
+                            val link = uiState.links[index]
+                            LinkItem(
+                                modifier = Modifier.padding(horizontal = 18.dp),
+                                title = link.name,
+                                link = link.url,
+                                date = link.createAt
+                            )
+                        }
+                    }
+                }
+
+                is SearchState.Empty -> {
                     Box(
-                        modifier = Modifier.fillMaxHeight()
+                        modifier = Modifier
+                            .fillMaxHeight()
                             .padding(bottom = 70.dp), // 검색바 크기만큼 보정
                         contentAlignment = Alignment.Center,
                     ) {
@@ -83,7 +113,10 @@ fun SearchScreen(
                         )
                     }
                 }
-                else -> {}
+
+                else -> {
+                    Text("뭔가 에러가 있나봐요.")
+                }
             }
         }
     }
