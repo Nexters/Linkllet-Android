@@ -41,7 +41,8 @@ fun LinkItem(
     link: String,
     date: String,
     onDelete: () -> Unit = {},
-    onClick : () -> Unit = {}
+    onClick: () -> Unit = {},
+    hasMoreButton: Boolean = true,
 ) {
     var dropdownState by remember { mutableStateOf(false) }
     val context = LocalContext.current
@@ -109,32 +110,33 @@ fun LinkItem(
                 style = Typography.bodyMedium
             )
 
-
-            LnkIconButton(
-                modifier = Modifier
-                    .constrainAs(moreRefs) {
-                        end.linkTo(parent.end, 8.dp)
-                        top.linkTo(parent.top, 12.dp)
-                    },
-                innerPadding = 8.dp,
-                onClick = {
-                    dropdownState = !dropdownState
-                }
-            ) {
-                Icon(imageVector = Icons.Rounded.MoreVert, contentDescription = null)
-                DropdownMenu(
-                    modifier = Modifier.background(Color.White),
-                    expanded = dropdownState,
-                    onDismissRequest = { dropdownState = !dropdownState }) {
-                    DropdownMenuItem(text = {
-                        Text(text = "링크 삭제하기")
-                    }, onClick = {
-                        onDelete()
+            if(hasMoreButton) {
+                LnkIconButton(
+                    modifier = Modifier
+                        .constrainAs(moreRefs) {
+                            end.linkTo(parent.end, 8.dp)
+                            top.linkTo(parent.top, 12.dp)
+                        },
+                    innerPadding = 8.dp,
+                    onClick = {
                         dropdownState = !dropdownState
-                    })
+                    }
+                ) {
+                    Icon(imageVector = Icons.Rounded.MoreVert, contentDescription = null)
+                    DropdownMenu(
+                        modifier = Modifier.background(Color.White),
+                        expanded = dropdownState,
+                        onDismissRequest = { dropdownState = !dropdownState }
+                    ) {
+                        DropdownMenuItem(text = {
+                            Text(text = "링크 삭제하기")
+                        }, onClick = {
+                            onDelete()
+                            dropdownState = !dropdownState
+                        })
+                    }
                 }
             }
-
 
         }
     }

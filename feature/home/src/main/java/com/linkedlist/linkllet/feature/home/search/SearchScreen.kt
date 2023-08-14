@@ -92,7 +92,8 @@ fun SearchScreen(
                                 modifier = Modifier.padding(horizontal = 18.dp),
                                 title = link.name,
                                 link = link.url,
-                                date = link.createAt
+                                date = link.createAt,
+                                hasMoreButton = false,
                             )
                         }
                     }
