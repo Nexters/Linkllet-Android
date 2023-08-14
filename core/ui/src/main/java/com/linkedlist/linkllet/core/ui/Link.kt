@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
@@ -110,34 +111,33 @@ fun LinkItem(
                 style = Typography.bodyMedium
             )
 
-            if(hasMoreButton) {
-                LnkIconButton(
-                    modifier = Modifier
-                        .constrainAs(moreRefs) {
-                            end.linkTo(parent.end, 8.dp)
-                            top.linkTo(parent.top, 12.dp)
-                        },
-                    innerPadding = 8.dp,
-                    onClick = {
-                        dropdownState = !dropdownState
-                    }
-                ) {
-                    Icon(imageVector = Icons.Rounded.MoreVert, contentDescription = null)
-                    DropdownMenu(
-                        modifier = Modifier.background(Color.White),
-                        expanded = dropdownState,
-                        onDismissRequest = { dropdownState = !dropdownState }
-                    ) {
-                        DropdownMenuItem(text = {
-                            Text(text = "링크 삭제하기")
-                        }, onClick = {
-                            onDelete()
+            Box(modifier = Modifier.constrainAs(moreRefs) {
+                end.linkTo(parent.end, 8.dp)
+                top.linkTo(parent.top, 12.dp) 
+            }) {
+                if(hasMoreButton) {
+                    LnkIconButton(
+                        innerPadding = 8.dp,
+                        onClick = {
                             dropdownState = !dropdownState
-                        })
+                        }
+                    ) {
+                        Icon(imageVector = Icons.Rounded.MoreVert, contentDescription = null)
+                        DropdownMenu(
+                            modifier = Modifier.background(Color.White),
+                            expanded = dropdownState,
+                            onDismissRequest = { dropdownState = !dropdownState }
+                        ) {
+                            DropdownMenuItem(text = {
+                                Text(text = "링크 삭제하기")
+                            }, onClick = {
+                                onDelete()
+                                dropdownState = !dropdownState
+                            })
+                        }
                     }
                 }
             }
-
         }
     }
 }
