@@ -6,8 +6,11 @@ import com.linkedlist.linkllet.core.data.model.Folder
 import com.linkedlist.linkllet.core.data.model.Link
 import com.linkedlist.linkllet.core.data.repository.LinkRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
@@ -28,6 +31,10 @@ sealed class SearchState {
     object Error : SearchState()
 }
 
+sealed class SearchEvent {
+    data class ShowLink(val link: String) : SearchEvent()
+}
+
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val linkRepository: LinkRepository,
@@ -37,6 +44,9 @@ class SearchViewModel @Inject constructor(
 
     private val _state: MutableStateFlow<SearchState> = MutableStateFlow(SearchState.BeforeToSearch)
     val state: StateFlow<SearchState> = _state.asStateFlow()
+
+    private val _eventsFlow = MutableSharedFlow<SearchEvent>()
+    val eventsFlow: SharedFlow<SearchEvent> = _eventsFlow.asSharedFlow()
 
     fun updateKeyword(newKeyword: String) {
         _uiState.update {
@@ -64,6 +74,12 @@ class SearchViewModel @Inject constructor(
                             else SearchState.Empty
                     }
                 }
+        }
+    }
+
+    fun showLink(link: String): () -> Unit = {
+        viewModelScope.launch {
+            _eventsFlow.emit(SearchEvent.ShowLink(link = link))
         }
     }
 }
