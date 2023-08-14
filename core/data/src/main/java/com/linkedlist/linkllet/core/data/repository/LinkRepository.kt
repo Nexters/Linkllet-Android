@@ -12,6 +12,8 @@ interface LinkRepository {
 
     suspend fun getLinks(id : Long) : Flow<Result<List<Link>>>
 
+    suspend fun search(query: String): Flow<Result<List<Link>>>
+
     suspend fun addLink(
         id : Long,
         name : String,

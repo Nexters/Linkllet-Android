@@ -10,6 +10,7 @@ import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface LinkService {
 
@@ -18,6 +19,11 @@ interface LinkService {
 
     @GET("/api/v1/folders")
     suspend fun getFolders() : Response<FolderResponse>
+
+    @GET("/api/v1/folders/search")
+    suspend fun search(
+        @Query("content") content: String,
+    ): Response<LinkResponse>
 
     @GET("/api/v1/folders/{id}/articles")
     suspend fun getLinks(

@@ -12,6 +12,8 @@ interface LinkRemoteDataSource {
 
     suspend fun getLinks(id : Long) : Result<List<Link>>
 
+    suspend fun search(query: String): Result<List<Link>>
+
     suspend fun addLink(
         id : Long,
         addLinkRequest : AddLinkRequest

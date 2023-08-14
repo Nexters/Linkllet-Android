@@ -36,6 +36,10 @@ class FakeLinkRepository : LinkRepository {
         TODO("Not yet implemented")
     }
 
+    override suspend fun search(query: String): Flow<Result<List<Link>>> {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun addLink(id: Long, name: String, url: String): Flow<Result<Unit>> {
         TODO("Not yet implemented")
     }

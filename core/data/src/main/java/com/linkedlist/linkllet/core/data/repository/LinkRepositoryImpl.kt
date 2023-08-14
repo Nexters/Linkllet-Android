@@ -23,6 +23,10 @@ class LinkRepositoryImpl @Inject constructor(
         emit(linkRemoteDataSource.getLinks(id))
     }
 
+    override suspend fun search(query: String): Flow<Result<List<Link>>> = flow {
+        emit(linkRemoteDataSource.search(query))
+    }
+
     override suspend fun addLink(id: Long, name: String, url: String): Flow<Result<Unit>> = flow {
         emit(
             linkRemoteDataSource.addLink(
