@@ -15,37 +15,55 @@ class LinkRemoteDataSourceImpl @Inject constructor(
 ) : LinkRemoteDataSource {
 
     override suspend fun addFolder(name: String): Result<Unit> =
-        linkService.addFolder(folder = AddFolderRequest(name = name)).runCatching {
-            if (!isSuccessful) throw RuntimeException(errorBody().toMessage("폴더 저장에 실패했어요."))
+        runCatching {
+            val response = linkService.addFolder(folder = AddFolderRequest(name = name))
+            if (!response.isSuccessful) throw RuntimeException(
+                response.errorBody().toMessage("폴더 저장에 실패했어요.")
+            )
         }
 
     override suspend fun getFolders(): Result<List<Folder>> =
-        linkService.getFolders().runCatching {
-            if (!isSuccessful) throw RuntimeException(errorBody().toMessage("폴더 조회에 실패했어요."))
-            body()?.folderList ?: emptyList()
+        runCatching {
+            val response = linkService.getFolders()
+            if (!response.isSuccessful) throw RuntimeException(
+                response.errorBody().toMessage("폴더 조회에 실패했어요.")
+            )
+            response.body()?.folderList ?: emptyList()
         }
 
     override suspend fun getLinks(id: Long): Result<List<Link>> =
-        linkService.getLinks(id).runCatching {
-            if (!isSuccessful) throw RuntimeException(errorBody().toMessage("링크 조회에 실패했어요."))
-            body()?.articleList ?: emptyList()
+        runCatching {
+            val response = linkService.getLinks(id)
+            if (!response.isSuccessful) throw RuntimeException(
+                response.errorBody().toMessage("링크 조회에 실패했어요.")
+            )
+            response.body()?.articleList ?: emptyList()
         }
 
     override suspend fun addLink(
         id: Long,
         addLinkRequest: AddLinkRequest
-    ): Result<Unit> = linkService.addLink(id = id, addLinkRequest = addLinkRequest).runCatching {
-        if (!isSuccessful) throw RuntimeException(errorBody().toMessage("링크를 저장할 수 없어요."))
+    ): Result<Unit> = runCatching {
+        val response = linkService.addLink(id = id, addLinkRequest = addLinkRequest)
+        if (!response.isSuccessful) throw RuntimeException(
+            response.errorBody().toMessage("링크를 저장할 수 없어요.")
+        )
     }
 
     override suspend fun deleteFolder(id: Long): Result<Unit> =
-        linkService.deleteFolder(id = id).runCatching {
-            if (!isSuccessful) throw RuntimeException(errorBody().toMessage("폴더를 삭제할 수 없어요."))
+        runCatching {
+            val response = linkService.deleteFolder(id = id)
+            if (!response.isSuccessful) throw RuntimeException(
+                response.errorBody().toMessage("폴더를 삭제할 수 없어요.")
+            )
         }
 
     override suspend fun deleteLink(id: Long, articleId: Long): Result<Unit> =
-        linkService.deleteLink(id = id, articleId = articleId).runCatching {
-            if (!isSuccessful) throw RuntimeException(errorBody().toMessage("링크를 삭제할 수 없어요."))
+        runCatching {
+            val response = linkService.deleteLink(id = id, articleId = articleId)
+            if (!response.isSuccessful) throw RuntimeException(
+                response.errorBody().toMessage("링크를 삭제할 수 없어요.")
+            )
         }
 
     private fun ResponseBody?.toMessage(defaultMessage: String): String {
