@@ -45,6 +45,7 @@ import com.linkedlist.linkllet.core.designsystem.theme.Typography
 import com.linkedlist.linkllet.core.ui.LinkItem
 import com.linkedlist.linkllet.core.ui.LnkAppBar
 import com.linkedlist.linkllet.core.ui.SearchBar
+import com.linkedlist.linkllet.core.ui.onTabClearFocusing
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -81,6 +82,7 @@ fun SearchScreen(
 
     Box {
         Scaffold(
+            modifier = Modifier.onTabClearFocusing(),
             topBar = {
                 LnkAppBar(
                     modifier = Modifier.shadow(elevation = 4.dp), // fixme : 임시 그림자
