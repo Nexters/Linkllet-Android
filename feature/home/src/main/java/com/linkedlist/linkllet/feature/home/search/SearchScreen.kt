@@ -9,15 +9,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -41,14 +37,14 @@ import com.google.accompanist.web.WebContent
 import com.google.accompanist.web.WebView
 import com.google.accompanist.web.WebViewState
 import com.google.accompanist.web.rememberWebViewNavigator
+import com.linkedlist.linkllet.core.data.model.Link
 import com.linkedlist.linkllet.core.designsystem.icon.LnkIcon
-import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.Search
 import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.X
-import com.linkedlist.linkllet.core.designsystem.theme.Gray100
 import com.linkedlist.linkllet.core.designsystem.theme.Gray600
 import com.linkedlist.linkllet.core.designsystem.theme.Typography
 import com.linkedlist.linkllet.core.ui.LinkItem
 import com.linkedlist.linkllet.core.ui.LnkAppBar
+import com.linkedlist.linkllet.core.ui.SearchBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -112,52 +108,8 @@ fun SearchScreen(
                     }
 
                     is SearchState.BeforeToSearch -> {}
-                    is SearchState.Success -> {
-                        LazyColumn {
-                            item {
-                                Text(
-                                    "링크 검색 결과 (${uiState.links.size})",
-                                    modifier = Modifier.padding(
-                                        start = 24.dp,
-                                        bottom = 20.dp
-                                    ),
-                                    style = TextStyle(
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = 14.sp,
-                                        color = Color.Black,
-                                    )
-                                )
-                            }
-                            items(uiState.links.size) { index ->
-                                val link = uiState.links[index]
-                                LinkItem(
-                                    modifier = Modifier.padding(horizontal = 18.dp),
-                                    title = link.name,
-                                    link = link.url,
-                                    date = link.createAt,
-                                    onClick = viewModel.showLink(link = link.url),
-                                    hasMoreButton = false,
-                                )
-                            }
-                        }
-                    }
-
-                    is SearchState.Empty -> {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxHeight()
-                                .padding(bottom = 70.dp), // 검색바 크기만큼 보정
-                            contentAlignment = Alignment.Center,
-                        ) {
-                            Text(
-                                text = "검색 결과가 없습니다.",
-                                modifier = Modifier.fillMaxWidth(),
-                                style = TextStyle(color = Gray600, fontWeight = FontWeight.Medium),
-                                textAlign = TextAlign.Center,
-                            )
-                        }
-                    }
-
+                    is SearchState.Success -> { SearchResult(links = uiState.links, onLinkItemClicked = viewModel::showLink) }
+                    is SearchState.Empty -> { Empty() }
                     is SearchState.Error -> {
                         Text("뭔가 에러가 있나봐요.")
                     }
@@ -181,42 +133,49 @@ fun SearchScreen(
 }
 
 @Composable
-fun SearchBar(
-    modifier: Modifier = Modifier,
-    value: String,
-    onValueChange: (String) -> Unit,
-    search: () -> Unit,
-) {
-    Box(
-        modifier = modifier.height(50.dp),
-        contentAlignment = Alignment.CenterEnd,
-    ) {
-        Surface(
-            Modifier.fillMaxHeight(),
-            shape = RoundedCornerShape(12.dp),
-            color = Gray100,
-        ) {
-            BasicTextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 20.dp, end = 54.dp),
-                value = value,
-                onValueChange = onValueChange,
-                singleLine = true,
-                textStyle = TextStyle(fontSize = 14.sp, color = Color.Black),
-                decorationBox = { innerTextField ->
-                    Box(contentAlignment = Alignment.CenterStart) {
-                        innerTextField()
-                    }
-                }
+fun SearchResult(links: List<Link>, onLinkItemClicked: (link: String) -> () -> Unit) {
+    LazyColumn {
+        item {
+            Text(
+                "링크 검색 결과 (${links.size})",
+                modifier = Modifier.padding(
+                    start = 24.dp,
+                    bottom = 20.dp
+                ),
+                style = TextStyle(
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 14.sp,
+                    color = Color.Black,
+                )
             )
         }
-        Icon(
-            modifier = Modifier
-                .padding(end = 16.dp)
-                .clickable { search() },
-            imageVector = LnkIcon.Search,
-            contentDescription = "검색",
+        items(links.size) { index ->
+            val link = links[index]
+            LinkItem(
+                modifier = Modifier.padding(horizontal = 18.dp),
+                title = link.name,
+                link = link.url,
+                date = link.createAt,
+                onClick = onLinkItemClicked(link.url),
+                hasMoreButton = false,
+            )
+        }
+    }
+}
+
+@Composable
+fun Empty() {
+    Box(
+        modifier = Modifier
+            .fillMaxHeight()
+            .padding(bottom = 70.dp), // 화면 가운데 정렬을 위해 검색바가 차지하는 크기만큼 보정
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            text = "검색 결과가 없습니다.",
+            modifier = Modifier.fillMaxWidth(),
+            style = TextStyle(color = Gray600, fontWeight = FontWeight.Medium),
+            textAlign = TextAlign.Center,
         )
     }
 }
