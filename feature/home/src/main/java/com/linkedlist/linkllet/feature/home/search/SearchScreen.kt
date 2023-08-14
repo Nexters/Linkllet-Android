@@ -69,6 +69,7 @@ fun SearchScreen(
             )
 
             when (state) {
+                is SearchState.Loading -> { Text("데이터를 로드중입니다.") }
                 is SearchState.BeforeToSearch -> {}
                 is SearchState.Success -> {
                     LazyColumn {
@@ -98,7 +99,6 @@ fun SearchScreen(
                         }
                     }
                 }
-
                 is SearchState.Empty -> {
                     Box(
                         modifier = Modifier
@@ -114,8 +114,7 @@ fun SearchScreen(
                         )
                     }
                 }
-
-                else -> {
+                is SearchState.Error -> {
                     Text("뭔가 에러가 있나봐요.")
                 }
             }
