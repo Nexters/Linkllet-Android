@@ -22,7 +22,6 @@ data class FolderModel(
     val totalItems: Int,
 )
 
-// todo : 디자인시스템에 컬러 추가 후 수정
 private val colorMap = mapOf(
     0 to blue400,
     1 to blue500,
