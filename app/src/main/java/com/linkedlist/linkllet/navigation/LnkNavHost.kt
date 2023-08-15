@@ -8,6 +8,7 @@ import com.linkedlist.linkllet.feature.home.navigation.Home
 import com.linkedlist.linkllet.feature.home.navigation.homeRoute
 import com.linkedlist.linkllet.feature.home.navigation.navigateToAddEditFolder
 import com.linkedlist.linkllet.feature.link.navigation.AddEditLink
+import com.linkedlist.linkllet.feature.link.navigation.AddEditLinkShared
 import com.linkedlist.linkllet.feature.link.navigation.Links
 import com.linkedlist.linkllet.feature.link.navigation.navigateToAddEditLink
 import com.linkedlist.linkllet.feature.link.navigation.navigateToLinks
@@ -40,6 +41,13 @@ fun LnkNavHost(
             onShowSnackbar = onShowSnackbar
         )
         AddEditLink(
+            navigateAddFolder = navController::navigateToAddEditFolder,
+            onBack = {
+                navController.navigateUp()
+            },
+            onShowSnackbar = onShowSnackbar
+        )
+        AddEditLinkShared(
             navigateAddFolder = navController::navigateToAddEditFolder,
             onBack = {
                 navController.navigateUp()
