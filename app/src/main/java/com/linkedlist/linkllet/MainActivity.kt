@@ -1,5 +1,6 @@
 package com.linkedlist.linkllet
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -29,6 +30,14 @@ class MainActivity : ComponentActivity() {
                     LnkApp()
                 }
             }
+        }
+    }
+
+    override fun onNewIntent(intent: Intent?) { // 이미 앱이 실행 중일 때(인스턴스 존재할 때) 처리
+        super.onNewIntent(intent)
+        if(!intent?.getStringExtra(Intent.EXTRA_TEXT).isNullOrBlank()){
+            finish()
+            startActivity(intent)
         }
     }
 }
