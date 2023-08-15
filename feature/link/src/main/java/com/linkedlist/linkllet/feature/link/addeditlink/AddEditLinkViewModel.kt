@@ -1,8 +1,10 @@
 package com.linkedlist.linkllet.feature.link.addeditlink
 
+import android.content.Intent
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
 import com.linkedlist.linkllet.core.data.repository.LinkRepository
 import com.linkedlist.linkllet.feature.link.model.FolderType
 import com.linkedlist.linkllet.feature.link.model.FolderUiModel
@@ -16,6 +18,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.regex.Pattern
 import javax.inject.Inject
 
 data class AddEditLinkUiState(
@@ -27,7 +30,7 @@ data class AddEditLinkUiState(
     val isLinkSaved: Boolean = false
 )
 enum class AddEditLinkError{
-    READY, TITLE_BLANK, LINK_BLANK, TITLE_LINK_BLANK, NETWORK_ERROR
+    READY, TITLE_BLANK, LINK_BLANK, TITLE_LINK_BLANK, NETWORK_ERROR,NOT_VALID_URL
 }
 
 @HiltViewModel
@@ -38,16 +41,20 @@ class AddEditLinkViewModel @Inject constructor(
 
     private val folderId = savedStateHandle.get<Long?>(
         key = FOLDER_ID
-    )
-
-    private val _uiState = MutableStateFlow(AddEditLinkUiState())
-    val uiState: StateFlow<AddEditLinkUiState> = _uiState.asStateFlow()
+    ) ?: -1
 
     private val _error = MutableStateFlow<AddEditLinkError>(AddEditLinkError.READY)
     val error : StateFlow<AddEditLinkError> = _error.asStateFlow()
 
     private val _snackbarState = MutableStateFlow("")
     val snackbarState: StateFlow<String> = _snackbarState.asStateFlow()
+
+    private val _uiState = MutableStateFlow(
+        AddEditLinkUiState(
+            link = getValidUrl()  ?: ""
+        )
+    )
+    val uiState: StateFlow<AddEditLinkUiState> = _uiState.asStateFlow()
 
     fun getChangedInputs() : Boolean {
         return uiState.value.title.trim().isNotBlank() || uiState.value.link.trim().isNotBlank()
@@ -181,6 +188,25 @@ class AddEditLinkViewModel @Inject constructor(
                 else it.copy(isSelected = false)
             })
         }
+    }
+
+    fun getValidUrl() : String? {
+        val sharedUrl = savedStateHandle.getStateFlow(NavController.KEY_DEEP_LINK_INTENT,Intent()).value.getStringExtra(Intent.EXTRA_TEXT) ?: return null
+        return if(isValidUrl(sharedUrl)){
+            sharedUrl
+        }else {
+            _error.value = AddEditLinkError.NOT_VALID_URL
+            null
+        }
+    }
+
+    private fun isValidUrl(url : String ) : Boolean {
+        val pattern = Pattern.compile(
+            "^(https?|ftp)://[\\w-]+(\\.[\\w-]+)+([\\w.,@?^=%&:/~+#-]*[\\w@?^=%&/~+#-])?\$",
+            Pattern.CASE_INSENSITIVE
+        )
+        val matcher = pattern.matcher(url)
+        return matcher.matches()
     }
 }
 

@@ -1,11 +1,14 @@
 package com.linkedlist.linkllet.feature.link.navigation
 
+import android.content.Intent
+import androidx.core.net.toUri
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import com.linkedlist.linkllet.feature.link.addeditlink.AddEditLinkScreen
 import com.linkedlist.linkllet.feature.link.links.LinksScreen
 
@@ -72,6 +75,28 @@ fun NavGraphBuilder.AddEditLink(
                 type = NavType.LongType
             }
         )
+    ) {
+        AddEditLinkScreen(
+            navigateAddFolder = navigateAddFolder,
+            onBack = onBack,
+            onShowSnackbar = onShowSnackbar
+        )
+    }
+}
+
+fun NavGraphBuilder.AddEditLinkShared(
+    navigateAddFolder : () -> Unit,
+    onBack: () -> Unit,
+    onShowSnackbar: suspend (String) -> Unit,
+) {
+    composable(
+        route = "addEditLink",
+        deepLinks = listOf(
+            navDeepLink {
+                action = Intent.ACTION_SEND
+                mimeType = "text/*"
+            }
+        ),
     ) {
         AddEditLinkScreen(
             navigateAddFolder = navigateAddFolder,

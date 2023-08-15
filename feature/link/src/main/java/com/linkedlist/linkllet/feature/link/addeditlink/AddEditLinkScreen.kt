@@ -103,6 +103,9 @@ fun AddEditLinkScreen(
                 viewModel.updateSnackbarState("링크를 저장할 수 없어요.")
                 viewModel.updateIsButtonEmphasized(false)
             }
+            AddEditLinkError.NOT_VALID_URL -> {
+                viewModel.updateSnackbarState("잘못된 링크 주소입니다.")
+            }
             else -> {
 
             }
