@@ -40,6 +40,12 @@ class LinkRemoteDataSourceImpl @Inject constructor(
             response.body()?.articleList ?: emptyList()
         }
 
+    override suspend fun search(query: String): Result<List<Link>> = runCatching {
+        val response = linkService.search(content = query)
+        if(!response.isSuccessful) throw RuntimeException(response.errorBody().toMessage("검색에 실패했어요."))
+        response.body()?.articleList ?: emptyList()
+    }
+
     override suspend fun addLink(
         id: Long,
         addLinkRequest: AddLinkRequest
