@@ -1,5 +1,6 @@
 package com.linkedlist.linkllet.core.ui
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.snapping.SnapLayoutInfoProvider
@@ -33,7 +34,8 @@ fun LnkRotatingCard(
     folders: List<FolderModel>,
     navigateToLinks: (Long, String, String) -> Unit,
 ) {
-    val visibleSize = folders.size.coerceAtMost(3)
+    // todo : 원형큐처럼 돌리기
+    val visibleSize = folders.size.coerceAtMost(3) // todo : 폴더 수가 3개 미만일 때 처리하기
     val listState = rememberLazyListState()
     val currentIndex by remember { derivedStateOf { listState.firstVisibleItemIndex } }
     val offset by remember { derivedStateOf { listState.firstVisibleItemScrollOffset } }
@@ -43,8 +45,7 @@ fun LnkRotatingCard(
     val snappingLayout = remember(listState) { SnapLayoutInfoProvider(listState) }
     val snapFlingBehavior = rememberSnapFlingBehavior(snappingLayout)
 
-    Text("$currentIndex, $offset")
-//    val animationDuration = 500
+    Text("$currentIndex, $offset") // fixme 디버깅용이므로 ui 완성하면 삭제하기
 
     LazyColumn(
         modifier = modifier,
@@ -60,12 +61,24 @@ fun LnkRotatingCard(
                 modifier = Modifier
                     .zIndex(-index.toFloat())
                     .graphicsLayer {
+                        val itemHeight = 65 * pixelRatio
+                        val progress = offset / itemHeight
+
+                        if (index < currentIndex) {
+                            alpha = 0f
+                        }
+
+                        // offset이 증가함에 따라 사라져야 한다.
+                        if (index == currentIndex) {
+                            alpha = 1 - progress.toFloat()
+                        }
+
+                        // offset이 증가함에 따라 나타나야 한다.
                         // currentIndex + 3 요소의 위치를 도착지점에 고정시키기
-                        if(index == currentIndex + 3) {
-                            val itemHeight = 65 * pixelRatio // 이만큼 미리 이동 시켜놓기
+                        if (index == currentIndex + 3) {
+                            // 도착지점에 미리 갖다 놓고, offset을 통해 스크롤이 내려가도 고정시키기
                             translationY = itemHeight.toFloat() - offset
 
-                            val progress = offset / itemHeight
                             val scale = (0.5 * progress).toFloat() + minimumScale
                             scaleX = scale
                             scaleY = scale
