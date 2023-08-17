@@ -1,6 +1,5 @@
 package com.linkedlist.linkllet.core.ui
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.snapping.SnapLayoutInfoProvider
@@ -8,7 +7,6 @@ import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -59,11 +57,15 @@ fun LnkRotatingCard(
                 modifier = Modifier
                     .zIndex(-index.toFloat())
                     .graphicsLayer {
-                        val itemHeight = 65 * pixelRatio
-                        val progress = offset / itemHeight
+                        val itemHeight = folderHeight * pixelRatio
+                        val marginHeight = 65 * pixelRatio
+                        val progress = offset / marginHeight
 
+                        // fixme : 아예 렌더링 안 하는 게 가장 좋을 것 같다. 왠지 모르겠지만 아예 렌더링 안 하면 화면이 이상해짐
+                        // fixme : 투명해진 카드가 클릭되는 것을 방지하기 위함
                         if (index < currentIndex) {
                             alpha = 0f
+                            translationY = itemHeight.toFloat()
                         }
 
                         // offset이 증가함에 따라 사라져야 한다.
@@ -75,7 +77,7 @@ fun LnkRotatingCard(
                         // currentIndex + 3 요소의 위치를 도착지점에 고정시키기
                         if (index == currentIndex + 3) {
                             // 도착지점에 미리 갖다 놓고, offset을 통해 스크롤이 내려가도 고정시키기
-                            translationY = itemHeight.toFloat() - offset
+                            translationY = marginHeight.toFloat() - offset
 
                             val scale = (0.5 * progress).toFloat() + minimumScale
                             scaleX = scale
