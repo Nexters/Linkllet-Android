@@ -1,45 +1,53 @@
 package com.linkedlist.linkllet
 
-import android.util.Log
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.linkedlist.linkllet.core.data.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+sealed class Event {
+    data class NavigateToAddEditLink(val url: String) : Event()
+}
+
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val authRepository: AuthRepository
+
 ) : ViewModel() {
 
-    private val _isSignedUp = MutableStateFlow(false)
-    val isSignedUp : StateFlow<Boolean> = _isSignedUp.asStateFlow()
+    private val _clipboardUrl = MutableStateFlow("")
+    val clipboardUrl: StateFlow<String> = _clipboardUrl.asStateFlow()
 
-    fun signUp() {
+    private val _eventsFlow: MutableSharedFlow<Event> = MutableSharedFlow()
+    val eventsFlow = _eventsFlow.asSharedFlow()
+
+    var sharedLinkStartFlag = false
+
+    fun navigateToAddEditLink(){
         viewModelScope.launch {
-            try {
-                authRepository.signUp()
-                    .catch {
-                        // TODO Error Handling
-                    }.collect {
-                        it.onSuccess {
-                            if(it){
-                                _isSignedUp.emit(true)
-                            }else {
-                                _isSignedUp.emit(false)
-                            }
-                        }.onFailure {
-                            // TODO Error Handling
-                        }
-                    }
-            }catch (e : Exception){
-                // TODO Error Handling
-            }
+            _eventsFlow.emit(Event.NavigateToAddEditLink(clipboardUrl.value))
         }
+    }
+
+    fun updateClipboardUrl(url : String){
+        viewModelScope.launch {
+            if(isValidUrl(url))
+                _clipboardUrl.emit(url)
+        }
+    }
+    private fun isValidUrl(str : String?) : Boolean {
+        return try {
+            val uri = Uri.parse(str)
+            return uri?.scheme == "http" || uri?.scheme == "https"
+        }catch(e:Exception){
+            false
+        }
+
     }
 }
