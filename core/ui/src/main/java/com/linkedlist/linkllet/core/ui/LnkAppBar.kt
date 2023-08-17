@@ -31,7 +31,7 @@ import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.Settings
 @Composable
 fun LnkAppBar(
     modifier: Modifier = Modifier,
-    title: @Composable () -> Unit,
+    title: @Composable () -> Unit = {},
     backButton: @Composable () -> Unit = {},
     leadingButton: @Composable () -> Unit = {},
     action: @Composable () -> Unit = {}

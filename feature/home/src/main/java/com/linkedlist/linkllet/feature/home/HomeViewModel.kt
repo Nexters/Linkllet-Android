@@ -23,6 +23,7 @@ sealed class Event {
 
 data class HomeUiState(
     val folders: List<FolderModel> = emptyList(),
+    val expanded: Boolean = false,
 )
 
 @HiltViewModel
@@ -82,6 +83,12 @@ class HomeViewModel @Inject constructor(
                     _error.value = false
                 }
             }
+        }
+    }
+
+    fun expandCard(expanded: Boolean) {
+        _uiState.update {
+            it.copy(expanded = expanded)
         }
     }
 }

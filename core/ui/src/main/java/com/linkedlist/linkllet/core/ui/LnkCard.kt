@@ -27,7 +27,7 @@ private val colorMap = mapOf(
 
 @Composable
 fun LnkExpandedCard(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     folders: List<FolderModel>,
     navigateToLinks: (Long, String, String) -> Unit,
 ) {

@@ -29,8 +29,9 @@ import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.Linkllet
 import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.Search
 import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.Settings
 import com.linkedlist.linkllet.core.ui.LnkAppBar
+import com.linkedlist.linkllet.core.ui.LnkCardToggle
+import com.linkedlist.linkllet.core.ui.LnkExpandedCard
 import com.linkedlist.linkllet.core.ui.LnkFloatingActionButton
-import com.linkedlist.linkllet.core.ui.LnkScrollableFolder
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,7 +39,7 @@ internal fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
     navigateToAddLink: () -> Unit,
     navigateToAddEditFolder: () -> Unit,
-    navigateToLinks: (Long,String,String) -> Unit,
+    navigateToLinks: (Long, String, String) -> Unit,
     navigateToSettings: () -> Unit,
     navigateToSearch: () -> Unit,
     onShowSnackbar: suspend (String) -> Unit,
@@ -49,7 +50,7 @@ internal fun HomeScreen(
         viewModel.fetchFolders()
 
         viewModel.eventsFlow.collect {
-            when(it) {
+            when (it) {
                 is Event.Error -> onShowSnackbar(it.message)
             }
         }
@@ -59,9 +60,14 @@ internal fun HomeScreen(
         containerColor = Color.White,
         topBar = {
             LnkAppBar(
-                title = { AppBarTitle() },
-                leadingButton = { SettingsAction(navigateToSettings) },
-                action = { HomeActions(navigateToSearch, navigateToAddEditFolder) },
+                leadingButton = { LnkCardToggle(onChanged = viewModel::expandCard) },
+                action = {
+                    HomeActions(
+                        navigateToSearch,
+                        navigateToAddEditFolder,
+                        navigateToSettings
+                    )
+                },
             )
         },
         floatingActionButton = {
@@ -93,11 +99,19 @@ internal fun HomeScreen(
                 modifier = Modifier.fillMaxHeight(),
                 contentAlignment = Alignment.BottomCenter,
             ) {
-                LnkScrollableFolder(
-                    modifier = Modifier.padding(horizontal = 5.dp),
-                    folders = uiState.folders,
-                    navigateToLinks = navigateToLinks,
-                )
+//                LnkScrollableFolder(
+//                    modifier = Modifier.padding(horizontal = 5.dp),
+//                    folders = uiState.folders,
+//                    navigateToLinks = navigateToLinks,
+//                )
+
+                if(uiState.expanded) {
+                    LnkExpandedCard(
+                        modifier = Modifier.padding(horizontal = 5.dp, vertical = 30.dp),
+                        folders = uiState.folders,
+                        navigateToLinks = navigateToLinks,
+                    )
+                }
             }
         }
     }
@@ -109,22 +123,19 @@ fun AppBarTitle() {
 }
 
 @Composable
-fun SettingsAction(navigateToSettings: () -> Unit) {
-    Icon(
-        modifier = Modifier.clickable {
-            navigateToSettings()
-        },
-        imageVector = LnkIcon.Settings,
-        contentDescription = "설정",
-    )
-}
-
-@Composable
 fun HomeActions(
     navigateToSearch: () -> Unit,
     navigateToAddEditFolder: () -> Unit,
+    navigateToSettings: () -> Unit,
 ) {
     Row {
+        Icon(
+            modifier = Modifier.clickable {
+                navigateToSettings()
+            },
+            imageVector = LnkIcon.Settings,
+            contentDescription = "설정",
+        )
         Icon(
             modifier = Modifier.clickable {
                 navigateToSearch()
@@ -148,9 +159,9 @@ fun HomeScreenPreview() {
     HomeScreen(
         navigateToAddLink = {},
         navigateToAddEditFolder = {},
-        navigateToLinks = {_,_,_ ->},
+        navigateToLinks = { _, _, _ -> },
         navigateToSettings = {},
         navigateToSearch = {},
-        onShowSnackbar = {_ -> true },
+        onShowSnackbar = { _ -> true },
     )
 }
