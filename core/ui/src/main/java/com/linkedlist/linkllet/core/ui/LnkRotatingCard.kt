@@ -55,6 +55,13 @@ fun LnkRotatingCard(
                         if(index == currentIndex + 3) {
                             val itemHeight = 65 * pixelRatio // 이만큼 미리 이동 시켜놓기
                             translationY = itemHeight.toFloat() - offset
+
+                            val progress = offset / itemHeight
+                            val scale = (0.5 * progress).toFloat() + minimumScale
+                            scaleX = scale
+                            scaleY = scale
+
+                            alpha = progress.toFloat()
                         }
                     }
                     .clickable {
