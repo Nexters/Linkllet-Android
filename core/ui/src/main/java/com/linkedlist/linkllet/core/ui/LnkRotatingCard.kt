@@ -1,6 +1,9 @@
 package com.linkedlist.linkllet.core.ui
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.snapping.SnapLayoutInfoProvider
+import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -23,6 +26,7 @@ private val colorMap = mapOf(
     2 to blue600,
 )
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LnkRotatingCard(
     modifier: Modifier,
@@ -36,6 +40,9 @@ fun LnkRotatingCard(
     val minimumScale = 0.5f
     val pixelRatio = 2.625 // fixme 기기에서 받아서 사용하기
 
+    val snappingLayout = remember(listState) { SnapLayoutInfoProvider(listState) }
+    val snapFlingBehavior = rememberSnapFlingBehavior(snappingLayout)
+
     Text("$currentIndex, $offset")
 //    val animationDuration = 500
 
@@ -44,9 +51,11 @@ fun LnkRotatingCard(
         state = listState,
         verticalArrangement = Arrangement.spacedBy((-135).dp),
         reverseLayout = true,
+        flingBehavior = snapFlingBehavior,
     ) {
         items(folders.size) { index ->
             val folder = folders[index]
+
             LnkFolder(
                 modifier = Modifier
                     .zIndex(-index.toFloat())
