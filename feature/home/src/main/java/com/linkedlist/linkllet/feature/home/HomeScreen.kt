@@ -1,12 +1,15 @@
 package com.linkedlist.linkllet.feature.home
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
@@ -32,6 +35,7 @@ import com.linkedlist.linkllet.core.ui.LnkAppBar
 import com.linkedlist.linkllet.core.ui.LnkCardToggle
 import com.linkedlist.linkllet.core.ui.LnkExpandedCard
 import com.linkedlist.linkllet.core.ui.LnkFloatingActionButton
+import com.linkedlist.linkllet.core.ui.LnkRotatingCard
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -111,15 +115,17 @@ internal fun HomeScreen(
                         folders = uiState.folders,
                         navigateToLinks = navigateToLinks,
                     )
+                } else {
+                    LnkRotatingCard(
+                        modifier = Modifier.padding(horizontal = 5.dp, vertical = 30.dp)
+                            .height((200 + 130).dp),
+                        folders = uiState.folders,
+                        navigateToLinks = navigateToLinks,
+                    )
                 }
             }
         }
     }
-}
-
-@Composable
-fun AppBarTitle() {
-    Icon(imageVector = LnkIcon.Linkllet, contentDescription = "Linkllet")
 }
 
 @Composable
