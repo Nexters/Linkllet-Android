@@ -103,12 +103,6 @@ internal fun HomeScreen(
                 modifier = Modifier.fillMaxHeight(),
                 contentAlignment = Alignment.BottomCenter,
             ) {
-//                LnkScrollableFolder(
-//                    modifier = Modifier.padding(horizontal = 5.dp),
-//                    folders = uiState.folders,
-//                    navigateToLinks = navigateToLinks,
-//                )
-
                 if(uiState.expanded) {
                     LnkExpandedCard(
                         modifier = Modifier.padding(horizontal = 5.dp, vertical = 30.dp),
