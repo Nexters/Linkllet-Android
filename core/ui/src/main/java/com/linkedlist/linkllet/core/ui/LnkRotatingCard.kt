@@ -45,8 +45,6 @@ fun LnkRotatingCard(
     val snappingLayout = remember(listState) { SnapLayoutInfoProvider(listState) }
     val snapFlingBehavior = rememberSnapFlingBehavior(snappingLayout)
 
-    Text("$currentIndex, $offset") // fixme 디버깅용이므로 ui 완성하면 삭제하기
-
     LazyColumn(
         modifier = modifier,
         state = listState,
@@ -84,6 +82,10 @@ fun LnkRotatingCard(
                             scaleY = scale
 
                             alpha = progress.toFloat()
+                        }
+
+                        if(index > currentIndex + 3) {
+                            alpha = 0f
                         }
                     }
                     .clickable {
