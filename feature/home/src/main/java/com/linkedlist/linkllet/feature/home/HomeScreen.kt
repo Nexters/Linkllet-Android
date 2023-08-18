@@ -97,6 +97,7 @@ internal fun HomeScreen(
                     .aspectRatio(1.213f)
                     .padding(top = 25.dp, start = 18.dp, end = 18.dp),
                 imageVector = LnkIcon.HomeBackground, contentDescription = "배경",
+                tint = if(uiState.expanded) Color.Black.copy(alpha = 0.1f) else Color.Black
             )
 
             Box(
