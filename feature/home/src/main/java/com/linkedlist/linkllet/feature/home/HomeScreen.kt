@@ -1,12 +1,15 @@
 package com.linkedlist.linkllet.feature.home
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
@@ -29,8 +32,10 @@ import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.Linkllet
 import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.Search
 import com.linkedlist.linkllet.core.designsystem.icon.lnkicon.Settings
 import com.linkedlist.linkllet.core.ui.LnkAppBar
+import com.linkedlist.linkllet.core.ui.LnkCardToggle
+import com.linkedlist.linkllet.core.ui.LnkExpandedCard
 import com.linkedlist.linkllet.core.ui.LnkFloatingActionButton
-import com.linkedlist.linkllet.core.ui.LnkScrollableFolder
+import com.linkedlist.linkllet.core.ui.LnkRotatingCard
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,7 +43,7 @@ internal fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
     navigateToAddLink: () -> Unit,
     navigateToAddEditFolder: () -> Unit,
-    navigateToLinks: (Long,String,String) -> Unit,
+    navigateToLinks: (Long, String, String) -> Unit,
     navigateToSettings: () -> Unit,
     navigateToSearch: () -> Unit,
     onShowSnackbar: suspend (String) -> Unit,
@@ -49,7 +54,7 @@ internal fun HomeScreen(
         viewModel.fetchFolders()
 
         viewModel.eventsFlow.collect {
-            when(it) {
+            when (it) {
                 is Event.Error -> onShowSnackbar(it.message)
             }
         }
@@ -59,9 +64,14 @@ internal fun HomeScreen(
         containerColor = Color.White,
         topBar = {
             LnkAppBar(
-                title = { AppBarTitle() },
-                leadingButton = { SettingsAction(navigateToSettings) },
-                action = { HomeActions(navigateToSearch, navigateToAddEditFolder) },
+                leadingButton = { LnkCardToggle(onChanged = viewModel::expandCard) },
+                action = {
+                    HomeActions(
+                        navigateToSearch,
+                        navigateToAddEditFolder,
+                        navigateToSettings
+                    )
+                },
             )
         },
         floatingActionButton = {
@@ -93,38 +103,39 @@ internal fun HomeScreen(
                 modifier = Modifier.fillMaxHeight(),
                 contentAlignment = Alignment.BottomCenter,
             ) {
-                LnkScrollableFolder(
-                    modifier = Modifier.padding(horizontal = 5.dp),
-                    folders = uiState.folders,
-                    navigateToLinks = navigateToLinks,
-                )
+                if(uiState.expanded) {
+                    LnkExpandedCard(
+                        modifier = Modifier.padding(horizontal = 5.dp, vertical = 30.dp),
+                        folders = uiState.folders,
+                        navigateToLinks = navigateToLinks,
+                    )
+                } else {
+                    LnkRotatingCard(
+                        modifier = Modifier.padding(horizontal = 5.dp, vertical = 30.dp)
+                            .height((200 + 130).dp),
+                        folders = uiState.folders,
+                        navigateToLinks = navigateToLinks,
+                    )
+                }
             }
         }
     }
 }
 
 @Composable
-fun AppBarTitle() {
-    Icon(imageVector = LnkIcon.Linkllet, contentDescription = "Linkllet")
-}
-
-@Composable
-fun SettingsAction(navigateToSettings: () -> Unit) {
-    Icon(
-        modifier = Modifier.clickable {
-            navigateToSettings()
-        },
-        imageVector = LnkIcon.Settings,
-        contentDescription = "설정",
-    )
-}
-
-@Composable
 fun HomeActions(
     navigateToSearch: () -> Unit,
     navigateToAddEditFolder: () -> Unit,
+    navigateToSettings: () -> Unit,
 ) {
     Row {
+        Icon(
+            modifier = Modifier.clickable {
+                navigateToSettings()
+            },
+            imageVector = LnkIcon.Settings,
+            contentDescription = "설정",
+        )
         Icon(
             modifier = Modifier.clickable {
                 navigateToSearch()
@@ -148,9 +159,9 @@ fun HomeScreenPreview() {
     HomeScreen(
         navigateToAddLink = {},
         navigateToAddEditFolder = {},
-        navigateToLinks = {_,_,_ ->},
+        navigateToLinks = { _, _, _ -> },
         navigateToSettings = {},
         navigateToSearch = {},
-        onShowSnackbar = {_ -> true },
+        onShowSnackbar = { _ -> true },
     )
 }

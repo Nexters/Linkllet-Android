@@ -21,6 +21,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+internal val folderHeight = 200
+
 @Composable
 fun LnkFolder(
     modifier: Modifier = Modifier,
@@ -34,8 +36,8 @@ fun LnkFolder(
     Surface(
         modifier = modifier
             .fillMaxWidth()
-            .height(165.dp),
-        shape = RoundedCornerShape(topStart = 40.dp, topEnd = 40.dp),
+            .height(folderHeight.dp),
+        shape = RoundedCornerShape(40.dp),
     ) {
         Row(
             Modifier
