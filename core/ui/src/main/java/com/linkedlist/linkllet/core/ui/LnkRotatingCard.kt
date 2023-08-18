@@ -38,7 +38,6 @@ fun LnkRotatingCard(
     val currentIndex by remember { derivedStateOf { listState.firstVisibleItemIndex } }
     val offset by remember { derivedStateOf { listState.firstVisibleItemScrollOffset } }
     val minimumScale = 0.5f
-    val pixelRatio = 2.625 // fixme 기기에서 받아서 사용하기
 
     val snappingLayout = remember(listState) { SnapLayoutInfoProvider(listState) }
     val snapFlingBehavior = rememberSnapFlingBehavior(snappingLayout)
@@ -57,33 +56,33 @@ fun LnkRotatingCard(
                 modifier = Modifier
                     .zIndex(-index.toFloat())
                     .graphicsLayer {
-                        val itemHeight = folderHeight * pixelRatio
-                        val marginHeight = 65 * pixelRatio
+                        val itemHeight = folderHeight.dp.toPx()
+                        val marginHeight = 65.dp.toPx()
                         val progress = offset / marginHeight
 
                         // fixme : 아예 렌더링 안 하는 게 가장 좋을 것 같다. 왠지 모르겠지만 아예 렌더링 안 하면 화면이 이상해짐
                         // fixme : 투명해진 카드가 클릭되는 것을 방지하기 위함
                         if (index < currentIndex) {
                             alpha = 0f
-                            translationY = itemHeight.toFloat()
+                            translationY = itemHeight
                         }
 
                         // offset이 증가함에 따라 사라져야 한다.
                         if (index == currentIndex) {
-                            alpha = 1 - progress.toFloat()
+                            alpha = 1 - progress
                         }
 
                         // offset이 증가함에 따라 나타나야 한다.
                         // currentIndex + 3 요소의 위치를 도착지점에 고정시키기
                         if (index == currentIndex + 3) {
                             // 도착지점에 미리 갖다 놓고, offset을 통해 스크롤이 내려가도 고정시키기
-                            translationY = marginHeight.toFloat() - offset
+                            translationY = marginHeight - offset
 
                             val scale = (0.5 * progress).toFloat() + minimumScale
                             scaleX = scale
                             scaleY = scale
 
-                            alpha = progress.toFloat()
+                            alpha = progress
                         }
 
                         if(index > currentIndex + 3) {
