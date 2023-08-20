@@ -49,14 +49,14 @@ fun LnkApp(
         mainViewModel.clipboardUrl.collect {
 
             if (it.isNotBlank()) {
-                if (!mainViewModel.sharedLinkStartFlag) { // 공유하기로 시작된 경우라면 스낵바를 띄우지 않는다.
+                if (!mainViewModel.getIsStartedBySharedLink()) { // 공유하기로 시작된 경우라면 스낵바를 띄우지 않는다.
                     snackbarHostState.showSnackbar(
                         message = "복사된 링크가 있어요!",
                         actionLabel = SnackBarActionLabel.SAVED_LINK.name,
                         duration = SnackbarDuration.Long
                     )
                 } else {
-                    mainViewModel.sharedLinkStartFlag = false
+                    mainViewModel.setIsStartedBySharedLink(false)
                 }
             }
 
@@ -80,7 +80,7 @@ fun LnkApp(
                     .padding(bottom = (height - 80).dp)
                     .height(60.dp),
                 hostState = snackbarHostState,
-                snackbar = {
+                snackbar = { snackbarData ->
 
                     Card(
                         modifier = Modifier
@@ -99,19 +99,19 @@ fun LnkApp(
                             Text(
                                 modifier = Modifier
                                     .align(
-                                        if (it.visuals.actionLabel == SnackBarActionLabel.SAVED_LINK.name) Alignment.CenterStart
+                                        if (snackbarData.visuals.actionLabel == SnackBarActionLabel.SAVED_LINK.name) Alignment.CenterStart
                                         else Alignment.Center
                                     ),
-                                text = it.visuals.message,
+                                text = snackbarData.visuals.message,
                                 color = Color.White,
                                 style = Typography.bodySmall
                             )
-                            if (it.visuals.actionLabel == SnackBarActionLabel.SAVED_LINK.name)
+                            if (snackbarData.visuals.actionLabel == SnackBarActionLabel.SAVED_LINK.name)
                                 Text(
                                     modifier = Modifier
                                         .align(Alignment.CenterEnd)
                                         .clickable {
-                                            it.dismiss()
+                                            snackbarData.dismiss()
                                             mainViewModel.navigateToAddEditLink()
                                         },
                                     text = SnackBarActionLabel.SAVED_LINK.text,

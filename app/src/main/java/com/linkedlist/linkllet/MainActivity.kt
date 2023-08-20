@@ -47,14 +47,13 @@ class MainActivity : ComponentActivity() {
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        if(hasFocus){
-            (getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager).let {
-                if(it.hasPrimaryClip()){
-                    if(it.primaryClip?.getItemAt(0)?.uri != null ){
-                        viewModel.updateClipboardUrl("${it.primaryClip?.getItemAt(0)?.uri?.toString()}")
-                    }else if(it.primaryClip?.getItemAt(0)?.text != null )  {
-                        viewModel.updateClipboardUrl("${it.primaryClip?.getItemAt(0)?.text}")
-                    }
+        if(!hasFocus) return
+        (getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager).let {
+            if(it.hasPrimaryClip()){
+                if(it.primaryClip?.getItemAt(0)?.uri != null ){
+                    viewModel.updateClipboardUrl("${it.primaryClip?.getItemAt(0)?.uri?.toString()}")
+                }else if(it.primaryClip?.getItemAt(0)?.text != null )  {
+                    viewModel.updateClipboardUrl("${it.primaryClip?.getItemAt(0)?.text}")
                 }
             }
         }
@@ -62,7 +61,7 @@ class MainActivity : ComponentActivity() {
 
     private fun checkIntent() { // 공유하기로 시작된 앱인지 체크하는 플래그 값 설정
         if(!intent?.getStringExtra(Intent.EXTRA_TEXT).isNullOrBlank()){
-            viewModel.sharedLinkStartFlag = true
+            viewModel.setIsStartedBySharedLink(true)
         }
     }
 }

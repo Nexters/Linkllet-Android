@@ -27,7 +27,13 @@ class MainViewModel @Inject constructor(
     private val _eventsFlow: MutableSharedFlow<Event> = MutableSharedFlow()
     val eventsFlow = _eventsFlow.asSharedFlow()
 
-    var sharedLinkStartFlag = false
+    private var isStartedBySharedLink = false
+
+    fun getIsStartedBySharedLink() : Boolean = isStartedBySharedLink
+
+    fun setIsStartedBySharedLink(isStarted : Boolean){
+        isStartedBySharedLink = isStarted
+    }
 
     fun navigateToAddEditLink(){
         viewModelScope.launch {
