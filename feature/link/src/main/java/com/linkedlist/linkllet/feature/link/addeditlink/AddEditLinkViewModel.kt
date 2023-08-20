@@ -1,6 +1,7 @@
 package com.linkedlist.linkllet.feature.link.addeditlink
 
 import android.content.Intent
+import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,7 +11,9 @@ import com.linkedlist.linkllet.feature.link.model.FolderType
 import com.linkedlist.linkllet.feature.link.model.FolderUiModel
 import com.linkedlist.linkllet.feature.link.model.toFolderType
 import com.linkedlist.linkllet.feature.link.model.toFolderUiModel
+import com.linkedlist.linkllet.feature.link.navigation.EMPTY_LINK
 import com.linkedlist.linkllet.feature.link.navigation.FOLDER_ID
+import com.linkedlist.linkllet.feature.link.navigation.LINK_URL
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -43,6 +46,10 @@ class AddEditLinkViewModel @Inject constructor(
         key = FOLDER_ID
     ) ?: -1
 
+    private val linkUrl = savedStateHandle.get<String?>(
+        key = LINK_URL
+    ) ?: ""
+
     private val _error = MutableStateFlow<AddEditLinkError>(AddEditLinkError.READY)
     val error : StateFlow<AddEditLinkError> = _error.asStateFlow()
 
@@ -51,7 +58,7 @@ class AddEditLinkViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(
         AddEditLinkUiState(
-            link = getValidUrl()  ?: ""
+            link = getValidUrl() ?: (getClipboardUrl() ?: "")
         )
     )
     val uiState: StateFlow<AddEditLinkUiState> = _uiState.asStateFlow()
@@ -188,6 +195,20 @@ class AddEditLinkViewModel @Inject constructor(
                 else it.copy(isSelected = false)
             })
         }
+    }
+
+    fun getClipboardUrl() : String? {
+        return try {
+            if(linkUrl== EMPTY_LINK) null
+            else if(linkUrl.isNotBlank()){
+                Uri.decode(linkUrl)
+            }else {
+                null
+            }
+        }catch (e: Exception){
+            null
+        }
+
     }
 
     fun getValidUrl() : String? {
