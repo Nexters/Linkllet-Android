@@ -27,7 +27,7 @@ import linkedlist.linkllet.feature.settings.navigation.navigateToSettings
 fun LnkNavHost(
     appState: LnkAppState,
     modifier: Modifier = Modifier,
-    startDestination: String = loginRoute,//homeRoute,
+    startDestination: String = homeRoute, //loginRoute
     onShowSnackbar: suspend (String) -> Unit,
     onCancelSnackbar: () -> Unit
 ) {
