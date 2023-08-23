@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.BoxWithConstraintsScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -36,89 +37,11 @@ fun LoginScreen() {
     BoxWithConstraints(
         modifier = Modifier.fillMaxSize()
     ) {
-        if(maxHeight < 400.dp){ // 가로 회전 대응
-            Column(
-                modifier = Modifier.align(Alignment.Center),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Image(
-                    modifier = Modifier
-                        .width(164.dp)
-                        .height(122.dp),
-                    painter = painterResource(id = R.drawable.logo),
-                    contentDescription = "로고"
-                )
-                Spacer(modifier = Modifier.size(10.dp))
-                Text(
-                    text = "소셜 계정으로 간편 가입하기",
-                    style = Typography.bodySmall,
-                    color = Gray600
-                )
+        LoginScreenBody(
+            isLandscape = maxHeight < 400.dp
+        )
 
-                Spacer(modifier = Modifier.size(10.dp))
-                Card(
-                    modifier = Modifier.size(48.dp),
-                    shape = CircleShape
-                ) {
-                    Box(
-                        modifier = Modifier.clickable {
-
-                        }
-                    ){
-                        Image(
-                            modifier = Modifier.size(48.dp),
-                            painter = painterResource(id = R.drawable.btn_kakao),
-                            contentDescription = "카카오 로그인"
-                        )
-                    }
-                }
-                Spacer(modifier = Modifier.size(30.dp))
-                LoginSkipButton(
-                    onClick = {
-
-                    }
-                )
-            }
-
-        }else {
-            Column(
-                modifier = Modifier.align(Alignment.Center),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-
-                Image(
-                    modifier = Modifier
-                        .width(164.dp)
-                        .height(122.dp),
-                    painter = painterResource(id = R.drawable.logo),
-                    contentDescription = "로고"
-                )
-                Spacer(modifier = Modifier.size(40.dp))
-                Text(
-                    text = "소셜 계정으로 간편 가입하기",
-                    style = Typography.bodySmall,
-                    color = Gray600
-                )
-
-                Spacer(modifier = Modifier.size(20.dp))
-                Card(
-                    modifier = Modifier.size(48.dp),
-                    shape = CircleShape
-                ) {
-                    Box(
-                        modifier = Modifier.clickable {
-
-                        }
-                    ){
-                        Image(
-                            modifier = Modifier.size(48.dp),
-                            painter = painterResource(id = R.drawable.btn_kakao),
-                            contentDescription = "카카오 로그인"
-                        )
-                    }
-                }
-
-            }
+        if(maxHeight >= 400.dp){
             LoginSkipButton(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
@@ -129,6 +52,57 @@ fun LoginScreen() {
             )
         }
 
+    }
+}
+
+@Composable
+fun BoxWithConstraintsScope.LoginScreenBody(
+    isLandscape : Boolean = false
+){
+    Column(
+        modifier = Modifier.align(Alignment.Center),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        Image(
+            modifier = Modifier
+                .width(164.dp)
+                .height(122.dp),
+            painter = painterResource(id = R.drawable.logo),
+            contentDescription = "로고"
+        )
+        Spacer(modifier = Modifier.size((if(isLandscape) 10 else 40).dp))
+        Text(
+            text = "소셜 계정으로 간편 가입하기",
+            style = Typography.bodySmall,
+            color = Gray600
+        )
+
+        Spacer(modifier = Modifier.size((if(isLandscape) 10 else 20).dp))
+        Card(
+            modifier = Modifier.size(48.dp),
+            shape = CircleShape
+        ) {
+            Box(
+                modifier = Modifier.clickable {
+
+                }
+            ){
+                Image(
+                    modifier = Modifier.size(48.dp),
+                    painter = painterResource(id = R.drawable.btn_kakao),
+                    contentDescription = "카카오 로그인"
+                )
+            }
+        }
+        if(isLandscape){
+            Spacer(modifier = Modifier.size(30.dp))
+            LoginSkipButton(
+                onClick = {
+
+                }
+            )
+        }
 
     }
 }
