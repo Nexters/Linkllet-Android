@@ -38,7 +38,7 @@ fun LoginScreen() {
         modifier = Modifier.fillMaxSize()
     ) {
         LoginScreenBody(
-            isLandscape = maxHeight < 400.dp
+            isMinifiedHeight = maxHeight < 400.dp
         )
 
         if(maxHeight >= 400.dp){
@@ -57,7 +57,7 @@ fun LoginScreen() {
 
 @Composable
 fun BoxWithConstraintsScope.LoginScreenBody(
-    isLandscape : Boolean = false
+    isMinifiedHeight : Boolean = false
 ){
     Column(
         modifier = Modifier.align(Alignment.Center),
@@ -71,14 +71,14 @@ fun BoxWithConstraintsScope.LoginScreenBody(
             painter = painterResource(id = R.drawable.logo),
             contentDescription = "로고"
         )
-        Spacer(modifier = Modifier.size((if(isLandscape) 10 else 40).dp))
+        Spacer(modifier = Modifier.size((if(isMinifiedHeight) 10 else 40).dp))
         Text(
             text = "소셜 계정으로 간편 가입하기",
             style = Typography.bodySmall,
             color = Gray600
         )
 
-        Spacer(modifier = Modifier.size((if(isLandscape) 10 else 20).dp))
+        Spacer(modifier = Modifier.size((if(isMinifiedHeight) 10 else 20).dp))
         Card(
             modifier = Modifier.size(48.dp),
             shape = CircleShape
@@ -95,7 +95,7 @@ fun BoxWithConstraintsScope.LoginScreenBody(
                 )
             }
         }
-        if(isLandscape){
+        if(isMinifiedHeight){
             Spacer(modifier = Modifier.size(30.dp))
             LoginSkipButton(
                 onClick = {
