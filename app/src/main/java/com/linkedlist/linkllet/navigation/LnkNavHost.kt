@@ -14,6 +14,9 @@ import com.linkedlist.linkllet.feature.link.navigation.AddEditLinkShared
 import com.linkedlist.linkllet.feature.link.navigation.Links
 import com.linkedlist.linkllet.feature.link.navigation.navigateToAddEditLink
 import com.linkedlist.linkllet.feature.link.navigation.navigateToLinks
+import com.linkedlist.linkllet.feature.login.navigation.Login
+import com.linkedlist.linkllet.feature.login.navigation.loginRoute
+import com.linkedlist.linkllet.feature.login.navigation.navigateToLogin
 import com.linkedlist.linkllet.ui.LnkAppState
 import linkedlist.linkllet.feature.settings.navigation.Feedback
 import linkedlist.linkllet.feature.settings.navigation.Settings
@@ -24,7 +27,7 @@ import linkedlist.linkllet.feature.settings.navigation.navigateToSettings
 fun LnkNavHost(
     appState: LnkAppState,
     modifier: Modifier = Modifier,
-    startDestination: String = homeRoute,
+    startDestination: String = homeRoute, //loginRoute
     onShowSnackbar: suspend (String) -> Unit,
     onCancelSnackbar: () -> Unit
 ) {
@@ -34,6 +37,11 @@ fun LnkNavHost(
         navController = navController,
         startDestination = startDestination,
     ) {
+        Login(
+            navigateLogin = {
+                navController.navigateToLogin()
+            }
+        )
         Home(
             navigateAddLink = {
                 onCancelSnackbar()
