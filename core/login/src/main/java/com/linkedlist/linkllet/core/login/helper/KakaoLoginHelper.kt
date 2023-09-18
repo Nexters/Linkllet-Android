@@ -1,7 +1,6 @@
 package com.linkedlist.linkllet.core.login.helper
 
 import android.content.Context
-import android.util.Log
 import com.kakao.sdk.user.UserApiClient
 import javax.inject.Inject
 import kotlin.coroutines.resume
@@ -14,14 +13,14 @@ class KakaoLoginHelper @Inject constructor() : LoginHelper {
         context: Context
     ) : Result<String> {
         try {
-            kakaoLogin(context)
+            loginWithKakao(context)
             return Result.success(getKakaoUserId().toString())
         }catch (e:Exception){
             return Result.failure(e)
         }
     }
 
-    private suspend fun kakaoLogin(context: Context) : Unit = suspendCoroutine { continuation ->
+    private suspend fun loginWithKakao(context: Context) : Unit = suspendCoroutine { continuation ->
         UserApiClient.instance.loginWithKakaoTalk(context) { token, error ->
             if (error != null) {
                 continuation.resumeWithException(error)

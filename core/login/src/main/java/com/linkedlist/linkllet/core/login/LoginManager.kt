@@ -31,8 +31,7 @@ class LoginManager @Inject constructor(
     private val loginTypePreferencesKey = stringPreferencesKey(LOGIN_TYPE)
     private var user : UserData? = null
 
-    fun getDeviceId() : String = user?.id ?: ""
-
+    val deviceId: String get() = user?.id ?: ""
     fun getLoginType() : Flow<LoginType> =
         preferenceDataStore.data.map { preferences ->
             LoginType.valueOf(preferences[loginTypePreferencesKey] ?: LoginType.LOGOUT.name)
@@ -45,7 +44,7 @@ class LoginManager @Inject constructor(
         }
     }
 
-    suspend fun kakaoLogin(
+    suspend fun loginWithKakao(
         context : Context
     ) : Flow<Result<Unit>> = flow {
         kakaoLoginHelper.login(context = context)
