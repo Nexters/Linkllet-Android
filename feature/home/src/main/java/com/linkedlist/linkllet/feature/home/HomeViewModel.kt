@@ -43,25 +43,6 @@ class HomeViewModel @Inject constructor(
     private val _eventsFlow = MutableSharedFlow<Event>()
     val eventsFlow: SharedFlow<Event> = _eventsFlow.asSharedFlow()
 
-    init {
-        signupAndFetchFolders()
-    }
-
-    private fun signupAndFetchFolders() {
-        viewModelScope.launch {
-            authRepository.signUp().collect { result ->
-                result.onSuccess {
-                    // fixme : 일단은 콜백으로 작성했으나 더 좋은 구조로 작성할 수 있는지 고민하기
-                    fetchFolders()
-                }.onFailure {
-                    if (it is ConnectException) {
-                        _eventsFlow.emit(Event.Error("네트워크 연결을 확인해 주세요"))
-                    }
-                }
-            }
-        }
-    }
-
     fun fetchFolders() {
         viewModelScope.launch {
             _loading.value = true
