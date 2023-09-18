@@ -23,9 +23,9 @@ sealed class Event {
 
 sealed interface MainUiState {
     object Loading : MainUiState
-    object Success : MainUiState
+    object LoginSuccess : MainUiState
 
-    object Failed : MainUiState
+    object LoginFailed : MainUiState
 }
 
 @HiltViewModel
@@ -57,37 +57,37 @@ class MainViewModel @Inject constructor(
                 .collectLatest {
                     when(it){
                         LoginType.KAKAO -> {
-                            kakaoLogin(context)
+                            loginWithKakao(context)
                         }
                         LoginType.GUEST -> {
-                            guestLogin()
+                            loginAsGuest()
                         }
                         LoginType.LOGOUT -> {
-                            _uiState.emit(MainUiState.Failed)
+                            _uiState.emit(MainUiState.LoginFailed)
                         }
                     }
                 }
         }
     }
 
-    private suspend fun kakaoLogin(context: Context){
+    private suspend fun loginWithKakao(context: Context){
         loginManager.loginWithKakao(context)
             .collectLatest {
                 it.onSuccess {
                     signUp()
                 }.onFailure {
-                    _uiState.emit(MainUiState.Failed)
+                    _uiState.emit(MainUiState.LoginFailed)
                 }
             }
     }
 
-    private suspend fun guestLogin(){
-        loginManager.guestLogin()
+    private suspend fun loginAsGuest(){
+        loginManager.loginAsGuest()
             .collectLatest {
                 it.onSuccess {
                     signUp()
                 }.onFailure {
-                    _uiState.emit(MainUiState.Failed)
+                    _uiState.emit(MainUiState.LoginFailed)
                 }
             }
     }
@@ -97,9 +97,9 @@ class MainViewModel @Inject constructor(
             authRepository.signUp()
                 .collect {
                     it.onSuccess {
-                        _uiState.emit(MainUiState.Success)
+                        _uiState.emit(MainUiState.LoginSuccess)
                     }.onFailure {
-                        _uiState.emit(MainUiState.Failed)
+                        _uiState.emit(MainUiState.LoginFailed)
                     }
                 }
         }

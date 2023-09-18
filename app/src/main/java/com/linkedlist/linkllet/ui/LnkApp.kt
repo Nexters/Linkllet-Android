@@ -135,7 +135,7 @@ fun LnkApp(
         LnkNavHost(
             appState = appState,
             modifier = Modifier.padding(innerPadding),
-            startDestination = if(mainState is MainUiState.Success) homeRoute else loginRoute ,
+            startDestination = if(mainState is MainUiState.LoginSuccess) homeRoute else loginRoute ,
             onShowSnackbar = {
                 val job = coroutineScope.launch {
                     snackbarHostState.showSnackbar(

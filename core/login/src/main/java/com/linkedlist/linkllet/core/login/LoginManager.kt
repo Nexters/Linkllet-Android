@@ -58,7 +58,7 @@ class LoginManager @Inject constructor(
     }
 
     @SuppressLint("HardwareIds")
-    suspend fun guestLogin() : Flow<Result<Unit>> = flow {
+    suspend fun loginAsGuest() : Flow<Result<Unit>> = flow {
         try {
             user = UserData(
                 Settings.Secure.getString(applicationContext.contentResolver, Settings.Secure.ANDROID_ID),

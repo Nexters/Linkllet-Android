@@ -33,10 +33,10 @@ class MainActivity : ComponentActivity() {
                 MainUiState.Loading -> {
                     true
                 }
-                MainUiState.Failed -> {
+                MainUiState.LoginFailed -> {
                     false
                 }
-                is MainUiState.Success -> {
+                is MainUiState.LoginSuccess -> {
                     checkIntent()
                     false
                 }
@@ -55,8 +55,8 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     when(uiState){
-                        is MainUiState.Success,
-                        MainUiState.Failed -> {
+                        is MainUiState.LoginSuccess,
+                        MainUiState.LoginFailed -> {
                             LnkApp(mainViewModel = viewModel)
                         }
 
