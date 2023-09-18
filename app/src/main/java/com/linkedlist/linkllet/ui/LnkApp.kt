@@ -18,6 +18,8 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -27,10 +29,13 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.linkedlist.linkllet.Event
+import com.linkedlist.linkllet.MainUiState
 import com.linkedlist.linkllet.MainViewModel
 import com.linkedlist.linkllet.core.designsystem.theme.ColorCC000000
 import com.linkedlist.linkllet.core.designsystem.theme.Typography
+import com.linkedlist.linkllet.feature.home.navigation.homeRoute
 import com.linkedlist.linkllet.feature.link.navigation.navigateToAddEditLink
+import com.linkedlist.linkllet.feature.login.navigation.loginRoute
 import com.linkedlist.linkllet.navigation.LnkNavHost
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -44,6 +49,7 @@ fun LnkApp(
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
     val height = LocalConfiguration.current.screenHeightDp
+    val mainState by mainViewModel.uiState.collectAsState()
 
     LaunchedEffect(Unit) {
         mainViewModel.clipboardUrl.collect {
@@ -129,6 +135,7 @@ fun LnkApp(
         LnkNavHost(
             appState = appState,
             modifier = Modifier.padding(innerPadding),
+            startDestination = if(mainState is MainUiState.Success) homeRoute else loginRoute ,
             onShowSnackbar = {
                 val job = coroutineScope.launch {
                     snackbarHostState.showSnackbar(
