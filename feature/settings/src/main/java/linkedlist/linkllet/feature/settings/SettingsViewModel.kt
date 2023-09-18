@@ -2,6 +2,7 @@ package linkedlist.linkllet.feature.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.linkedlist.linkllet.core.login.LoginManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -9,6 +10,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -29,10 +31,13 @@ data class SettingsUiState(
 
 sealed class Event() {
     object SendFeedback : Event()
+    object Logout : Event()
 }
 
 @HiltViewModel
-class SettingsViewModel @Inject constructor() : ViewModel() {
+class SettingsViewModel @Inject constructor(
+    private val loginManager : LoginManager
+) : ViewModel() {
     private val _uiState = MutableStateFlow(
         SettingsUiState(
             settings = listOf(
@@ -47,6 +52,8 @@ class SettingsViewModel @Inject constructor() : ViewModel() {
                 SettingModel.Divider,
                 SettingModel.Item(name = "제작자 소개", ::showDialog),
                 SettingModel.Item(name = "현재 버전", ::showDialog),
+                SettingModel.Item(name = "로그아웃",
+                    action = { logout() } )
             )
         )
     )
@@ -54,6 +61,14 @@ class SettingsViewModel @Inject constructor() : ViewModel() {
 
     private val _eventsFlow = MutableSharedFlow<Event>()
     val eventFlow: SharedFlow<Event> = _eventsFlow.asSharedFlow()
+
+    private fun logout(){
+        viewModelScope.launch {
+            loginManager.logout().collectLatest {
+                emitEvent(Event.Logout)
+            }
+        }
+    }
 
     fun emitEvent(event: Event) {
         viewModelScope.launch {

@@ -11,11 +11,13 @@ const val settingsRoute = "settings"
 fun NavGraphBuilder.Settings(
     onBack: () -> Unit,
     navigateToFeedback: () -> Unit,
+    navigateToLogin : () -> Unit
     ) {
     composable(route = settingsRoute) {
         SettingsScreen(
             onBack = onBack,
             navigateToFeedback = navigateToFeedback,
+            navigateToLogin = navigateToLogin
         )
     }
 }
