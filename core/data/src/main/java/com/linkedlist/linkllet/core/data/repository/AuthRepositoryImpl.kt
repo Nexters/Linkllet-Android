@@ -10,10 +10,13 @@ import javax.inject.Inject
 class AuthRepositoryImpl @Inject constructor(
     private val authRemoteDataSource: AuthRemoteDataSource
 ) : AuthRepository {
+
     override fun signUp(): Flow<Result<Boolean>> = flow {
         emit(authRemoteDataSource.signUp().mapCatching { auth ->
             when (auth) {
-                SIGNED_UP, ALREADY_SIGNED_UP -> true
+                SIGNED_UP, ALREADY_SIGNED_UP -> {
+                    true
+                }
                 else -> false
             }
         })
