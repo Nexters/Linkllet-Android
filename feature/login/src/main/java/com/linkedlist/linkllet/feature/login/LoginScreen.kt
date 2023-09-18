@@ -27,18 +27,29 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.linkedlist.linkllet.core.designsystem.R
 import com.linkedlist.linkllet.core.designsystem.theme.Gray100
 import com.linkedlist.linkllet.core.designsystem.theme.Gray600
 import com.linkedlist.linkllet.core.designsystem.theme.Typography
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(
+    viewModel: LoginViewModel = hiltViewModel(),
+    navigateHome : () -> Unit
+) {
+
     BoxWithConstraints(
         modifier = Modifier.fillMaxSize()
     ) {
         LoginScreenBody(
-            isMinifiedHeight = maxHeight < 400.dp
+            isMinifiedHeight = maxHeight < 400.dp,
+            onClickKakaoLogin = {
+                viewModel.kakaoLogin()
+            },
+            onClickGuestLogin = {
+                viewModel.guestLogin()
+            }
         )
 
         if(maxHeight >= 400.dp){
@@ -47,7 +58,7 @@ fun LoginScreen() {
                     .align(Alignment.BottomCenter)
                     .padding(bottom = 50.dp),
                 onClick = {
-
+                    viewModel.guestLogin()
                 }
             )
         }
@@ -57,8 +68,11 @@ fun LoginScreen() {
 
 @Composable
 fun BoxWithConstraintsScope.LoginScreenBody(
-    isMinifiedHeight : Boolean = false
+    isMinifiedHeight : Boolean = false,
+    onClickKakaoLogin : () -> Unit,
+    onClickGuestLogin : () -> Unit,
 ){
+
     Column(
         modifier = Modifier.align(Alignment.Center),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -85,7 +99,7 @@ fun BoxWithConstraintsScope.LoginScreenBody(
         ) {
             Box(
                 modifier = Modifier.clickable {
-
+                    onClickKakaoLogin()
                 }
             ){
                 Image(
@@ -99,7 +113,7 @@ fun BoxWithConstraintsScope.LoginScreenBody(
             Spacer(modifier = Modifier.size(30.dp))
             LoginSkipButton(
                 onClick = {
-
+                    onClickGuestLogin()
                 }
             )
         }
@@ -140,5 +154,5 @@ fun LoginSkipButton(
 @Preview
 @Composable
 fun PreviewLoginScreen() {
-    LoginScreen()
+    LoginScreen(navigateHome = {})
 }
