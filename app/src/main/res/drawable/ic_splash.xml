@@ -5,7 +5,7 @@
     android:viewportWidth="108"
     android:viewportHeight="108">
 
-    <item android:bottom="40dp" android:end="40dp" android:top="40dp" android:start="40dp">
+    <item android:bottom="60dp" android:end="48dp" android:top="60dp" android:start="48dp">
         <bitmap android:src="@drawable/logo_typo"/>
     </item>
 

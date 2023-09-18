@@ -4,15 +4,16 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import com.linkedlist.linkllet.core.data.util.KakaoLoginHelper
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.linkedlist.linkllet.core.designsystem.theme.LinklletTheme
 import com.linkedlist.linkllet.ui.LnkApp
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,18 +25,52 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        checkIntent()
-        KakaoLoginHelper.kakaoLogin(this)
+
+        val splashScreen = installSplashScreen()
+
+        splashScreen.setKeepOnScreenCondition {
+            when (viewModel.uiState.value) {
+                MainUiState.Loading -> {
+                    true
+                }
+                MainUiState.Failed -> {
+                    false
+                }
+                is MainUiState.Success -> {
+                    checkIntent()
+                    false
+                }
+            }
+        }
+
+        viewModel.checkLoginType(context = this)
+
         setContent {
+            val uiState by viewModel.uiState.collectAsState()
+
             LinklletTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    LnkApp(mainViewModel = viewModel)
+                    when(uiState){
+                        is MainUiState.Success,
+                        MainUiState.Failed -> {
+                            LnkApp(mainViewModel = viewModel)
+                        }
+
+                        else -> {
+                            // TODO Loading 화면 있으면 좋을 듯?
+                        }
+                    }
+
                 }
             }
+
+
+
+
         }
     }
 
