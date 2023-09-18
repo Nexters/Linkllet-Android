@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import com.linkedlist.linkllet.core.data.util.KakaoLoginHelper
 import com.linkedlist.linkllet.core.designsystem.theme.LinklletTheme
 import com.linkedlist.linkllet.ui.LnkApp
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,6 +25,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         checkIntent()
+        KakaoLoginHelper.kakaoLogin(this)
         setContent {
             LinklletTheme {
                 // A surface container using the 'background' color from the theme
