@@ -1,19 +1,18 @@
 package com.linkedlist.linkllet.core.data.remote.api
 
-import android.annotation.SuppressLint
-import android.content.Context
-import android.provider.Settings
+import android.util.Log
+import com.linkedlist.linkllet.core.login.LoginManager
 import okhttp3.Interceptor
 import okhttp3.Response
+import javax.inject.Inject
 
-class KeyInterceptor(
-    private val context: Context
+class KeyInterceptor @Inject constructor(
+    private val loginManager: LoginManager
 ) : Interceptor {
-    @SuppressLint("HardwareIds")
     override fun intercept(chain: Interceptor.Chain): Response {
         val original = chain.request()
         val request = original.newBuilder().apply {
-            header("Device-Id", Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID))
+            header("Device-Id", loginManager.deviceId)
             method(original.method, original.body)
         }.build()
         return chain.proceed(request)

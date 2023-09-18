@@ -3,7 +3,10 @@ package com.linkedlist.linkllet.core.data.di
 import android.content.Context
 import com.linkedlist.linkllet.core.data.RetrofitFactory
 import com.linkedlist.linkllet.core.data.remote.api.AuthService
+import com.linkedlist.linkllet.core.data.remote.api.KeyInterceptor
 import com.linkedlist.linkllet.core.data.remote.api.LinkService
+import com.linkedlist.linkllet.core.data.repository.AuthRepositoryImpl
+import com.linkedlist.linkllet.core.login.LoginManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,15 +20,25 @@ object NetworkModule {
 
     @Provides
     @Singleton
+    fun provideKeyInterceptor(
+        loginManager: LoginManager
+    ) : KeyInterceptor {
+        return KeyInterceptor(loginManager)
+    }
+
+    @Provides
+    @Singleton
     fun provideAuthService(
-        @ApplicationContext context : Context
+        keyInterceptor: KeyInterceptor
     ): AuthService
-        = RetrofitFactory.create(context)
+        = RetrofitFactory.create(keyInterceptor)
 
     @Provides
     @Singleton
     fun provideLinkService(
-        @ApplicationContext context : Context
+        keyInterceptor: KeyInterceptor
     ): LinkService
-        = RetrofitFactory.create(context)
+        = RetrofitFactory.create(keyInterceptor)
+
+
 }
