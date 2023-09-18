@@ -100,7 +100,11 @@ dependencies {
     // coroutine test
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3"
 
+    //kakao
     implementation "com.kakao.sdk:v2-user:2.15.0"
+
+    //splash
+    implementation "androidx.core:core-splashscreen:1.0.1"
 
     implementation(project(":core:common"))
     implementation(project(":core:ui"))
@@ -110,4 +114,5 @@ dependencies {
     implementation(project(":feature:settings"))
     implementation(project(":feature:link"))
     implementation(project(":feature:login"))
+    implementation(project(":core:login"))
 }
