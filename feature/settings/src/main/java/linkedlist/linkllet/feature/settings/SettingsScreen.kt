@@ -36,6 +36,7 @@ fun SettingsScreen(
     viewModel: SettingsViewModel = hiltViewModel(),
     onBack: () -> Unit,
     navigateToFeedback: () -> Unit,
+    navigateToLogin: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -43,6 +44,7 @@ fun SettingsScreen(
         viewModel.eventFlow.collect { event ->
             when(event) {
                 is Event.SendFeedback -> navigateToFeedback()
+                is Event.Logout -> navigateToLogin()
             }
         }
     }
@@ -91,5 +93,5 @@ fun SettingsScreen(
 @Preview(showBackground = true)
 @Composable
 fun SettingsScreenPreview() {
-    SettingsScreen(onBack = {}, navigateToFeedback = {})
+    SettingsScreen(onBack = {}, navigateToFeedback = {}, navigateToLogin = {})
 }

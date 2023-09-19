@@ -66,4 +66,6 @@ dependencies {
 
     //kakao
     implementation "com.kakao.sdk:v2-user:2.15.0"
+
+    implementation(project(":core:login"))
 }

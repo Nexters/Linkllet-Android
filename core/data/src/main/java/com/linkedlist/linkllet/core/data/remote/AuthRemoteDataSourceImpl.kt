@@ -7,19 +7,20 @@ import com.linkedlist.linkllet.core.data.model.Auth
 import com.linkedlist.linkllet.core.data.model.request.AddFeedbackRequest
 import com.linkedlist.linkllet.core.data.model.request.SignUpRequest
 import com.linkedlist.linkllet.core.data.remote.api.AuthService
+import com.linkedlist.linkllet.core.login.LoginManager
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 class AuthRemoteDataSourceImpl @Inject constructor(
-    @ApplicationContext private val context: Context,
-    private val authService: AuthService
+    private val authService: AuthService,
+    private val loginManager: LoginManager
 ) : AuthRemoteDataSource {
 
     @SuppressLint("HardwareIds")
     override suspend fun signUp(): Result<Auth> = runCatching {
         val response = authService.signUp(
             SignUpRequest(
-                deviceId = Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
+                deviceId = loginManager.deviceId
             )
         )
 

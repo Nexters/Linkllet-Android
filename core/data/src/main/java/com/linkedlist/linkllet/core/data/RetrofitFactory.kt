@@ -1,6 +1,5 @@
 package com.linkedlist.linkllet.core.data
 
-import android.content.Context
 import com.linkedlist.linkllet.core.data.remote.api.KeyInterceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -10,7 +9,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 object RetrofitFactory {
 
     inline fun <reified Service> create(
-        context: Context
+        keyInterceptor: KeyInterceptor
     ): Service {
         return Retrofit.Builder()
             .baseUrl(BuildConfig.BACKEND_URL)
@@ -18,7 +17,7 @@ object RetrofitFactory {
             .client(
                 OkHttpClient.Builder()
                     .addInterceptor(createLoggingInterceptor())
-                    .addInterceptor(KeyInterceptor(context))
+                    .addInterceptor(keyInterceptor)
                     .build()
             )
             .build()

@@ -2,12 +2,15 @@ package com.linkedlist.linkllet.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavOptions
 import androidx.navigation.compose.NavHost
+import androidx.navigation.navOptions
 import com.linkedlist.linkllet.feature.home.navigation.AddEditFolder
 import com.linkedlist.linkllet.feature.home.navigation.Home
 import com.linkedlist.linkllet.feature.home.navigation.Search
 import com.linkedlist.linkllet.feature.home.navigation.homeRoute
 import com.linkedlist.linkllet.feature.home.navigation.navigateToAddEditFolder
+import com.linkedlist.linkllet.feature.home.navigation.navigateToHome
 import com.linkedlist.linkllet.feature.home.navigation.navigateToSearch
 import com.linkedlist.linkllet.feature.link.navigation.AddEditLink
 import com.linkedlist.linkllet.feature.link.navigation.AddEditLinkShared
@@ -27,7 +30,7 @@ import linkedlist.linkllet.feature.settings.navigation.navigateToSettings
 fun LnkNavHost(
     appState: LnkAppState,
     modifier: Modifier = Modifier,
-    startDestination: String = homeRoute, //loginRoute
+    startDestination: String = loginRoute,
     onShowSnackbar: suspend (String) -> Unit,
     onCancelSnackbar: () -> Unit
 ) {
@@ -38,8 +41,12 @@ fun LnkNavHost(
         startDestination = startDestination,
     ) {
         Login(
-            navigateLogin = {
-                navController.navigateToLogin()
+            navigateHome = {
+                navController.navigateToHome(navOptions = navOptions {
+                    popUpTo(homeRoute){
+                        inclusive = true
+                    }
+                })
             }
         )
         Home(
@@ -98,6 +105,13 @@ fun LnkNavHost(
         Settings(
             onBack = navController::navigateUp,
             navigateToFeedback = navController::navigateToFeedback,
+            navigateToLogin = {
+                navController.navigateToLogin(navOptions {
+                    popUpTo(navController.graph.id){
+                        inclusive =true
+                    }
+                })
+            }
         )
         Feedback(onBack = navController::navigateUp)
         Search(onBack = navController::navigateUp)

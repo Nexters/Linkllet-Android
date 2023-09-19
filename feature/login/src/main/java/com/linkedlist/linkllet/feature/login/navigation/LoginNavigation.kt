@@ -15,7 +15,7 @@ fun NavController.navigateToLogin(
 }
 
 fun NavGraphBuilder.Login(
-    navigateLogin: () -> Unit,
+    navigateHome: () -> Unit,
     onBack: () -> Unit = {},
     onShowSnackbar: suspend (String) -> Unit = {},
 ) {
@@ -23,6 +23,8 @@ fun NavGraphBuilder.Login(
     composable(
         route = loginRoute,
     ) {
-        LoginScreen()
+        LoginScreen(
+            navigateHome = navigateHome
+        )
     }
 }
