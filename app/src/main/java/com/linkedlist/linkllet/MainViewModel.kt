@@ -47,9 +47,13 @@ class MainViewModel @Inject constructor(
 
     fun getIsStartedBySharedLink(): Boolean = isStartedBySharedLink
 
+    fun isLoggedIn() : Boolean = loginManager.isLoggedIn
+
     fun setIsStartedBySharedLink(isStarted: Boolean) {
         isStartedBySharedLink = isStarted
     }
+
+
 
     fun checkLoginType(context: Context){
         viewModelScope.launch {

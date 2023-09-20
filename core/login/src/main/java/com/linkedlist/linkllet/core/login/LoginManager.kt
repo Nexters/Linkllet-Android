@@ -32,6 +32,7 @@ class LoginManager @Inject constructor(
     private var user : UserData? = null
 
     val deviceId: String get() = user?.id ?: ""
+    val isLoggedIn : Boolean get() = user != null
     fun getLoginType() : Flow<LoginType> =
         preferenceDataStore.data.map { preferences ->
             LoginType.valueOf(preferences[loginTypePreferencesKey] ?: LoginType.LOGOUT.name)

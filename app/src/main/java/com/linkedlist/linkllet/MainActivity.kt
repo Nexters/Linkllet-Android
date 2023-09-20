@@ -37,7 +37,7 @@ class MainActivity : ComponentActivity() {
                     false
                 }
                 is MainUiState.LoginSuccess -> {
-                    checkIntent()
+                    //checkIntent()
                     false
                 }
             }
@@ -74,17 +74,18 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    override fun onNewIntent(intent: Intent?) { // 이미 앱이 실행 중일 때(인스턴스 존재할 때) 처리
-        super.onNewIntent(intent)
-        if(!intent?.getStringExtra(Intent.EXTRA_TEXT).isNullOrBlank()){
-            finish()
-            startActivity(intent)
-        }
-    }
+//    override fun onNewIntent(intent: Intent?) { // 이미 앱이 실행 중일 때(인스턴스 존재할 때) 처리
+//        super.onNewIntent(intent)
+//        if(!intent?.getStringExtra(Intent.EXTRA_TEXT).isNullOrBlank()){
+//            finish()
+//            startActivity(intent)
+//        }
+//    }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         if(!hasFocus) return
+        if(!viewModel.isLoggedIn()) return
         (getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager).let {
             if(it.hasPrimaryClip()){
                 if(it.primaryClip?.getItemAt(0)?.uri != null ){
