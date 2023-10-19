@@ -10,22 +10,18 @@ class FakeLinkRepository : LinkRepository {
     var id = 1L
     private val folders = mutableListOf<Folder>()
 
-    override suspend fun addFolder(name: String): Flow<Result<Unit>> =
-        flow {
-            val res = runCatching {
-                folders.add(
-                    Folder(
-                        id = id++,
-                        name = name,
-                        type = "DEFAULT",
-                        size = 0
-                    )
-                )
-                Unit
-            }
+    override fun addFolder(name: String): Flow<Unit> = flow {
+        folders.add(
+            Folder(
+                id = id++,
+                name = name,
+                type = "DEFAULT",
+                size = 0
+            )
+        )
 
-            emit(res)
-        }
+        emit(Unit)
+    }
 
     override suspend fun getFolders(): Flow<Result<List<Folder>>> =
         flow {

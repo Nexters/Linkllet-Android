@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface LinkRepository {
 
-    suspend fun addFolder(name: String): Flow<Result<Unit>>
+    fun addFolder(name: String): Flow<Unit>
 
     suspend fun getFolders() : Flow<Result<List<Folder>>>
 
