@@ -9,6 +9,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -45,7 +48,7 @@ class AddEditFolderViewModel @Inject constructor(
 
     fun addFolder() {
         val folderName = uiState.value.folderName
-        if(folderName.trim().isBlank()) {
+        if (folderName.trim().isBlank()) {
             _uiState.update { it.copy(folderName = folderName.trim(), error = true) }
             viewModelScope.launch {
                 _eventsFlow.emit(Event.ShowToast("폴더 제목을 입력해 주세요"))
@@ -53,25 +56,19 @@ class AddEditFolderViewModel @Inject constructor(
             return
         }
 
-        viewModelScope.launch {
-            linkRepository.addFolder(uiState.value.folderName).collect { result ->
-                result.onSuccess {
-                    _eventsFlow.emit(Event.CloseScreen)
-                    _eventsFlow.emit(Event.ShowToast("폴더가 추가되었어요"))
-                }.onFailure {
-                    if(it.message == null) _eventsFlow.emit(Event.ShowToast("폴더 저장에 실패했어요"))
-                    else {
-                        it.message?.let {
-                            _eventsFlow.emit(Event.ShowToast(it))
-                        }
-                    }
-                }
+        linkRepository.addFolder(uiState.value.folderName)
+            .onEach {
+                _eventsFlow.emit(Event.CloseScreen)
+                _eventsFlow.emit(Event.ShowToast("폴더가 추가되었어요"))
             }
-        }
+            .catch { throwable ->
+                _eventsFlow.emit(Event.ShowToast(throwable.message ?: "폴더 저장에 실패했어요"))
+            }
+            .launchIn(viewModelScope)
     }
 
     fun navigateUp() {
-        if(uiState.value.folderName.trim().isBlank()) {
+        if (uiState.value.folderName.trim().isBlank()) {
             viewModelScope.launch {
                 _eventsFlow.emit(Event.CloseScreen)
             }

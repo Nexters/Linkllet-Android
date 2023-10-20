@@ -11,7 +11,7 @@ import javax.inject.Inject
 class LinkRepositoryImpl @Inject constructor(
     private val linkRemoteDataSource: LinkRemoteDataSource
 ) : LinkRepository {
-    override suspend fun addFolder(name: String): Flow<Result<Unit>> = flow {
+    override fun addFolder(name: String): Flow<Unit> = flow {
         emit(linkRemoteDataSource.addFolder(name = name))
     }
 

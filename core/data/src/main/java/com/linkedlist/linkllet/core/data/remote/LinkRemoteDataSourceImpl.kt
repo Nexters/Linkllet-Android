@@ -14,13 +14,12 @@ class LinkRemoteDataSourceImpl @Inject constructor(
     private val linkService: LinkService
 ) : LinkRemoteDataSource {
 
-    override suspend fun addFolder(name: String): Result<Unit> =
-        runCatching {
-            val response = linkService.addFolder(folder = AddFolderRequest(name = name))
-            if (!response.isSuccessful) throw RuntimeException(
-                response.errorBody().toMessage("폴더 저장에 실패했어요.")
-            )
-        }
+    override suspend fun addFolder(name: String) {
+        val response = linkService.addFolder(folder = AddFolderRequest(name = name))
+        if (!response.isSuccessful) throw RuntimeException(
+            response.errorBody().toMessage("폴더 저장에 실패했어요.")
+        )
+    }
 
     override suspend fun getFolders(): Result<List<Folder>> =
         runCatching {
@@ -42,7 +41,9 @@ class LinkRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun search(query: String): Result<List<Link>> = runCatching {
         val response = linkService.search(content = query)
-        if(!response.isSuccessful) throw RuntimeException(response.errorBody().toMessage("검색에 실패했어요."))
+        if (!response.isSuccessful) throw RuntimeException(
+            response.errorBody().toMessage("검색에 실패했어요.")
+        )
         response.body()?.articleList ?: emptyList()
     }
 
