@@ -137,16 +137,14 @@ class AddEditLinkViewModel @Inject constructor(
                     isLinkSaved = true
                 )
             }
-        }
-            .catch {
-                if (it.message == null) _error.emit(AddEditLinkError.NETWORK_ERROR)
-                else {
-                    it.message?.let { message ->
-                        _snackbarState.emit(message)
-                    }
+        }.catch {
+            if (it.message == null) _error.emit(AddEditLinkError.NETWORK_ERROR)
+            else {
+                it.message?.let { message ->
+                    _snackbarState.emit(message)
                 }
             }
-            .launchIn(viewModelScope)
+        }.launchIn(viewModelScope)
     }
 
 
