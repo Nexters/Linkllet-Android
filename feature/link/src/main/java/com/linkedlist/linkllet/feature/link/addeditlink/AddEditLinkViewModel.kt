@@ -65,6 +65,8 @@ class AddEditLinkViewModel @Inject constructor(
     )
     val uiState: StateFlow<AddEditLinkUiState> = _uiState.asStateFlow()
 
+    private val urlValidator = UrlValidator()
+
     fun getChangedInputs() : Boolean {
         return uiState.value.title.trim().isNotBlank() || uiState.value.link.trim().isNotBlank()
                 || if(folderId != -1L) uiState.value.folders.find { it.isSelected }?.id != folderId
@@ -197,21 +199,12 @@ class AddEditLinkViewModel @Inject constructor(
 
     fun getValidUrl() : String? {
         val sharedUrl = savedStateHandle.getStateFlow(NavController.KEY_DEEP_LINK_INTENT,Intent()).value.getStringExtra(Intent.EXTRA_TEXT) ?: return null
-        return if(isValidUrl(sharedUrl)){
+        return if (urlValidator.validateUrl(sharedUrl)) {
             sharedUrl
-        }else {
+        } else {
             _error.value = AddEditLinkError.NOT_VALID_URL
             null
         }
-    }
-
-    private fun isValidUrl(url : String ) : Boolean {
-        val pattern = Pattern.compile(
-            "^(https?|ftp)://[\\w-]+(\\.[\\w-]+)+([\\w.,@?^=%&:/~+#-]*[\\w@?^=%&/~+#-])?\$",
-            Pattern.CASE_INSENSITIVE
-        )
-        val matcher = pattern.matcher(url)
-        return matcher.matches()
     }
 }
 
