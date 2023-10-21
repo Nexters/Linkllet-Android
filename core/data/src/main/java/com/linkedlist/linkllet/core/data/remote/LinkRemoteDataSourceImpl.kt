@@ -22,27 +22,33 @@ class LinkRemoteDataSourceImpl @Inject constructor(
     }
 
     override suspend fun getFolders(): List<Folder> {
+        val errorMessage = "폴더 조회에 실패했어요."
+
         val response = linkService.getFolders()
         if (!response.isSuccessful) throw RuntimeException(
-            response.errorBody().toMessage("폴더 조회에 실패했어요.")
+            response.errorBody().toMessage(errorMessage)
         )
-        return response.body()?.folderList ?: emptyList()
+        return response.body()?.folderList ?: throw RuntimeException(errorMessage)
     }
 
     override suspend fun getLinks(id: Long): List<Link> {
+        val errorMessage = "링크 조회에 실패했어요."
+
         val response = linkService.getLinks(id)
         if (!response.isSuccessful) throw RuntimeException(
-            response.errorBody().toMessage("링크 조회에 실패했어요.")
+            response.errorBody().toMessage(errorMessage)
         )
-        return response.body()?.articleList ?: emptyList()
+        return response.body()?.articleList ?: throw RuntimeException(errorMessage)
     }
 
     override suspend fun search(query: String): List<Link> {
+        val errorMessage = "검색에 실패했어요."
+
         val response = linkService.search(content = query)
         if (!response.isSuccessful) throw RuntimeException(
-            response.errorBody().toMessage("검색에 실패했어요.")
+            response.errorBody().toMessage(errorMessage)
         )
-        return response.body()?.articleList ?: emptyList()
+        return response.body()?.articleList ?: throw RuntimeException(errorMessage)
     }
 
     override suspend fun addLink(
