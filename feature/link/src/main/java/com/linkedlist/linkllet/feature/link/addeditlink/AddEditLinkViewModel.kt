@@ -146,11 +146,7 @@ class AddEditLinkViewModel @Inject constructor(
             }
         }.catch {
             if (it.message == null) _error.emit(AddEditLinkError.NETWORK_ERROR)
-            else {
-                it.message?.let { message ->
-                    _snackbarState.emit(message)
-                }
-            }
+            else _snackbarState.emit(it.message ?: "에러가 발생했어요.")
         }.onCompletion {
             addLinkJob = null
         }.launchIn(viewModelScope)
@@ -181,8 +177,8 @@ class AddEditLinkViewModel @Inject constructor(
     }
 
     fun updateFolder(title: String) {
-        _uiState.update {
-            it.copy(folders = it.folders.map {
+        _uiState.update { state ->
+            state.copy(folders = state.folders.map {
                 if (it.name == title) it.copy(isSelected = true)
                 else it.copy(isSelected = false)
             })
