@@ -105,7 +105,7 @@ class AddEditLinkViewModel @Inject constructor(
                     .catch {
                         _error.emit(AddEditLinkError.NETWORK_ERROR)
                     }.collect {
-                        it.onSuccess {
+                        try {
                             _uiState.emit(
                                 uiState.value.copy(
                                     folders = it.map {
@@ -117,10 +117,9 @@ class AddEditLinkViewModel @Inject constructor(
                                     }
                                 )
                             )
-                        }.onFailure {
+                        } catch (e: Throwable) {
                             _error.emit(AddEditLinkError.NETWORK_ERROR)
                         }
-
                     }
             }catch (e: Exception){
                 _error.emit(AddEditLinkError.NETWORK_ERROR)
@@ -140,19 +139,18 @@ class AddEditLinkViewModel @Inject constructor(
                     ).catch {
                         _error.emit(AddEditLinkError.NETWORK_ERROR)
                     }.collect {
-                        it.onSuccess {
+                        try {
                             _uiState.emit(uiState.value.copy(
                                 isLinkSaved = true
                             ))
-                        }.onFailure {
-                            if(it.message == null) _error.emit(AddEditLinkError.NETWORK_ERROR)
+                        } catch (e: Throwable) {
+                            if(e.message == null) _error.emit(AddEditLinkError.NETWORK_ERROR)
                             else {
-                                it.message?.let {
+                                e.message?.let {
                                     _snackbarState.emit(it)
                                 }
                             }
                         }
-
                     }
                 }else {
                     _snackbarState.emit("정보를 입력해주세요.")

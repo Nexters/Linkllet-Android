@@ -23,28 +23,28 @@ class FakeLinkRepository : LinkRepository {
         emit(Unit)
     }
 
-    override suspend fun getFolders(): Flow<Result<List<Folder>>> =
+    override fun getFolders(): Flow<List<Folder>> =
         flow {
-            emit(Result.success(folders))
+            emit(folders)
         }
 
-    override suspend fun getLinks(id: Long): Flow<Result<List<Link>>> {
+    override fun getLinks(id: Long): Flow<List<Link>> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun search(query: String): Flow<Result<List<Link>>> {
+    override fun search(query: String): Flow<List<Link>> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun addLink(id: Long, name: String, url: String): Flow<Result<Unit>> {
+    override fun addLink(id: Long, name: String, url: String): Flow<Unit> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun deleteFolder(id: Long): Flow<Result<Unit>> {
+    override fun deleteFolder(id: Long): Flow<Unit> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun deleteLink(id: Long, articleId: Long): Flow<Result<Unit>> {
+    override fun deleteLink(id: Long, articleId: Long): Flow<Unit> {
         TODO("Not yet implemented")
     }
 }

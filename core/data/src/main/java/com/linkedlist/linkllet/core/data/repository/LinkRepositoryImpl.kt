@@ -15,19 +15,19 @@ class LinkRepositoryImpl @Inject constructor(
         emit(linkRemoteDataSource.addFolder(name = name))
     }
 
-    override suspend fun getFolders(): Flow<Result<List<Folder>>> = flow {
+    override fun getFolders(): Flow<List<Folder>> = flow {
         emit(linkRemoteDataSource.getFolders())
     }
 
-    override suspend fun getLinks(id: Long): Flow<Result<List<Link>>> = flow {
+    override fun getLinks(id: Long): Flow<List<Link>> = flow {
         emit(linkRemoteDataSource.getLinks(id))
     }
 
-    override suspend fun search(query: String): Flow<Result<List<Link>>> = flow {
+    override fun search(query: String): Flow<List<Link>> = flow {
         emit(linkRemoteDataSource.search(query))
     }
 
-    override suspend fun addLink(id: Long, name: String, url: String): Flow<Result<Unit>> = flow {
+    override fun addLink(id: Long, name: String, url: String): Flow<Unit> = flow {
         emit(
             linkRemoteDataSource.addLink(
                 id = id,
@@ -39,11 +39,11 @@ class LinkRepositoryImpl @Inject constructor(
         )
     }
 
-    override suspend fun deleteFolder(id: Long): Flow<Result<Unit>> = flow {
+    override fun deleteFolder(id: Long): Flow<Unit> = flow {
         emit(linkRemoteDataSource.deleteFolder(id = id))
     }
 
-    override suspend fun deleteLink(id: Long, articleId: Long): Flow<Result<Unit>> = flow {
+    override fun deleteLink(id: Long, articleId: Long): Flow<Unit> = flow {
         emit(
             linkRemoteDataSource.deleteLink(
                 id = id,

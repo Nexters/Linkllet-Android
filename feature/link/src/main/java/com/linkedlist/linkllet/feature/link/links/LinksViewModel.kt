@@ -29,8 +29,8 @@ sealed class Event {
 }
 
 data class LinksUiState(
-    val folderTitle : String = "",
-    val folderType : FolderType,
+    val folderTitle: String = "",
+    val folderType: FolderType,
     val links: List<LinkUiModel> = emptyList(),
     val isLoading: Boolean = false
 )
@@ -68,17 +68,17 @@ class LinksViewModel @Inject constructor(
             folderId?.let {
                 linkRepository.getLinks(
                     id = it
-                ).collect { result ->
-                    result.onSuccess {
+                ).collect { links ->
+                    try {
                         _uiState.emit(
                             uiState.value.copy(
-                                links = it.map { link ->
+                                links = links.map { link ->
                                     link.toUiModel()
                                 }
                             )
                         )
-                    }.onFailure {
-                        it.message?.let { message ->
+                    } catch (e: Throwable) {
+                        e.message?.let { message ->
                             _eventsFlow.emit(Event.Error(message))
                         }
                     }
@@ -92,11 +92,11 @@ class LinksViewModel @Inject constructor(
             folderId?.let {
                 linkRepository.deleteFolder(
                     id = it
-                ).collect { result ->
-                    result.onSuccess {
+                ).collect {
+                    try {
                         _eventsFlow.emit(Event.FolderDeleted)
-                    }.onFailure {
-                        it.message?.let { message ->
+                    } catch (e: Throwable) {
+                        e.message?.let { message ->
                             _eventsFlow.emit(Event.Error(message))
                         }
                     }
@@ -105,18 +105,18 @@ class LinksViewModel @Inject constructor(
         }
     }
 
-    fun deleteLink(linkId : Long) {
+    fun deleteLink(linkId: Long) {
         viewModelScope.launch {
             folderId?.let {
                 linkRepository.deleteLink(
                     id = it,
                     articleId = linkId
-                ).collect { result ->
-                    result.onSuccess {
+                ).collect {
+                    try {
                         fetchLinks()
                         _eventsFlow.emit(Event.LinkDeleted)
-                    }.onFailure {
-                        it.message?.let { message ->
+                    } catch (e: Throwable) {
+                        e.message?.let { message ->
                             _eventsFlow.emit(Event.Error(message))
                         }
                     }
@@ -125,7 +125,7 @@ class LinksViewModel @Inject constructor(
         }
     }
 
-    fun selectLink(url : String) {
+    fun selectLink(url: String) {
         viewModelScope.launch {
             _eventsFlow.emit(Event.ShowLink(url))
         }
