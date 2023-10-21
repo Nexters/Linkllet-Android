@@ -19,6 +19,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.regex.Pattern
@@ -98,69 +100,55 @@ class AddEditLinkViewModel @Inject constructor(
         }else true
     }
 
-    fun fetchFolders(){
-        viewModelScope.launch {
-            try {
-                linkRepository.getFolders()
-                    .catch {
-                        _error.emit(AddEditLinkError.NETWORK_ERROR)
-                    }.collect {
-                        try {
-                            _uiState.emit(
-                                uiState.value.copy(
-                                    folders = it.map {
-                                        if(folderId == -1L ) {
-                                            it.toFolderUiModel(it.type.toFolderType() == FolderType.DEFAULT)
-                                        }else {
-                                            it.toFolderUiModel(it.id == folderId)
-                                        }
-                                    }
-                                )
-                            )
-                        } catch (e: Throwable) {
-                            _error.emit(AddEditLinkError.NETWORK_ERROR)
+    fun fetchFolders() {
+        linkRepository.getFolders()
+            .onEach { folders ->
+                _uiState.update {
+                    uiState.value.copy(
+                        folders = folders.map { folder ->
+                            if (folderId == -1L) {
+                                folder.toFolderUiModel(folder.type.toFolderType() == FolderType.DEFAULT)
+                            } else {
+                                folder.toFolderUiModel(folder.id == folderId)
+                            }
                         }
-                    }
-            }catch (e: Exception){
-                _error.emit(AddEditLinkError.NETWORK_ERROR)
+                    )
+                }
             }
-
-        }
+            .catch { _error.emit(AddEditLinkError.NETWORK_ERROR) }
+            .launchIn(viewModelScope)
     }
 
     fun addLink() {
-        viewModelScope.launch {
-            try {
-                if(checkTitleAndLink()){
-                    linkRepository.addLink(
-                        id = uiState.value.folders.firstOrNull{it.isSelected}?.id ?: 0,
-                        name = uiState.value.title.trim(),
-                        url = uiState.value.link.trim()
-                    ).catch {
-                        _error.emit(AddEditLinkError.NETWORK_ERROR)
-                    }.collect {
-                        try {
-                            _uiState.emit(uiState.value.copy(
-                                isLinkSaved = true
-                            ))
-                        } catch (e: Throwable) {
-                            if(e.message == null) _error.emit(AddEditLinkError.NETWORK_ERROR)
-                            else {
-                                e.message?.let {
-                                    _snackbarState.emit(it)
-                                }
-                            }
-                        }
-                    }
-                }else {
-                    _snackbarState.emit("정보를 입력해주세요.")
-                }
-            }catch (e: Exception){
-                _error.emit(AddEditLinkError.NETWORK_ERROR)
+        if (checkTitleAndLink()) {
+            viewModelScope.launch {
+                _snackbarState.emit("정보를 입력해주세요.")
             }
-
+            return
         }
+
+        linkRepository.addLink(
+            id = uiState.value.folders.firstOrNull { it.isSelected }?.id ?: 0,
+            name = uiState.value.title.trim(),
+            url = uiState.value.link.trim()
+        ).onEach {
+            _uiState.update {
+                uiState.value.copy(
+                    isLinkSaved = true
+                )
+            }
+        }
+            .catch {
+                if (it.message == null) _error.emit(AddEditLinkError.NETWORK_ERROR)
+                else {
+                    it.message?.let { message ->
+                        _snackbarState.emit(message)
+                    }
+                }
+            }
+            .launchIn(viewModelScope)
     }
+
 
     fun updateLink(link: String) {
         _uiState.update {
