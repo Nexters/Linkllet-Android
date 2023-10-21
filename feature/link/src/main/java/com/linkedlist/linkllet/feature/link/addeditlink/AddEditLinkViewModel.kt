@@ -15,11 +15,13 @@ import com.linkedlist.linkllet.feature.link.navigation.EMPTY_LINK
 import com.linkedlist.linkllet.feature.link.navigation.FOLDER_ID
 import com.linkedlist.linkllet.feature.link.navigation.LINK_URL
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -66,6 +68,7 @@ class AddEditLinkViewModel @Inject constructor(
     val uiState: StateFlow<AddEditLinkUiState> = _uiState.asStateFlow()
 
     private val urlValidator = UrlValidator()
+    private var addLinkJob: Job? = null
 
     fun getChangedInputs() : Boolean {
         return uiState.value.title.trim().isNotBlank() || uiState.value.link.trim().isNotBlank()
@@ -122,6 +125,8 @@ class AddEditLinkViewModel @Inject constructor(
     }
 
     fun addLink() {
+        if (addLinkJob != null) return
+
         if (checkTitleAndLink()) {
             viewModelScope.launch {
                 _snackbarState.emit("정보를 입력해주세요.")
@@ -129,7 +134,7 @@ class AddEditLinkViewModel @Inject constructor(
             return
         }
 
-        linkRepository.addLink(
+        addLinkJob = linkRepository.addLink(
             id = uiState.value.folders.firstOrNull { it.isSelected }?.id ?: 0,
             name = uiState.value.title.trim(),
             url = uiState.value.link.trim()
@@ -146,9 +151,10 @@ class AddEditLinkViewModel @Inject constructor(
                     _snackbarState.emit(message)
                 }
             }
+        }.onCompletion {
+            addLinkJob = null
         }.launchIn(viewModelScope)
     }
-
 
     fun updateLink(link: String) {
         _uiState.update {
