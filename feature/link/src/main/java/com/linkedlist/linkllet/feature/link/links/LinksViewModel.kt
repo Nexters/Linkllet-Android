@@ -17,6 +17,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -29,8 +33,8 @@ sealed class Event {
 }
 
 data class LinksUiState(
-    val folderTitle : String = "",
-    val folderType : FolderType,
+    val folderTitle: String = "",
+    val folderType: FolderType,
     val links: List<LinkUiModel> = emptyList(),
     val isLoading: Boolean = false
 )
@@ -64,68 +68,51 @@ class LinksViewModel @Inject constructor(
     val eventsFlow = _eventsFlow.asSharedFlow()
 
     fun fetchLinks() {
-        viewModelScope.launch {
-            folderId?.let {
-                linkRepository.getLinks(
-                    id = it
-                ).collect { result ->
-                    result.onSuccess {
-                        _uiState.emit(
-                            uiState.value.copy(
-                                links = it.map { link ->
-                                    link.toUiModel()
-                                }
-                            )
-                        )
-                    }.onFailure {
-                        it.message?.let { message ->
-                            _eventsFlow.emit(Event.Error(message))
+        if(folderId == null) return
+
+        linkRepository.getLinks(folderId)
+            .onEach { links ->
+                _uiState.update {
+                    uiState.value.copy(
+                        links = links.map { link ->
+                            link.toUiModel()
                         }
-                    }
+                    )
                 }
             }
-        }
+            .catch {
+                _eventsFlow.emit(Event.Error(it.message ?: "에러가 발생했어요."))
+            }
+            .launchIn(viewModelScope)
     }
 
     fun deleteFolder() {
-        viewModelScope.launch {
-            folderId?.let {
-                linkRepository.deleteFolder(
-                    id = it
-                ).collect { result ->
-                    result.onSuccess {
-                        _eventsFlow.emit(Event.FolderDeleted)
-                    }.onFailure {
-                        it.message?.let { message ->
-                            _eventsFlow.emit(Event.Error(message))
-                        }
-                    }
-                }
-            }
-        }
+        if (folderId == null) return
+
+        linkRepository.deleteFolder(
+            id = folderId
+        ).onEach {
+            _eventsFlow.emit(Event.FolderDeleted)
+        }.catch {
+            _eventsFlow.emit(Event.Error(it.message ?: "에러가 발생했어요."))
+        }.launchIn(viewModelScope)
     }
 
-    fun deleteLink(linkId : Long) {
-        viewModelScope.launch {
-            folderId?.let {
-                linkRepository.deleteLink(
-                    id = it,
-                    articleId = linkId
-                ).collect { result ->
-                    result.onSuccess {
-                        fetchLinks()
-                        _eventsFlow.emit(Event.LinkDeleted)
-                    }.onFailure {
-                        it.message?.let { message ->
-                            _eventsFlow.emit(Event.Error(message))
-                        }
-                    }
-                }
-            }
-        }
+    fun deleteLink(linkId: Long) {
+        if (folderId == null) return
+
+        linkRepository.deleteLink(
+            id = folderId,
+            articleId = linkId
+        ).onEach {
+            fetchLinks()
+            _eventsFlow.emit(Event.LinkDeleted)
+        }.catch {
+            _eventsFlow.emit(Event.Error(it.message ?: "에러가 발생했어요."))
+        }.launchIn(viewModelScope)
     }
 
-    fun selectLink(url : String) {
+    fun selectLink(url: String) {
         viewModelScope.launch {
             _eventsFlow.emit(Event.ShowLink(url))
         }

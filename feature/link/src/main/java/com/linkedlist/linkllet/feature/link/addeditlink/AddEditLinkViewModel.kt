@@ -15,10 +15,14 @@ import com.linkedlist.linkllet.feature.link.navigation.EMPTY_LINK
 import com.linkedlist.linkllet.feature.link.navigation.FOLDER_ID
 import com.linkedlist.linkllet.feature.link.navigation.LINK_URL
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.regex.Pattern
@@ -63,6 +67,9 @@ class AddEditLinkViewModel @Inject constructor(
     )
     val uiState: StateFlow<AddEditLinkUiState> = _uiState.asStateFlow()
 
+    private val urlValidator = UrlValidator()
+    private var addLinkJob: Job? = null
+
     fun getChangedInputs() : Boolean {
         return uiState.value.title.trim().isNotBlank() || uiState.value.link.trim().isNotBlank()
                 || if(folderId != -1L) uiState.value.folders.find { it.isSelected }?.id != folderId
@@ -98,70 +105,51 @@ class AddEditLinkViewModel @Inject constructor(
         }else true
     }
 
-    fun fetchFolders(){
-        viewModelScope.launch {
-            try {
-                linkRepository.getFolders()
-                    .catch {
-                        _error.emit(AddEditLinkError.NETWORK_ERROR)
-                    }.collect {
-                        it.onSuccess {
-                            _uiState.emit(
-                                uiState.value.copy(
-                                    folders = it.map {
-                                        if(folderId == -1L ) {
-                                            it.toFolderUiModel(it.type.toFolderType() == FolderType.DEFAULT)
-                                        }else {
-                                            it.toFolderUiModel(it.id == folderId)
-                                        }
-                                    }
-                                )
-                            )
-                        }.onFailure {
-                            _error.emit(AddEditLinkError.NETWORK_ERROR)
+    fun fetchFolders() {
+        linkRepository.getFolders()
+            .onEach { folders ->
+                _uiState.update {
+                    uiState.value.copy(
+                        folders = folders.map { folder ->
+                            if (folderId == -1L) {
+                                folder.toFolderUiModel(folder.type.toFolderType() == FolderType.DEFAULT)
+                            } else {
+                                folder.toFolderUiModel(folder.id == folderId)
+                            }
                         }
-
-                    }
-            }catch (e: Exception){
-                _error.emit(AddEditLinkError.NETWORK_ERROR)
+                    )
+                }
             }
-
-        }
+            .catch { _error.emit(AddEditLinkError.NETWORK_ERROR) }
+            .launchIn(viewModelScope)
     }
 
     fun addLink() {
-        viewModelScope.launch {
-            try {
-                if(checkTitleAndLink()){
-                    linkRepository.addLink(
-                        id = uiState.value.folders.firstOrNull{it.isSelected}?.id ?: 0,
-                        name = uiState.value.title.trim(),
-                        url = uiState.value.link.trim()
-                    ).catch {
-                        _error.emit(AddEditLinkError.NETWORK_ERROR)
-                    }.collect {
-                        it.onSuccess {
-                            _uiState.emit(uiState.value.copy(
-                                isLinkSaved = true
-                            ))
-                        }.onFailure {
-                            if(it.message == null) _error.emit(AddEditLinkError.NETWORK_ERROR)
-                            else {
-                                it.message?.let {
-                                    _snackbarState.emit(it)
-                                }
-                            }
-                        }
+        if (addLinkJob != null) return
 
-                    }
-                }else {
-                    _snackbarState.emit("정보를 입력해주세요.")
-                }
-            }catch (e: Exception){
-                _error.emit(AddEditLinkError.NETWORK_ERROR)
+        if (checkTitleAndLink()) {
+            viewModelScope.launch {
+                _snackbarState.emit("정보를 입력해주세요.")
             }
-
+            return
         }
+
+        addLinkJob = linkRepository.addLink(
+            id = uiState.value.folders.firstOrNull { it.isSelected }?.id ?: 0,
+            name = uiState.value.title.trim(),
+            url = uiState.value.link.trim()
+        ).onEach {
+            _uiState.update {
+                uiState.value.copy(
+                    isLinkSaved = true
+                )
+            }
+        }.catch {
+            if (it.message == null) _error.emit(AddEditLinkError.NETWORK_ERROR)
+            else _snackbarState.emit(it.message ?: "에러가 발생했어요.")
+        }.onCompletion {
+            addLinkJob = null
+        }.launchIn(viewModelScope)
     }
 
     fun updateLink(link: String) {
@@ -189,8 +177,8 @@ class AddEditLinkViewModel @Inject constructor(
     }
 
     fun updateFolder(title: String) {
-        _uiState.update {
-            it.copy(folders = it.folders.map {
+        _uiState.update { state ->
+            state.copy(folders = state.folders.map {
                 if (it.name == title) it.copy(isSelected = true)
                 else it.copy(isSelected = false)
             })
@@ -213,21 +201,12 @@ class AddEditLinkViewModel @Inject constructor(
 
     fun getValidUrl() : String? {
         val sharedUrl = savedStateHandle.getStateFlow(NavController.KEY_DEEP_LINK_INTENT,Intent()).value.getStringExtra(Intent.EXTRA_TEXT) ?: return null
-        return if(isValidUrl(sharedUrl)){
+        return if (urlValidator.validateUrl(sharedUrl)) {
             sharedUrl
-        }else {
+        } else {
             _error.value = AddEditLinkError.NOT_VALID_URL
             null
         }
-    }
-
-    private fun isValidUrl(url : String ) : Boolean {
-        val pattern = Pattern.compile(
-            "^(https?|ftp)://[\\w-]+(\\.[\\w-]+)+([\\w.,@?^=%&:/~+#-]*[\\w@?^=%&/~+#-])?\$",
-            Pattern.CASE_INSENSITIVE
-        )
-        val matcher = pattern.matcher(url)
-        return matcher.matches()
     }
 }
 

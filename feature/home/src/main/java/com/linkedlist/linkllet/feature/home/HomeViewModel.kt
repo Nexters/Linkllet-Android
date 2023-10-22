@@ -12,9 +12,13 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
-import java.net.ConnectException
 import javax.inject.Inject
 
 sealed class Event {
@@ -44,27 +48,24 @@ class HomeViewModel @Inject constructor(
     val eventsFlow: SharedFlow<Event> = _eventsFlow.asSharedFlow()
 
     fun fetchFolders() {
-        viewModelScope.launch {
-            _loading.value = true
-            linkRepository.getFolders().collect { result ->
-                result.mapCatching { folders ->
-                    folders.map {
-                        FolderModel(
-                            folderId = it.id,
-                            name = it.name,
-                            totalItems = it.size,
-                            type = it.type
-                        )
-                    }
-                }.onSuccess { folders ->
-                    _uiState.update { it.copy(folders = folders) }
-                    _loading.value = false
-                }.onFailure {
-                    _loading.value = false
-                    _error.value = false
+        linkRepository.getFolders()
+            .onStart { _loading.value = true }
+            .map { folders ->
+                folders.map {
+                    FolderModel(
+                        folderId = it.id,
+                        name = it.name,
+                        totalItems = it.size,
+                        type = it.type
+                    )
                 }
             }
-        }
+            .onEach { folders ->
+                _uiState.update { it.copy(folders = folders) }
+            }
+            .catch { _error.value = true }
+            .onCompletion { _loading.value = false }
+            .launchIn(viewModelScope)
     }
 
     fun expandCard(expanded: Boolean) {

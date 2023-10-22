@@ -8,24 +8,24 @@ interface LinkRemoteDataSource {
 
     suspend fun addFolder(name: String)
 
-    suspend fun getFolders() : Result<List<Folder>>
+    suspend fun getFolders(): List<Folder>
 
-    suspend fun getLinks(id : Long) : Result<List<Link>>
+    suspend fun getLinks(id: Long): List<Link>
 
-    suspend fun search(query: String): Result<List<Link>>
+    suspend fun search(query: String): List<Link>
 
     suspend fun addLink(
-        id : Long,
-        addLinkRequest : AddLinkRequest
-    ) : Result<Unit>
+        id: Long,
+        addLinkRequest: AddLinkRequest
+    )
 
     suspend fun deleteFolder(
-        id : Long
-    ) : Result<Unit>
+        id: Long
+    )
 
     suspend fun deleteLink(
-        id : Long,
-        articleId : Long
-    ) : Result<Unit>
+        id: Long,
+        articleId: Long
+    )
 
 }

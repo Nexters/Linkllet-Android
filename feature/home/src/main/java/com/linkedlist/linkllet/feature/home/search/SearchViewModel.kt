@@ -12,6 +12,9 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -56,25 +59,23 @@ class SearchViewModel @Inject constructor(
 
     fun search() {
         val query = uiState.value.keyword
-        if(query.length < 2) return
+        if (query.length < 2) return
 
-        viewModelScope.launch {
-            linkRepository.search(query)
-                .onStart {
-                    _state.value = SearchState.Loading
+        linkRepository.search(query)
+            .onStart {
+                _state.value = SearchState.Loading
+            }
+            .onEach { links ->
+                _uiState.update {
+                    it.copy(links = links)
                 }
-                .collect { result ->
-                    result.onSuccess { links ->
-                        _uiState.update {
-                            it.copy(links = links)
-                        }
 
-                        _state.value =
-                            if(links.isNotEmpty()) SearchState.Success
-                            else SearchState.Empty
-                    }
-                }
-        }
+                _state.value =
+                    if (links.isNotEmpty()) SearchState.Success
+                    else SearchState.Empty
+            }
+            .catch { _state.value = SearchState.Error }
+            .launchIn(viewModelScope)
     }
 
     fun showLink(link: String): () -> Unit = {
