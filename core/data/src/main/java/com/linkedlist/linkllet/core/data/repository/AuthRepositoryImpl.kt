@@ -22,7 +22,8 @@ class AuthRepositoryImpl @Inject constructor(
         })
     }
 
-    override fun addFeedback(content: String): Flow<Result<Unit>> = flow {
-        emit(authRemoteDataSource.addFeedback(content))
+    override fun addFeedback(content: String): Flow<Unit> = flow {
+        val response = authRemoteDataSource.addFeedback(content)
+        emit(response)
     }
 }

@@ -9,7 +9,7 @@ class FakeAuthRepository : AuthRepository {
         TODO("Not yet implemented")
     }
 
-    override fun addFeedback(content: String): Flow<Result<Unit>> {
+    override fun addFeedback(content: String): Flow<Unit> {
         TODO("Not yet implemented")
     }
 }

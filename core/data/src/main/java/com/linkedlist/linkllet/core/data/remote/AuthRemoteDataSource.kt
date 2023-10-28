@@ -4,5 +4,5 @@ import com.linkedlist.linkllet.core.data.model.Auth
 
 interface AuthRemoteDataSource {
     suspend fun signUp(): Result<Auth>
-    suspend fun addFeedback(content: String): Result<Unit>
+    suspend fun addFeedback(content: String)
 }

@@ -9,6 +9,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -31,13 +33,10 @@ class FeedbackViewModel @Inject constructor(
     }
 
     fun sendFeedback() {
-        viewModelScope.launch {
-            authRepository.addFeedback(content = content.value)
-                .collect { result ->
-                    result.onSuccess {
-                        _eventsFlow.emit(FeedbackEvent.CloseScreen)
-                    }
-                }
-        }
+        authRepository.addFeedback(content = content.value)
+            .onEach {
+                _eventsFlow.emit(FeedbackEvent.CloseScreen)
+            }
+            .launchIn(viewModelScope)
     }
 }
