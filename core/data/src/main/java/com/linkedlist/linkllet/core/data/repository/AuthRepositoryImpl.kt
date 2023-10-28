@@ -11,15 +11,11 @@ class AuthRepositoryImpl @Inject constructor(
     private val authRemoteDataSource: AuthRemoteDataSource
 ) : AuthRepository {
 
-    override fun signUp(): Flow<Result<Boolean>> = flow {
-        emit(authRemoteDataSource.signUp().mapCatching { auth ->
-            when (auth) {
-                SIGNED_UP, ALREADY_SIGNED_UP -> {
-                    true
-                }
-                else -> false
-            }
-        })
+    override fun signUp(): Flow<Boolean> = flow {
+        val response = authRemoteDataSource.signUp()
+        val successfulResponses = listOf(SIGNED_UP, ALREADY_SIGNED_UP)
+
+        emit(response in successfulResponses)
     }
 
     override fun addFeedback(content: String): Flow<Unit> = flow {

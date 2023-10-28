@@ -4,6 +4,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface AuthRepository {
 
-    fun signUp(): Flow<Result<Boolean>>
+    fun signUp(): Flow<Boolean>
     fun addFeedback(content: String): Flow<Unit>
 }
