@@ -5,11 +5,11 @@ import kotlinx.coroutines.flow.Flow
 
 class FakeAuthRepository : AuthRepository {
 
-    override fun signUp(): Flow<Result<Boolean>> {
+    override fun signUp(): Flow<Boolean> {
         TODO("Not yet implemented")
     }
 
-    override fun addFeedback(content: String): Flow<Result<Unit>> {
+    override fun addFeedback(content: String): Flow<Unit> {
         TODO("Not yet implemented")
     }
 }

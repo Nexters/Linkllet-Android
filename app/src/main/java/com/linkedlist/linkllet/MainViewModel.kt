@@ -13,7 +13,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -96,17 +99,15 @@ class MainViewModel @Inject constructor(
             }
     }
 
-    private fun signUp(){
-        viewModelScope.launch {
-            authRepository.signUp()
-                .collect {
-                    it.onSuccess {
-                        _uiState.emit(MainUiState.LoginSuccess)
-                    }.onFailure {
-                        _uiState.emit(MainUiState.LoginFailed)
-                    }
-                }
-        }
+    private fun signUp() {
+        authRepository.signUp()
+            .onEach {
+                _uiState.emit(MainUiState.LoginSuccess)
+            }
+            .catch {
+                _uiState.emit(MainUiState.LoginFailed)
+            }
+            .launchIn(viewModelScope)
     }
 
     fun navigateToAddEditLink() {
